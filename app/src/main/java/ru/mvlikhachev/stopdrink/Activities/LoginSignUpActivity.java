@@ -157,9 +157,10 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     public void loginSignUpUser(View view) {
 
-        if (!validateEmail() | !validateName() | !validatePassword()) {
+        if (!validateEmail() | !validatePassword()) {
             return;
         }
+
         if (isLoginModeActive) { // Authorization
             auth.signInWithEmailAndPassword(
                     textInputEmail.getEditText().getText().toString().trim(),
@@ -178,7 +179,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.d(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginSignUpActivity.this, "Authentication failed.",
+                                Toast.makeText(LoginSignUpActivity.this, "Ошибка авторизации. \n Проверьте введенные данные!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -205,7 +206,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.d(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(LoginSignUpActivity.this, "Authentication failed.",
+                                Toast.makeText(LoginSignUpActivity.this, "Registration failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
