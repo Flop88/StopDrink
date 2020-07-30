@@ -10,11 +10,54 @@
 
 
     <ImageView
+        android:layout_marginTop="30dp"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/logo" />
 
+    <TextView
+        android:id="@+id/helloUsernameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Здраствуйте, Username"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:padding="8dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Вы не пьете:"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/daysTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 дней"
+        android:textSize="30sp"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textSize="30sp"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/resetTimeButton"
+        android:text="Сорвался"
+        android:layout_marginTop="80dp"
+        android:background="@color/primaryDarkColor"
+        android:textColor="@color/primaryLightColor"
+        android:textSize="20sp" />
 
 
 

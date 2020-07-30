@@ -17,7 +17,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 
 public class LoginSignUpActivity extends AppCompatActivity {
@@ -34,7 +37,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private boolean isLoginModeActive;
 
+    // Firebase
     private FirebaseAuth auth;
+
+    private FirebaseDatabase database;
+    private DatabaseReference usersDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,9 @@ public class LoginSignUpActivity extends AppCompatActivity {
         authorizationUi();
         
         auth = FirebaseAuth.getInstance();
+
+        database = FirebaseDatabase.getInstance();
+        usersDatabaseReference = database.getReference().child("users");
         
     }
     private boolean validateEmail() {
@@ -199,6 +209,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = auth.getCurrentUser();
+                                createUser(user);
                                 startActivity(new Intent(
                                         LoginSignUpActivity.this,
                                         MainActivity.class
@@ -213,5 +224,19 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     });
         }
 
+    }
+
+    private void createUser(FirebaseUser user) {
+
+        User currentUser = new User();
+
+        currentUser.setId(user.getUid());
+        currentUser.setEmail(user.getEmail());
+        currentUser.setName(textInputName.getEditText()
+                                         .getText()
+                                         .toString()
+                                         .trim());
+
+        usersDatabaseReference.push().setValue(currentUser);
     }
 }
