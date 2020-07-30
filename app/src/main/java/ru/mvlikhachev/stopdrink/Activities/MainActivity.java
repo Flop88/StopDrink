@@ -2,6 +2,7 @@ package ru.mvlikhachev.stopdrink.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,13 +10,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,35 +34,66 @@ public class MainActivity extends AppCompatActivity {
     private Button resetTimeButton;
 
     private String username;
-    private String recipientUserId;
-    private String recipientUserName;
 
     private Thread thread;
 
-
+    private FirebaseDatabase database;
+    private DatabaseReference userDatabaseReference;
+    private ChildEventListener userChildeEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = getIntent();
-
-        if(intent != null) {
-            username = intent.getStringExtra("userName");
-            recipientUserId = intent.getStringExtra("recipientUserId");
-            recipientUserName = intent.getStringExtra("recipientUserName");
-        }
-
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
 
-        helloUsernameTextView.setText("Здраствуйте, " + username);
+        database = FirebaseDatabase.getInstance();
+        userDatabaseReference = database.getReference().child("users");
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            username = intent.getStringExtra("userName");
+        }
+
+        userChildeEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    username = user.getName();
+                    helloUsernameTextView.setText("Здраствуйте, " + username);
+                    Log.d("getNameDB", "username:" + username + " " + "user.getName():"+ user.getName());
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        userDatabaseReference.addChildEventListener(userChildeEventListener);
 
         thread = new Thread() {
-
             @Override
             public void run() {
                 try {
@@ -75,11 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
         thread.start();
 
-
     }
 
     // Метот расчитывает время с даты последнего употребления алкоголя до текущего момента
-
     private void calculateTime(String year, String month, String day, String hour, String minute, String second) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -118,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
         timeTextView.setText(diffHours + ":" + diffMinutes + ":" + secondsString);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -136,7 +172,5 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
 }
