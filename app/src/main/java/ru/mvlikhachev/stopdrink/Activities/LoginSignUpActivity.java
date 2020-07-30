@@ -62,6 +62,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         usersDatabaseReference = database.getReference().child("users");
+
+        // Если пользователь авторизован - сразу открыть мэйн активити
+        if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginSignUpActivity.this, MainActivity.class));
+        }
         
     }
     private boolean validateEmail() {
