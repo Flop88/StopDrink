@@ -25,7 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView timeTextView;
     private Button resetTimeButton;
 
+    private String username;
+    private String recipientUserId;
+    private String recipientUserName;
+
     private Thread thread;
+
 
 
     @Override
@@ -33,10 +38,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+
+        if(intent != null) {
+            username = intent.getStringExtra("userName");
+            recipientUserId = intent.getStringExtra("recipientUserId");
+            recipientUserName = intent.getStringExtra("recipientUserName");
+        }
+
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
+
+        helloUsernameTextView.setText("Здраствуйте, " + username);
 
         thread = new Thread() {
 
@@ -59,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         thread.start();
+
 
     }
 
@@ -120,5 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
 }
