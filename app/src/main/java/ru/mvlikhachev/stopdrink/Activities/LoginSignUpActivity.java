@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 
@@ -200,9 +204,12 @@ public class LoginSignUpActivity extends AppCompatActivity {
                         }
                     });
         } else { // Registration
+
             if (!validateEmail() | !validateName() | !validatePassword() | !validateConfirmPassword()) {
                 return;
             }
+
+
             auth.createUserWithEmailAndPassword(
                     textInputEmail.getEditText().getText().toString().trim(),
                     textInputPassword.getEditText().getText().toString().trim())
@@ -235,12 +242,18 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         User currentUser = new User();
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+
         currentUser.setId(user.getUid());
         currentUser.setEmail(user.getEmail());
         currentUser.setName(textInputName.getEditText()
                                          .getText()
                                          .toString()
                                          .trim());
+        currentUser.setDateWhenStopDrink(dateFormat.format(date));
+        Log.d("testTime", " " + dateFormat.format(date));
+
 
         usersDatabaseReference.push().setValue(currentUser);
     }
