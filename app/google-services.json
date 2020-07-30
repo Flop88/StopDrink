@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "307389596924",
+    "firebase_url": "https://stop-drink.firebaseio.com",
+    "project_id": "stop-drink",
+    "storage_bucket": "stop-drink.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307389596924:android:029a8b7184466749d74379",
+        "android_client_info": {
+          "package_name": "ru.mvlikhachev.stopdrink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307389596924-2k309o954ro0aeqnjobrhrson1kf3id4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mvlikhachev.stopdrink",
+            "certificate_hash": "84488f1e5bad17827f76795680302581b367b4e6"
+          }
+        },
+        {
+          "client_id": "307389596924-mk2u8s3kqt1r8frscpbtna0m6ue5ra0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX5O7ZXolHoB-Cx-DGMl25x8xu_PHwI7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307389596924-mk2u8s3kqt1r8frscpbtna0m6ue5ra0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
