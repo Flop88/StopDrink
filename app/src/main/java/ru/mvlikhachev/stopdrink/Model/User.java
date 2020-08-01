@@ -1,5 +1,10 @@
 package ru.mvlikhachev.stopdrink.Model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
 
     private String id;
@@ -14,6 +19,10 @@ public class User {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.dateWhenStopDrink = dateWhenStopDrink;
+    }
+
+    public User(String dateWhenStopDrink) {
         this.dateWhenStopDrink = dateWhenStopDrink;
     }
 
@@ -47,5 +56,16 @@ public class User {
 
     public void setDateWhenStopDrink(String dateWhenStopDrink) {
         this.dateWhenStopDrink = dateWhenStopDrink;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", id);
+        result.put("name", name);
+        result.put("email", email);
+        result.put("dateWhenStopDrink", dateWhenStopDrink);
+
+        return result;
     }
 }

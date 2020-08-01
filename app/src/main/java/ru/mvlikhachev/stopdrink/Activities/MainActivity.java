@@ -9,20 +9,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
@@ -36,13 +42,16 @@ public class MainActivity extends AppCompatActivity {
 
     private String username;
     private String lastDrinkDate;
+    private String newDrinkDate;
 
     private Thread thread;
 
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
-    private ChildEventListener dateUserChildeEventListener;
+    private ChildEventListener loadDateUserChildeEventListener;
+
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent != null) {
             username = intent.getStringExtra("userName");
+            lastDrinkDate = intent.getStringExtra("drinkDate");
         }
+
 
         // load name from firebase database
         getNameFromDatabase();
@@ -68,19 +79,17 @@ public class MainActivity extends AppCompatActivity {
         // load last date when user drink alcohol from firebase database
         getDateOfLastDrinkFromDatabase();
 
-
-
         //Поток запуска расчета времени
         thread = new Thread() {
             @Override
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
+                                Log.d("loadTime", "В calculateTime прилетело - " + lastDrinkDate);
                                 calculateTime(lastDrinkDate);
                             }
                         });
@@ -95,8 +104,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void updateDate() {
+    userDatabaseReference.child(auth.getCurrentUser().getUid()).child("dateWhenStopDrink").setValue("test");
+
+    }
+
     private void getDateOfLastDrinkFromDatabase() {
-        dateUserChildeEventListener = new ChildEventListener() {
+        loadDateUserChildeEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 User user = snapshot.getValue(User.class);
@@ -126,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        userDatabaseReference.addChildEventListener(dateUserChildeEventListener);
+        userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
     private void getNameFromDatabase() {
@@ -171,8 +185,9 @@ public class MainActivity extends AppCompatActivity {
 
         long timeUp = 0;
         try {
+            Log.d("loadTime", "В timeUp прилетело - " + date);
             timeUp = format.parse(date).getTime();
-            //timeUp = format.parse(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second).getTime();
+            Log.d("loadTime", "timeUp =  " + timeUp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -189,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         String minutesString = "";
         String secondsString = "";
 
-        if(diffMinutes < 10) {
+        if(diffHours < 10) {
             hoursString = "0" + diffHours;
         } else {
             hoursString = String.valueOf(diffHours);
@@ -231,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetDrinkDate(View view) {
-
-
+        updateDate();
     }
 }

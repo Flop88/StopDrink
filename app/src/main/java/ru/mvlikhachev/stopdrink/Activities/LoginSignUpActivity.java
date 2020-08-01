@@ -234,9 +234,16 @@ public class LoginSignUpActivity extends AppCompatActivity {
     }
 
     private void startApp() {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+
         Intent intent = new Intent(LoginSignUpActivity.this,
                 MainActivity.class);
+
         intent.putExtra("userName", textInputName.getEditText().getText().toString().trim());
+        intent.putExtra("drinkDate", dateFormat.format(date));
+
         startActivity(intent);
     }
 
