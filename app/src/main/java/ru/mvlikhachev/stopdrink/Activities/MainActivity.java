@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private Button resetTimeButton;
 
     private String username;
+    private String lastDrinkDate;
 
     private Thread thread;
 
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
+    private ChildEventListener dateUserChildeEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,74 @@ public class MainActivity extends AppCompatActivity {
             username = intent.getStringExtra("userName");
         }
 
+        // load name from firebase database
+        getNameFromDatabase();
+
+        // load last date when user drink alcohol from firebase database
+        getDateOfLastDrinkFromDatabase();
+
+
+
+        //Поток запуска расчета времени
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                calculateTime(lastDrinkDate);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+
+    }
+
+    private void getDateOfLastDrinkFromDatabase() {
+        dateUserChildeEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    lastDrinkDate = user.getDateWhenStopDrink();
+                    Log.d("getDateDB", "date:" + lastDrinkDate);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        userDatabaseReference.addChildEventListener(dateUserChildeEventListener);
+    }
+
+    private void getNameFromDatabase() {
         userChildeEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -92,37 +163,16 @@ public class MainActivity extends AppCompatActivity {
         };
 
         userDatabaseReference.addChildEventListener(userChildeEventListener);
-
-        thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                calculateTime("2020", "07", "06", "00","00","00");
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        thread.start();
-
     }
 
     // Метот расчитывает время с даты последнего употребления алкоголя до текущего момента
-    private void calculateTime(String year, String month, String day, String hour, String minute, String second) {
+    private void calculateTime(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
         long timeUp = 0;
         try {
-            timeUp = format.parse(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second).getTime();
+            timeUp = format.parse(date).getTime();
+            //timeUp = format.parse(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -135,8 +185,15 @@ public class MainActivity extends AppCompatActivity {
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
         // Проверка если минуты и секунды меньше 10 - выполняем форматирование, чтоб красиво отображалось во вью
+        String hoursString = "";
         String minutesString = "";
         String secondsString = "";
+
+        if(diffMinutes < 10) {
+            hoursString = "0" + diffHours;
+        } else {
+            hoursString = String.valueOf(diffHours);
+        }
 
         if(diffMinutes < 10) {
             minutesString = "0" + diffMinutes;
@@ -152,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         daysTextView.setText(diffDays + " дней");
-        timeTextView.setText(diffHours + ":" + diffMinutes + ":" + secondsString);
+        timeTextView.setText(hoursString + ":" + minutesString + ":" + secondsString);
     }
 
     @Override
@@ -173,4 +230,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void resetDrinkDate(View view) {
+
+
+    }
 }
