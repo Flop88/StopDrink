@@ -9,26 +9,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private ChildEventListener userChildeEventListener;
     private ChildEventListener loadDateUserChildeEventListener;
 
+    List<String> userIdList = new ArrayList();
+
     FirebaseAuth auth;
 
     @Override
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
+
+        auth = FirebaseAuth.getInstance();
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
@@ -104,40 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateDate() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        User post = new User();
+    private void updateDate(String s) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-
-        String id = currentUser.getUid();
-        String name = username;
-        String email = currentUser.getEmail();
-        String newDate = dateFormat.format(date);
-        String test = "new Test";
-
-
-        //String key = userDatabaseReference.child("users").push().getKey();
-        String key = userDatabaseReference.push().getKey();
-        Log.d("getKey", key);
-
-        //userDatabaseReference.child(key).child("dateWhenStopDrink").setValue();
-//        post.setId(id);
-//        post.setName(name);
-//        post.setEmail(email);
-//        post.setDateWhenStopDrink(newDate);
-//
-//
-//
-//        Map<String, Object> postValues = post.toMap();
-//
-//        Map<String, Object> childUpdates = new HashMap<>();
-//        childUpdates.put(key, postValues);
-//
-//        userDatabaseReference.child("dateWhenStopDrink").removeValue();
-//
-//        userDatabaseReference.updateChildren(childUpdates);
+                Log.d("result ", s);
+        userDatabaseReference.child(s).child("dateWhenStopDrink").setValue(dateFormat.format(date));
 
     }
 
@@ -278,6 +253,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetDrinkDate(View view) {
-        updateDate();
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    String key = dataSnapshot1.getKey();
+                    Log.d("snapshot", "onCreate: key :" + key);
+
+                    String email = dataSnapshot1.child("email").getValue(String.class);
+                    String roomno = dataSnapshot1.child("address").getValue(String.class);
+                    Log.d("snapshot", "onDataChange: email: " + email);
+                    Log.d("snapshot", "onDataChange: email: " + auth.getCurrentUser().getEmail());
+                    Log.d("snapshot", "onDataChange: address: " + roomno);
+
+                    if (email.equals(auth.getCurrentUser().getEmail())) {
+                        updateDate(key);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

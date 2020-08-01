@@ -206,7 +206,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 return;
             }
 
-
             auth.createUserWithEmailAndPassword(
                     textInputEmail.getEditText().getText().toString().trim(),
                     textInputPassword.getEditText().getText().toString().trim())
@@ -261,7 +260,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                          .toString()
                                          .trim());
         currentUser.setDateWhenStopDrink(dateFormat.format(date));
-        currentUser.setTest(usersDatabaseReference.push().getKey());
+        currentUser.setTest(usersDatabaseReference.getKey());
+
         usersDatabaseReference.push().setValue(currentUser);
 
     }
