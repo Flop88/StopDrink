@@ -102,17 +102,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
         thread.start();
-
     }
 
     private void updateDate(String s) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-                Log.d("result ", s);
+
         userDatabaseReference.child(s).child("dateWhenStopDrink").setValue(dateFormat.format(date));
+        // load last date when user drink alcohol from firebase database
+        getDateOfLastDrinkFromDatabase();
 
     }
 
@@ -263,13 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                     String key = dataSnapshot1.getKey();
-                    Log.d("snapshot", "onCreate: key :" + key);
-
                     String email = dataSnapshot1.child("email").getValue(String.class);
-                    String roomno = dataSnapshot1.child("address").getValue(String.class);
-                    Log.d("snapshot", "onDataChange: email: " + email);
-                    Log.d("snapshot", "onDataChange: email: " + auth.getCurrentUser().getEmail());
-                    Log.d("snapshot", "onDataChange: address: " + roomno);
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
                         updateDate(key);
@@ -278,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
