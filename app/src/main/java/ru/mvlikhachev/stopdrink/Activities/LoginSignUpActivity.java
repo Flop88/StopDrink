@@ -261,9 +261,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                          .toString()
                                          .trim());
         currentUser.setDateWhenStopDrink(dateFormat.format(date));
-        Log.d("testTime", " " + dateFormat.format(date));
-
-
+        currentUser.setTest(usersDatabaseReference.push().getKey());
         usersDatabaseReference.push().setValue(currentUser);
+
     }
 }

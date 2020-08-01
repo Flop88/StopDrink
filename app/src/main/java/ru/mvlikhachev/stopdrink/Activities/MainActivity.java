@@ -105,7 +105,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDate() {
-    userDatabaseReference.child(auth.getCurrentUser().getUid()).child("dateWhenStopDrink").setValue("test");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        User post = new User();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+
+        String id = currentUser.getUid();
+        String name = username;
+        String email = currentUser.getEmail();
+        String newDate = dateFormat.format(date);
+        String test = "new Test";
+
+
+        //String key = userDatabaseReference.child("users").push().getKey();
+        String key = userDatabaseReference.push().getKey();
+        Log.d("getKey", key);
+
+        //userDatabaseReference.child(key).child("dateWhenStopDrink").setValue();
+//        post.setId(id);
+//        post.setName(name);
+//        post.setEmail(email);
+//        post.setDateWhenStopDrink(newDate);
+//
+//
+//
+//        Map<String, Object> postValues = post.toMap();
+//
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        childUpdates.put(key, postValues);
+//
+//        userDatabaseReference.child("dateWhenStopDrink").removeValue();
+//
+//        userDatabaseReference.updateChildren(childUpdates);
 
     }
 

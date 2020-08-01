@@ -11,14 +11,23 @@ public class User {
     private String email;
     private String name;
     private String dateWhenStopDrink;
+    private String test;
 
     public User() {
     }
 
-    public User(String id, String email, String name, String dateWhenStopDrink) {
+    public User(String id, String name, String email, String test) {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.test = test;
+    }
+
+    public User(String id, String email, String name, String dateWhenStopDrink, String test) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.test = test;
         this.dateWhenStopDrink = dateWhenStopDrink;
     }
 
@@ -58,13 +67,22 @@ public class User {
         this.dateWhenStopDrink = dateWhenStopDrink;
     }
 
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", id);
+        result.put("id", id);
         result.put("name", name);
         result.put("email", email);
         result.put("dateWhenStopDrink", dateWhenStopDrink);
+        result.put("test", test);
 
         return result;
     }
