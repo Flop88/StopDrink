@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +41,6 @@ public class SettingActivity extends AppCompatActivity {
     private FirebaseAuth auth;
 
     private TextInputLayout newNameTextInputLayout;
-    private TextInputEditText nameTextInputEditText;
 
     private CalendarView calendarView;
     private TextView yearTextView;
@@ -107,6 +105,10 @@ public class SettingActivity extends AppCompatActivity {
 
     public void saveNewData(View view) {
 
+        if (oldDate.equals(newDate) && oldName.equals(newName)) {
+            startActivity(new Intent(SettingActivity.this, MainActivity.class));
+            finish();
+        }
         if (hasConnection(this)) {
             getUserId();
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
@@ -151,9 +153,10 @@ public class SettingActivity extends AppCompatActivity {
                     String email = dataSnapshot1.child("email").getValue(String.class);
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
-                        updateName(key);
-                        updateDate(key);
+                        updateData(key);
+                        Log.d("setValue", "TEST LOOOOOOOOOP");
                     }
+                    return;
                 }
             }
             @Override
@@ -162,10 +165,12 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void updateDate(String key) {
+    private void updateData(String key) {
 
         long iMonth = Integer.parseInt(newMonth);
         long iDay = Integer.parseInt(newDay);
+
+        newName = newNameTextInputLayout.getEditText().getText().toString();
 
         if (iMonth < 10) {
             newMonth = "0" + iMonth;
@@ -179,12 +184,30 @@ public class SettingActivity extends AppCompatActivity {
         Log.d("setValue", newDate);
         userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
 
-    }
-
-    private void updateName(String key) {
-        newName = newNameTextInputLayout.getEditText().getText().toString();
-
         Log.d("setValue", newName);
         userDatabaseReference.child(key).child("name").setValue(newName);
+
+
+    }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (FirebaseDatabase.getInstance() != null)
+        {
+            FirebaseDatabase.getInstance().goOnline();
+        }
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+
+        if(FirebaseDatabase.getInstance()!=null)
+        {
+            FirebaseDatabase.getInstance().goOffline();
+        }
     }
 }
