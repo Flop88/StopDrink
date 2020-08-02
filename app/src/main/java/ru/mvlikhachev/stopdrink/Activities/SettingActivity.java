@@ -59,10 +59,15 @@ public class SettingActivity extends AppCompatActivity {
     String newMonth;
     String newDay;
 
+    String idKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        // Убрать ActionBar
+        getSupportActionBar().hide();
 
         newNameTextInputLayout = findViewById(R.id.renameTextInputLayout);
         calendarView = findViewById(R.id.calendarView);
@@ -110,6 +115,8 @@ public class SettingActivity extends AppCompatActivity {
         }
         if (Utils.hasConnection(this)) {
             getUserId();
+
+            Log.d("setValue", "In saveNewData " + idKey);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SettingActivity.this, MainActivity.class));
             finish();
@@ -133,11 +140,13 @@ public class SettingActivity extends AppCompatActivity {
                     String email = dataSnapshot1.child("email").getValue(String.class);
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
-                        updateData(key);
-                        Log.d("setValue", "TEST LOOOOOOOOOP");
+                        idKey = key;
+                        updateData(idKey);
+                        Log.d("setValue", "In loop " + idKey);
                     }
-                    return;
+                    break;
                 }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

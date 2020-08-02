@@ -252,11 +252,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.about_program:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                finish();
                 return true;
             case R.id.settings_programm:
                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

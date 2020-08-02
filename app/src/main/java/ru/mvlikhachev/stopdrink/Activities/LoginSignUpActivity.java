@@ -52,6 +52,9 @@ public class LoginSignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_sign_up);
 
+        // Убрать ActionBar
+        getSupportActionBar().hide();
+
         textInputEmail = findViewById(R.id.textInputEmail);
         textInputName = findViewById(R.id.textInputName);
         textInputPassword = findViewById(R.id.textInputPassword);

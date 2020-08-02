@@ -14,6 +14,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // Убрать ActionBar
+        getSupportActionBar().hide();
+
         Thread thread = new Thread() {
             @Override
             public void run() {

@@ -20,6 +20,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.MainActivity"
+            android:label="Я Не Пью!"
+            android:noHistory="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SplashActivity"
