@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -113,27 +114,6 @@ public class MainActivity extends AppCompatActivity {
                     "2000/01/01 00:00:00");
         }
 
-        //Поток запуска расчета времени
-        thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1500);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setUserame(username);
-                                calculateTime(lastDrinkDate);
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
 
     }
 
@@ -257,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             timeUp = format.parse(date).getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.d("dateParseError", "ParseException e");
         }
 
         long diff = System.currentTimeMillis() - timeUp;
@@ -346,6 +326,33 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //Поток запуска расчета времени
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1500);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setUserame(username);
+                                calculateTime(lastDrinkDate);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
     }
 
     @Override
