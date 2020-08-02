@@ -3,10 +3,7 @@ package ru.mvlikhachev.stopdrink.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +30,7 @@ import java.util.Date;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,10 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private String lastDrinkDate;
 ///////////////////////////////////////////////////////////////////
 
-///////////////////////// Threads /////////////////////////////////
-    private Thread thread;
-///////////////////////////////////////////////////////////////////
-
 ////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
@@ -78,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+///////// Initialization block
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
 
-        sharedPreferences = this.getSharedPreferences(
-                APP_PREFERENCES, Context.MODE_PRIVATE
-        );
+
+        sharedPreferences = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         auth = FirebaseAuth.getInstance();
@@ -93,61 +87,38 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
 
-
-            username = "";
-            lastDrinkDate = "2000/01/01 00:00:00";
-
-
+        username = "";
+        lastDrinkDate = "2000/01/01 00:00:00";
+//////// End initialization block
 
 
-        if (hasConnection(this)) {
+        if (Utils.hasConnection(this)) {
             // load name from firebase database
             getNameFromDatabase();
             // load last date when user drink alcohol from firebase database
-            getDateOfLastDrinkFromDatabase();
-
+            Thread updateDateThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true){
+                        try {
+                            getDateOfLastDrinkFromDatabase();
+                            Thread.sleep(60000); //1000 - 1 сек
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            });
+            updateDateThread.start();
         } else {
             username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                     "Default Name");
             lastDrinkDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                     "2000/01/01 00:00:00");
         }
+
     }
 
-    // Set username in TextView
-    private void setUserame(String username) {
-        helloUsernameTextView.setText("Здраствуйте, " + username);
-    }
-
-    // Проверка подключения к интернету
-    public static boolean hasConnection(final Context context) {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        return false;
-    }
-
-    // Update Date method
-    private void updateDate(String s) {
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-
-        userDatabaseReference.child(s).child("dateWhenStopDrink").setValue(dateFormat.format(date));
-    }
 
     // Get date when user last drink alcohol from firebase database method
     private void getDateOfLastDrinkFromDatabase() {
@@ -196,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     username = user.getName();
-                    setUserame(username);
+                    helloUsernameTextView.setText("Здраствуйте, " + username);
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_NAME, username);
@@ -236,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             timeUp = format.parse(date).getTime();
         } catch (ParseException e) {
-            Log.d("dateParseError", "ParseException e");
+            e.printStackTrace();
         }
 
         long diff = System.currentTimeMillis() - timeUp;
@@ -295,16 +266,16 @@ public class MainActivity extends AppCompatActivity {
     // Button "Сорвался"
     public void resetDrinkDate(View view) {
         
-        if (hasConnection(this)) {
-            getUserId();
+        if (Utils.hasConnection(this)) {
+            updateDateAndTemeInFirebaseDatabase();
             getDateOfLastDrinkFromDatabase();
         }
 
     }
 
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
-    // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
-    private void getUserId() {
+    // емейлом авторизованного пользователя и если они сходятся - обновляем дату употребления на сервере
+    private void updateDateAndTemeInFirebaseDatabase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
         databaseReference1.addValueEventListener(new ValueEventListener() {
@@ -317,7 +288,10 @@ public class MainActivity extends AppCompatActivity {
                     String email = dataSnapshot1.child("email").getValue(String.class);
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
-                        updateDate(key);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+
+                        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(dateFormat.format(date));
                     }
                 }
             }
@@ -327,32 +301,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        //Поток запуска расчета времени
-//        thread = new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    while (!isInterrupted()) {
-//                        Thread.sleep(1500);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                setUserame(username);
-//                                calculateTime(lastDrinkDate);
-//                            }
-//                        });
-//                    }
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        thread.start();
-//    }
+
 
     @Override
     protected void onResume()

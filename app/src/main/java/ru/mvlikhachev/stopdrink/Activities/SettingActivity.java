@@ -3,8 +3,6 @@ package ru.mvlikhachev.stopdrink.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.Utils;
 
 
 public class SettingActivity extends AppCompatActivity {
@@ -109,7 +108,7 @@ public class SettingActivity extends AppCompatActivity {
             startActivity(new Intent(SettingActivity.this, MainActivity.class));
             finish();
         }
-        if (hasConnection(this)) {
+        if (Utils.hasConnection(this)) {
             getUserId();
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SettingActivity.this, MainActivity.class));
@@ -118,25 +117,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
 
-    public static boolean hasConnection(final Context context) {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
-            return true;
-        }
-        return false;
-    }
 
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
     // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
