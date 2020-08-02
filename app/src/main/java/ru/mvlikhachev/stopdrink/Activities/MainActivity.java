@@ -93,11 +93,10 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
 
-        Intent intent = getIntent();
-        if(intent != null) {
-            username = intent.getStringExtra("userName");
-            lastDrinkDate = intent.getStringExtra("drinkDate");
-        }
+
+            username = "";
+            lastDrinkDate = "2000/01/01 00:00:00";
+
 
 
 
@@ -113,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
             lastDrinkDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                     "2000/01/01 00:00:00");
         }
-
-
     }
 
     // Set username in TextView
@@ -160,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     lastDrinkDate = user.getDateWhenStopDrink();
+                    calculateTime(lastDrinkDate);
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
@@ -198,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     username = user.getName();
+                    setUserame(username);
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_NAME, username);
@@ -328,32 +327,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //Поток запуска расчета времени
-        thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1500);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setUserame(username);
-                                calculateTime(lastDrinkDate);
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        //Поток запуска расчета времени
+//        thread = new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while (!isInterrupted()) {
+//                        Thread.sleep(1500);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                setUserame(username);
+//                                calculateTime(lastDrinkDate);
+//                            }
+//                        });
+//                    }
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        thread.start();
+//    }
 
     @Override
     protected void onResume()
