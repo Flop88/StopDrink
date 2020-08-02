@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.mvlikhachev.stopdrink">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,9 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.LoginSignUpActivity"></activity>
-        <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.SplashActivity">
+        <activity android:name=".Activities.AboutActivity"
+                  android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activities.LoginSignUpActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.MainActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.SplashActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,5 +24,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

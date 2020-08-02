@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
             lastDrinkDate = intent.getStringExtra("drinkDate");
         }
 
+
+
         if (hasConnection(this)) {
             // load name from firebase database
             getNameFromDatabase();
@@ -264,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
 
         long diff = System.currentTimeMillis() - timeUp;
 
-        long diffSeconds = diff / 1000 % 60;
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000) % 24;
         long diffDays = diff / (24 * 60 * 60 * 1000);
@@ -272,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
         // Проверка если минуты и секунды меньше 10 - выполняем форматирование, чтоб красиво отображалось во вью
         String hoursString = "";
         String minutesString = "";
-        String secondsString = "";
 
         if(diffHours < 10) {
             hoursString = "0" + diffHours;
@@ -286,15 +286,8 @@ public class MainActivity extends AppCompatActivity {
             minutesString = String.valueOf(diffMinutes);
         }
 
-        if(diffSeconds < 10) {
-            secondsString = "0" + diffSeconds;
-        } else {
-            secondsString = String.valueOf(diffSeconds);
-        }
-
-
         daysTextView.setText(diffDays + " дней");
-        timeTextView.setText(hoursString + ":" + minutesString + ":" + secondsString);
+        timeTextView.setText(hoursString + ":" + minutesString);
     }
 
     @Override
@@ -310,6 +303,8 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
                 return true;
+            case R.id.about_program:
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }
