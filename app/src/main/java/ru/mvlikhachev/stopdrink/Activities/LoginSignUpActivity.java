@@ -244,6 +244,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         intent.putExtra("drinkDate", dateFormat.format(date));
 
         startActivity(intent);
+        finish();
     }
 
     private void createUser(FirebaseUser user) {

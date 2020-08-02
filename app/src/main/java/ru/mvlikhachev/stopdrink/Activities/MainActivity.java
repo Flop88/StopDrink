@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -257,9 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
         long timeUp = 0;
         try {
-            Log.d("loadTime", "В timeUp прилетело - " + date);
             timeUp = format.parse(date).getTime();
-            Log.d("loadTime", "timeUp =  " + timeUp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -302,9 +298,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.sign_out:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
+                finish();
                 return true;
             case R.id.about_program:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                finish();
+                return true;
+            case R.id.settings_programm:
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -316,9 +319,6 @@ public class MainActivity extends AppCompatActivity {
         if (hasConnection(this)) {
             getUserId();
             getDateOfLastDrinkFromDatabase();
-        } {
-
-            Toast.makeText(this, "Нет соединения с интернетом! \n Приложение не может обновить БД", Toast.LENGTH_SHORT).show();
         }
 
     }
