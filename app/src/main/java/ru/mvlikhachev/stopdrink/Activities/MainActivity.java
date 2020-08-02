@@ -2,6 +2,7 @@ package ru.mvlikhachev.stopdrink.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -36,23 +37,42 @@ import ru.mvlikhachev.stopdrink.R;
 
 public class MainActivity extends AppCompatActivity {
 
+//////////////////////// Constants ////////////////////////////////
+    // Константа файла сохранения настроек
+    public static final String APP_PREFERENCES = "datasetting";
+    public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
+    public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+///////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
     private TextView timeTextView;
     private Button resetTimeButton;
+///////////////////////////////////////////////////////////////////
 
+///////////////////////// DATA ////////////////////////////////////
     private String username;
     private String lastDrinkDate;
+///////////////////////////////////////////////////////////////////
 
+///////////////////////// Threads /////////////////////////////////
     private Thread thread;
+///////////////////////////////////////////////////////////////////
 
+////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
     private ChildEventListener loadDateUserChildeEventListener;
 
+    private FirebaseAuth auth;
+///////////////////////////////////////////////////////////////////
 
-    FirebaseAuth auth;
+///////////////////////////////////////////////////////////////////
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+///////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
+
+        sharedPreferences = this.getSharedPreferences(
+                APP_PREFERENCES, Context.MODE_PRIVATE
+        );
+        editor = sharedPreferences.edit();
 
         auth = FirebaseAuth.getInstance();
 
@@ -75,17 +100,18 @@ public class MainActivity extends AppCompatActivity {
             lastDrinkDate = intent.getStringExtra("drinkDate");
         }
 
-
         if (hasConnection(this)) {
             // load name from firebase database
             getNameFromDatabase();
             // load last date when user drink alcohol from firebase database
             getDateOfLastDrinkFromDatabase();
+
         } else {
-            Toast.makeText(this, "!Internet", Toast.LENGTH_SHORT).show();
+            username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+                    "Default Name");
+            lastDrinkDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+                    "2000/01/01 00:00:00");
         }
-
-
 
         //Поток запуска расчета времени
         thread = new Thread() {
@@ -97,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d("loadTime", "В calculateTime прилетело - " + lastDrinkDate);
+                                setUserame(username);
                                 calculateTime(lastDrinkDate);
                             }
                         });
@@ -109,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
         };
         thread.start();
 
+    }
+
+    // Set username in TextView
+    private void setUserame(String username) {
+        helloUsernameTextView.setText("Здраствуйте, " + username);
     }
 
     // Проверка подключения к интернету
@@ -132,16 +163,16 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    // Update Date method
     private void updateDate(String s) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
 
         userDatabaseReference.child(s).child("dateWhenStopDrink").setValue(dateFormat.format(date));
-        // load last date when user drink alcohol from firebase database
-
     }
 
+    // Get date when user last drink alcohol from firebase database method
     private void getDateOfLastDrinkFromDatabase() {
         loadDateUserChildeEventListener = new ChildEventListener() {
             @Override
@@ -149,7 +180,10 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     lastDrinkDate = user.getDateWhenStopDrink();
-                    Log.d("getDateDB", "date:" + lastDrinkDate);
+
+                    // Save "username" on local storage
+                    editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
+                    editor.apply();
                 }
             }
 
@@ -176,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
+    // Get name from firebase database method
     private void getNameFromDatabase() {
         userChildeEventListener = new ChildEventListener() {
             @Override
@@ -183,8 +218,10 @@ public class MainActivity extends AppCompatActivity {
                 User user = snapshot.getValue(User.class);
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     username = user.getName();
-                    helloUsernameTextView.setText("Здраствуйте, " + username);
-                    Log.d("getNameDB", "username:" + username + " " + "user.getName():"+ user.getName());
+
+                    // Save "username" on local storage
+                    editor.putString(APP_PREFERENCES_KEY_NAME, username);
+                    editor.apply();
                 }
             }
 
@@ -278,10 +315,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Button "Сорвался"
     public void resetDrinkDate(View view) {
+        
+        if (hasConnection(this)) {
+            getUserId();
+            getDateOfLastDrinkFromDatabase();
+        } {
 
-        getUserId();
-        getDateOfLastDrinkFromDatabase();
+            Toast.makeText(this, "Нет соединения с интернетом! \n Приложение не может обновить БД", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
