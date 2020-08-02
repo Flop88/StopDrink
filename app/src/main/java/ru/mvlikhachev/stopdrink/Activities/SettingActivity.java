@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.CalendarView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,11 +44,23 @@ public class SettingActivity extends AppCompatActivity {
     private TextInputLayout newNameTextInputLayout;
     private TextInputEditText nameTextInputEditText;
 
+    private CalendarView calendarView;
+    private TextView yearTextView;
+    private TextView monthTextView;
+    private TextView dayTextView;
+
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     String oldName;
     String newName;
+
+    String oldDate;
+    String newDate;
+
+    String newYear;
+    String newMonth;
+    String newDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +68,10 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         newNameTextInputLayout = findViewById(R.id.renameTextInputLayout);
+        calendarView = findViewById(R.id.calendarView);
+        yearTextView = findViewById(R.id.yearTextView);
+        monthTextView = findViewById(R.id.monthTextView);
+        dayTextView = findViewById(R.id.dayTextView);
 
         auth = FirebaseAuth.getInstance();
 
@@ -66,8 +85,23 @@ public class SettingActivity extends AppCompatActivity {
 
         oldName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name");
+        oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+                "Default Name");
 
-        newName = "";
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                newYear = String.valueOf(year);
+                newMonth = String.valueOf(month + 1);
+                newDay= String.valueOf(dayOfMonth);
+
+                yearTextView.setText(newYear);
+                monthTextView.setText(newMonth);
+                dayTextView.setText(newDay);
+            }
+        });
+
 
     }
 
@@ -118,6 +152,7 @@ public class SettingActivity extends AppCompatActivity {
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
                         updateName(key);
+                        updateDate(key);
                     }
                 }
             }
@@ -127,8 +162,29 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void updateName(String key) {
-        userDatabaseReference.child(key).child("name").setValue(newNameTextInputLayout.getEditText().getText().toString());
+    private void updateDate(String key) {
 
+        long iMonth = Integer.parseInt(newMonth);
+        long iDay = Integer.parseInt(newDay);
+
+        if (iMonth < 10) {
+            newMonth = "0" + iMonth;
+        }
+        if (iDay < 10) {
+            newDay = "0" + iDay;
+        }
+
+        newDate = newYear + "/" + newMonth + "/" + newDay + " 00:00:00";
+
+        Log.d("setValue", newDate);
+        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
+
+    }
+
+    private void updateName(String key) {
+        newName = newNameTextInputLayout.getEditText().getText().toString();
+
+        Log.d("setValue", newName);
+        userDatabaseReference.child(key).child("name").setValue(newName);
     }
 }
