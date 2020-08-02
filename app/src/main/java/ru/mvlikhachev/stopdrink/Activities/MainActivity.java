@@ -1,6 +1,9 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,9 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String username;
     private String lastDrinkDate;
-    private String newDrinkDate;
 
     private Thread thread;
 
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private ChildEventListener userChildeEventListener;
     private ChildEventListener loadDateUserChildeEventListener;
 
-    List<String> userIdList = new ArrayList();
 
     FirebaseAuth auth;
 
@@ -76,11 +76,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // load name from firebase database
-        getNameFromDatabase();
+        if (hasConnection(this)) {
+            // load name from firebase database
+            getNameFromDatabase();
+            // load last date when user drink alcohol from firebase database
+            getDateOfLastDrinkFromDatabase();
+        } else {
+            Toast.makeText(this, "!Internet", Toast.LENGTH_SHORT).show();
+        }
 
-        // load last date when user drink alcohol from firebase database
-        getDateOfLastDrinkFromDatabase();
+
 
         //Поток запуска расчета времени
         thread = new Thread() {
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(2000);
+                        Thread.sleep(1500);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -103,6 +108,28 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         thread.start();
+
+    }
+
+    // Проверка подключения к интернету
+    public static boolean hasConnection(final Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        wifiInfo = cm.getActiveNetworkInfo();
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        return false;
     }
 
     private void updateDate(String s) {
@@ -112,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
 
         userDatabaseReference.child(s).child("dateWhenStopDrink").setValue(dateFormat.format(date));
         // load last date when user drink alcohol from firebase database
-        getDateOfLastDrinkFromDatabase();
 
     }
 
@@ -254,6 +280,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void resetDrinkDate(View view) {
 
+        getUserId();
+        getDateOfLastDrinkFromDatabase();
+
+    }
+
+    // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
+    // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
+    private void getUserId() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
         databaseReference1.addValueEventListener(new ValueEventListener() {
@@ -274,6 +308,6 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
     }
+
 }
