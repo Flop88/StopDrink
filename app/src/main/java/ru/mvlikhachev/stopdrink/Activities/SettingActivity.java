@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +40,8 @@ public class SettingActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
-    private TextInputLayout newNameTextInputLayout;
+    private TextInputLayout renameTextInputLayout;
+    private TextInputEditText renameTextInputEditText;
 
     private CalendarView calendarView;
     private TextView yearTextView;
@@ -49,17 +51,17 @@ public class SettingActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    String oldName;
-    String newName;
+    private String oldName;
+    private String newName;
 
-    String oldDate;
-    String newDate;
+    private String oldDate;
+    private String newDate;
 
-    String newYear;
-    String newMonth;
-    String newDay;
+    private String newYear;
+    private String newMonth;
+    private String newDay;
 
-    String idKey;
+    private String idKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,8 @@ public class SettingActivity extends AppCompatActivity {
         // Убрать ActionBar
         getSupportActionBar().hide();
 
-        newNameTextInputLayout = findViewById(R.id.renameTextInputLayout);
+        renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
+        renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
         calendarView = findViewById(R.id.calendarView);
         yearTextView = findViewById(R.id.yearTextView);
         monthTextView = findViewById(R.id.monthTextView);
@@ -104,6 +107,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        renameTextInputEditText.setText(oldName);
 
     }
 
@@ -159,7 +163,7 @@ public class SettingActivity extends AppCompatActivity {
         long iMonth = Integer.parseInt(newMonth);
         long iDay = Integer.parseInt(newDay);
 
-        newName = newNameTextInputLayout.getEditText().getText().toString();
+        newName = renameTextInputLayout.getEditText().getText().toString();
 
         if (iMonth < 10) {
             newMonth = "0" + iMonth;

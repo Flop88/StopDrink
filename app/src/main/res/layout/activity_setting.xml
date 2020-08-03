@@ -36,12 +36,12 @@
         android:id="@+id/monthTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Год: " />
+        android:text="Месяц: " />
     <TextView
         android:id="@+id/dayTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Год: " />
+        android:text="День: " />
 
 
     <Button
