@@ -254,7 +254,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;
             case R.id.settings_programm:
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

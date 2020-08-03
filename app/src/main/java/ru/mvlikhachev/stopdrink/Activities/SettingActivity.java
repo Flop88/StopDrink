@@ -1,5 +1,7 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,9 +47,11 @@ public class SettingActivity extends AppCompatActivity {
     private TextInputEditText renameTextInputEditText;
 
     private CalendarView calendarView;
-    private TextView yearTextView;
-    private TextView monthTextView;
-    private TextView dayTextView;
+
+    private TextView testTextView;
+    int DIALOG_TIME = 1;
+    int myHour = 14;
+    int myMinute = 35;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -74,9 +79,9 @@ public class SettingActivity extends AppCompatActivity {
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
         calendarView = findViewById(R.id.calendarView);
-        yearTextView = findViewById(R.id.yearTextView);
-        monthTextView = findViewById(R.id.monthTextView);
-        dayTextView = findViewById(R.id.dayTextView);
+
+        testTextView = findViewById(R.id.tvTime);
+
 
         auth = FirebaseAuth.getInstance();
 
@@ -100,16 +105,31 @@ public class SettingActivity extends AppCompatActivity {
                 newYear = String.valueOf(year);
                 newMonth = String.valueOf(month + 1);
                 newDay= String.valueOf(dayOfMonth);
-
-                yearTextView.setText(newYear);
-                monthTextView.setText(newMonth);
-                dayTextView.setText(newDay);
             }
         });
 
         renameTextInputEditText.setText(oldName);
 
     }
+
+    public void onclick(View view) {
+        showDialog(DIALOG_TIME);
+    }
+
+    protected Dialog onCreateDialog(int id) {
+        if (id == DIALOG_TIME) {
+            TimePickerDialog tpd = new TimePickerDialog(this, myCallBack, myHour, myMinute, true);
+            return tpd;
+        }
+        return super.onCreateDialog(id);
+    }
+
+    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            myHour = hourOfDay;
+            myMinute = minute;
+        }
+    };
 
     public void saveNewData(View view) {
 
@@ -122,7 +142,9 @@ public class SettingActivity extends AppCompatActivity {
 
             Log.d("setValue", "In saveNewData " + idKey);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(SettingActivity.this, MainActivity.class));
+            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
         }
     }
@@ -172,7 +194,7 @@ public class SettingActivity extends AppCompatActivity {
             newDay = "0" + iDay;
         }
 
-        newDate = newYear + "/" + newMonth + "/" + newDay + " 00:00:00";
+        newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
 
         Log.d("setValue", newDate);
         userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
