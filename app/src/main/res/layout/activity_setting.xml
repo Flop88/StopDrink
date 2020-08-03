@@ -32,6 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:layout_marginBottom="20dp"
         android:onClick="onclick"
         android:gravity="center_horizontal"
         android:text="Установить время"
