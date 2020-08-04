@@ -41,6 +41,9 @@ public class SettingActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
 
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+
     private FirebaseAuth auth;
 
     private TextInputLayout renameTextInputLayout;
@@ -67,6 +70,8 @@ public class SettingActivity extends AppCompatActivity {
     private String newDay;
 
     private String idKey;
+
+    private ValueEventListener valueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +144,7 @@ public class SettingActivity extends AppCompatActivity {
         }
         if (Utils.hasConnection(this)) {
             getUserId();
+            //databaseReference.removeEventListener(valueEventListener);
 
             Log.d("setValue", "In saveNewData " + idKey);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
@@ -154,9 +160,10 @@ public class SettingActivity extends AppCompatActivity {
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
     // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
     private void getUserId() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
-        databaseReference1.addValueEventListener(new ValueEventListener() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("users");
+
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -177,7 +184,9 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        };
+        databaseReference.addValueEventListener(valueEventListener);
+
     }
 
     private void updateData(String key) {
