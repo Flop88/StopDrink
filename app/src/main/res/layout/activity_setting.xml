@@ -46,7 +46,9 @@
         android:id="@+id/saveNewDataButton"
         android:onClick="saveNewData"
         android:layout_gravity="center_horizontal"
-        android:text="@string/save"/>
+        android:text="@string/save"
+        style="@style/ButtonStyle"
+        />
 
 
 

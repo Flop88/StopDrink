@@ -83,9 +83,8 @@
         android:onClick="loginSignUpUser"
         android:text="@string/registration"
         android:layout_marginTop="80dp"
-        android:background="@color/primaryDarkColor"
-        android:textColor="@color/primaryLightColor"
-        android:textSize="20sp" />
+        style="@style/ButtonStyle"
+         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

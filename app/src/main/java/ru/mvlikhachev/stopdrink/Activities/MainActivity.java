@@ -265,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Button "Сорвался"
     public void resetDrinkDate(View view) {
-        
         if (Utils.hasConnection(this)) {
             updateDateAndTemeInFirebaseDatabase();
             getDateOfLastDrinkFromDatabase();

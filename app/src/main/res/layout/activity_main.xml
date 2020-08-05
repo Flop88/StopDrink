@@ -56,9 +56,7 @@
         android:onClick="resetDrinkDate"
         android:text="@string/todrink"
         android:layout_marginTop="80dp"
-        android:background="@color/primaryDarkColor"
-        android:textColor="@color/primaryLightColor"
-        android:textSize="20sp" />
+        style="@style/ButtonStyle" />
 
 
 
