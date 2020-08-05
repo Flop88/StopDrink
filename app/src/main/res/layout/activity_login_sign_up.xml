@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:hint="Email" />
+            android:hint="@string/email" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:hint="Имя" />
+            android:hint="@string/name" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="Пароль" />
+            android:hint="@string/password" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="Повторите пароль" />
+            android:hint="@string/confirmPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,7 +81,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/loginSignUpButton"
         android:onClick="loginSignUpUser"
-        android:text="Зарегистрироваться"
+        android:text="@string/registration"
         android:layout_marginTop="80dp"
         android:background="@color/primaryDarkColor"
         android:textColor="@color/primaryLightColor"
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/toggleLoginSignUpTextView"
         android:onClick="toggleLoginSignUp"
-        android:text="Или войдите"
+        android:text="@string/logIn"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:textSize="20sp"
