@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink;
+package ru.mvlikhachev.stopdrink.DAO;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils;
+import ru.mvlikhachev.stopdrink.DAO.Utils;
 
 
 public class SettingActivity extends AppCompatActivity {

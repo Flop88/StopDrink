@@ -30,7 +30,7 @@ import java.util.Date;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils;
+import ru.mvlikhachev.stopdrink.DAO.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
