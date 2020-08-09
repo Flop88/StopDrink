@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
             updateDateAndTemeInFirebaseDatabase();
             getDateOfLastDrinkFromDatabase();
         }
-
     }
 
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
@@ -299,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     @Override
