@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Stop Drink</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3120800894638034/7105898088</string>
+
+    <string name="app_name">Я не Пью!</string>
     <string name="email">Email</string>
     <string name="name">Имя</string>
     <string name="password">Пароль</string>
@@ -12,9 +15,12 @@
     <string name="setTime">Установить время</string>
     <string name="save">Сохранить</string>
     <string name="about">About</string>
-
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="settings">Настройки</string>
     <string name="aboutProgram">О программе</string>
     <string name="sign_out">Выход</string>
+    <string name="app_full_name">Приложение-счетчик дней без алкоголя</string>
+    <string name="author">Автор:</string>
+    <string name="author_name">M.V.Likhachev</string>
+    <string name="version">Версия:</string>
+    <string name="version_text">1.0.0</string>
 </resources>
