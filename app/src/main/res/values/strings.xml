@@ -7,9 +7,11 @@
     <string name="registration">Зарегистрироваться</string>
     <string name="logIn">Или войдите</string>
     <string name="youArntDrink">Вы не пьете:</string>
-    <string name="todrink">Сорвался</string>
+    <string name="todrink">Сбросить</string>
     <string name="newName">Новое имя</string>
     <string name="setTime">Установить время</string>
     <string name="save">Сохранить</string>
     <string name="about">About</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3120800894638034/7105898088</string>
 </resources>
