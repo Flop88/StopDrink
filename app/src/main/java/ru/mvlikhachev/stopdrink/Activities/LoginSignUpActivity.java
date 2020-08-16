@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -57,8 +61,15 @@ public class LoginSignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_sign_up);
 
         // AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
 
-        mAdView = findViewById(R.id.adView);
+        mAdView = new AdView(this);
+
+        mAdView = findViewById(R.id.adViewTop);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
@@ -280,5 +291,26 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         usersDatabaseReference.push().setValue(currentUser);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAdView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        mAdView.pause();
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+
+        super.onDestroy();
     }
 }

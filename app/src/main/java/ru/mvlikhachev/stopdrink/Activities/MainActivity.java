@@ -15,6 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -60,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private ChildEventListener loadDateUserChildeEventListener;
 
     private FirebaseAuth auth;
+
+    private AdView mAdView;
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
@@ -71,6 +78,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // AdMob
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = new AdView(this);
+
+        mAdView = findViewById(R.id.adViewBottom);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
 ///////// Initialization block
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
@@ -305,6 +329,8 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onResume();
 
+        mAdView.resume();
+
         if (FirebaseDatabase.getInstance() != null)
         {
             FirebaseDatabase.getInstance().goOnline();
@@ -313,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        mAdView.pause();
 
         super.onPause();
 
@@ -322,4 +349,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+
+        super.onDestroy();
+    }
 }

@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/settings_programm"
-        android:title="Настройки"
+        android:title="@string/settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/about_program"
-        android:title="О программе"
+        android:title="@string/aboutProgram"
         app:showAsAction="never" />
     <item
         android:id="@+id/sign_out"
-        android:title="Sign Out"
+        android:title="@string/sign_out"
         app:showAsAction="never" />
 
 </menu>
