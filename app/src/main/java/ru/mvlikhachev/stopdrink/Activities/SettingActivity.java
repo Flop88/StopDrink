@@ -36,6 +36,7 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "useridFromDb";
 ///////////////////////////////////////////////////////////////////
 
     private FirebaseDatabase database;
@@ -87,7 +88,6 @@ public class SettingActivity extends AppCompatActivity {
 
         testTextView = findViewById(R.id.tvTime);
 
-
         auth = FirebaseAuth.getInstance();
 
         database = FirebaseDatabase.getInstance();
@@ -102,7 +102,6 @@ public class SettingActivity extends AppCompatActivity {
                 "Default Name");
         oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "Default Name");
-
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -146,8 +145,10 @@ public class SettingActivity extends AppCompatActivity {
             getUserId();
             //databaseReference.removeEventListener(valueEventListener);
 
-            Log.d("setValue", "In saveNewData " + idKey);
+
+            Log.d("setValue", "In saveNewData ID: " + idKey);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(SettingActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -171,13 +172,17 @@ public class SettingActivity extends AppCompatActivity {
 
                     String key = dataSnapshot1.getKey();
                     String email = dataSnapshot1.child("email").getValue(String.class);
+                    String name = dataSnapshot1.child("name").getValue(String.class);
+
+                    Log.d("setValue", "getUserId method: " + key);
+                    Log.d("setValue", "getUserId method: " + email);
+                    Log.d("setValue", "getUserId method: " + name);
 
                     if (email.equals(auth.getCurrentUser().getEmail())) {
                         idKey = key;
-                        updateData(idKey);
                         Log.d("setValue", "In loop " + idKey);
+                        updateData(idKey);
                     }
-                    break;
                 }
 
             }
@@ -186,7 +191,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         };
         databaseReference.addValueEventListener(valueEventListener);
-
     }
 
     private void updateData(String key) {
@@ -210,9 +214,9 @@ public class SettingActivity extends AppCompatActivity {
 
         Log.d("setValue", newName);
         userDatabaseReference.child(key).child("name").setValue(newName);
-
-
+        return;
     }
+
     @Override
     protected void onResume()
     {

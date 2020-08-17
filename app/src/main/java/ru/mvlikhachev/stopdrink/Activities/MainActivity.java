@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "useridFromDb";
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 ///////////////////////// DATA ////////////////////////////////////
     private String username;
     private String lastDrinkDate;
+    private String userId;
 ///////////////////////////////////////////////////////////////////
 
 ////////////////////////// FIREBASE ///////////////////////////////
@@ -101,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.timeTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
 
-
         sharedPreferences = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
+        userId = "";
 //////// End initialization block
 
 
@@ -133,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             updateDateThread.start();
+
         } else {
             username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                     "Default Name");
@@ -289,32 +293,44 @@ public class MainActivity extends AppCompatActivity {
     // Button "Сорвался"
     public void resetDrinkDate(View view) {
         if (Utils.hasConnection(this)) {
-            updateDateAndTemeInFirebaseDatabase();
+            updateDateAndTimeInFirebaseDatabase();
             getDateOfLastDrinkFromDatabase();
         }
     }
 
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
     // емейлом авторизованного пользователя и если они сходятся - обновляем дату употребления на сервере
-    private void updateDateAndTemeInFirebaseDatabase() {
+    private void updateDateAndTimeInFirebaseDatabase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    String email = childSnapshot.child("email").getValue(String.class);
 
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    String key = dataSnapshot1.getKey();
-                    String email = dataSnapshot1.child("email").getValue(String.class);
-
+                    Log.d("keyS", "Value: " + key);
                     if (email.equals(auth.getCurrentUser().getEmail())) {
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date date = new Date();
-
-                        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(dateFormat.format(date));
+                        userId = key;
                     }
                 }
+                Log.d("keyS", userId);
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFormat.format(date));
+//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//
+//                    String key = dataSnapshot1.getKey();
+//                    String email = dataSnapshot1.child("email").getValue(String.class);
+//
+//                    if (email.equals(auth.getCurrentUser().getEmail())) {
+//                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//                        Date date = new Date();
+//                        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(dateFormat.format(date));
+//
+//                    }
+//                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
