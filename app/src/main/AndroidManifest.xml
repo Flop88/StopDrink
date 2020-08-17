@@ -21,6 +21,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.LoginSignUpActivity"
+            android:label="Вход"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity

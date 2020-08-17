@@ -69,6 +69,9 @@ public class SettingActivity extends AppCompatActivity {
     private String newYear;
     private String newMonth;
     private String newDay;
+    private String newHour;
+    private String newMinute;
+
 
     private String userId;
 
@@ -149,10 +152,10 @@ public class SettingActivity extends AppCompatActivity {
             Log.d("setValue", "In saveNewData ID: " + userId);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
-//            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
-//            finish();
+            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -180,28 +183,41 @@ public class SettingActivity extends AppCompatActivity {
 
                 // Set new name
                 newName = renameTextInputLayout.getEditText().getText().toString();
-                Log.d("userid", newName);
+                Log.d("userid", "newName: " + newName);
+                Log.d("userid", " ");
                 userDatabaseReference.child(userId).child("name").setValue(newName);
 
-//                long iMonth = Integer.parseInt(newMonth);
-//                long iDay = Integer.parseInt(newDay);
-//
-//                newName = renameTextInputLayout.getEditText().getText().toString();
-//
-//                if (iMonth < 10) {
-//                    newMonth = "0" + iMonth;
+                //set new date
+                long iMonth = Integer.parseInt(newMonth);
+                long iDay = Integer.parseInt(newDay);
+
+                if (iMonth < 10) {
+                    newMonth = "0" + iMonth;
+                }
+                if (iDay < 10) {
+                    newDay = "0" + iDay;
+                }
+                if (myHour < 10) {
+                    newHour = "0" + myHour;
+                } else {
+                    newHour = String.valueOf(myHour);
+                }
+//                if (myMinute < 10) {
+//                    newMinute = "0" + myMinute;
+//                } else {
+//                    newMinute = String.valueOf(myMinute);
 //                }
-//                if (iDay < 10) {
-//                    newDay = "0" + iDay;
-//                }
-//
-//                newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
-//
-//                Log.d("setValue", newDate);
-//                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
-//
-//                Log.d("setValue", newName);
-//                userDatabaseReference.child(userId).child("name").setValue(newName);
+                newMinute = "00";
+
+                newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
+                Log.d("userid", "newYear: " + newYear);
+                Log.d("userid", "newMonth: " + newMonth);
+                Log.d("userid", "newDay: " + newDay);
+                Log.d("userid", "newHour: " + newHour);
+                Log.d("userid", "newMinute: " + newMinute);
+                Log.d("userid", "newDate: " + newDate);
+                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+
 
 //                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 //
@@ -267,6 +283,16 @@ public class SettingActivity extends AppCompatActivity {
     public void onPause() {
 
         super.onPause();
+
+        if(FirebaseDatabase.getInstance()!=null)
+        {
+            FirebaseDatabase.getInstance().goOffline();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
         if(FirebaseDatabase.getInstance()!=null)
         {
