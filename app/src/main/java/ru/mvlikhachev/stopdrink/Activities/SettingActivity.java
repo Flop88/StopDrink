@@ -70,7 +70,7 @@ public class SettingActivity extends AppCompatActivity {
     private String newMonth;
     private String newDay;
 
-    private String idKey;
+    private String userId;
 
     private ValueEventListener valueEventListener;
 
@@ -146,13 +146,13 @@ public class SettingActivity extends AppCompatActivity {
             //databaseReference.removeEventListener(valueEventListener);
 
 
-            Log.d("setValue", "In saveNewData ID: " + idKey);
+            Log.d("setValue", "In saveNewData ID: " + userId);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//            finish();
         }
     }
 
@@ -167,23 +167,58 @@ public class SettingActivity extends AppCompatActivity {
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    String email = childSnapshot.child("email").getValue(String.class);
 
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    String key = dataSnapshot1.getKey();
-                    String email = dataSnapshot1.child("email").getValue(String.class);
-                    String name = dataSnapshot1.child("name").getValue(String.class);
-
-                    Log.d("setValue", "getUserId method: " + key);
-                    Log.d("setValue", "getUserId method: " + email);
-                    Log.d("setValue", "getUserId method: " + name);
-
+                    Log.d("keyS", "Value: " + key);
                     if (email.equals(auth.getCurrentUser().getEmail())) {
-                        idKey = key;
-                        Log.d("setValue", "In loop " + idKey);
-                        updateData(idKey);
+                        userId = key;
                     }
                 }
+                Log.d("userid", userId);
+
+                // Set new name
+                newName = renameTextInputLayout.getEditText().getText().toString();
+                Log.d("userid", newName);
+                userDatabaseReference.child(userId).child("name").setValue(newName);
+
+//                long iMonth = Integer.parseInt(newMonth);
+//                long iDay = Integer.parseInt(newDay);
+//
+//                newName = renameTextInputLayout.getEditText().getText().toString();
+//
+//                if (iMonth < 10) {
+//                    newMonth = "0" + iMonth;
+//                }
+//                if (iDay < 10) {
+//                    newDay = "0" + iDay;
+//                }
+//
+//                newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
+//
+//                Log.d("setValue", newDate);
+//                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+//
+//                Log.d("setValue", newName);
+//                userDatabaseReference.child(userId).child("name").setValue(newName);
+
+//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//
+//                    String key = dataSnapshot1.getKey();
+//                    String email = dataSnapshot1.child("email").getValue(String.class);
+//                    String name = dataSnapshot1.child("name").getValue(String.class);
+//
+//                    Log.d("setValue", "getUserId method: " + key);
+//                    Log.d("setValue", "getUserId method: " + email);
+//                    Log.d("setValue", "getUserId method: " + name);
+//
+//                    if (email.equals(auth.getCurrentUser().getEmail())) {
+//                        idKey = key;
+//                        Log.d("setValue", "In loop " + idKey);
+//                        updateData(idKey);
+//                    }
+//                }
 
             }
             @Override
