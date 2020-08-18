@@ -365,7 +365,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-
         mAdView.resume();
 
         if (FirebaseDatabase.getInstance() != null)
