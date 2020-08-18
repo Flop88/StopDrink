@@ -95,6 +95,7 @@ public class SettingActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
+        goOnlineConnection();
 
         sharedPreferences = this.getSharedPreferences(
                 APP_PREFERENCES, Context.MODE_PRIVATE
@@ -217,6 +218,7 @@ public class SettingActivity extends AppCompatActivity {
                 Log.d("userid", "newMinute: " + newMinute);
                 Log.d("userid", "newDate: " + newDate);
                 userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+                goOfflineConnection();
 
 
 //                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -268,22 +270,14 @@ public class SettingActivity extends AppCompatActivity {
         return;
     }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
+    private void goOnlineConnection() {
         if (FirebaseDatabase.getInstance() != null)
         {
             FirebaseDatabase.getInstance().goOnline();
         }
     }
 
-    @Override
-    public void onPause() {
-
-        super.onPause();
-
+    private void goOfflineConnection() {
         if(FirebaseDatabase.getInstance()!=null)
         {
             FirebaseDatabase.getInstance().goOffline();
@@ -291,12 +285,26 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        goOnlineConnection();
+    }
+
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+
+        goOfflineConnection();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if(FirebaseDatabase.getInstance()!=null)
-        {
-            FirebaseDatabase.getInstance().goOffline();
-        }
+        goOfflineConnection();
     }
 }

@@ -103,12 +103,13 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
 
+
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = "";
 //////// End initialization block
 
-
+        goOnlineConnectiontoDatabase();
         if (Utils.hasConnection(this)) {
             // load name from firebase database
             getNameFromDatabase();
@@ -315,45 +316,43 @@ public class MainActivity extends AppCompatActivity {
     // Button "Сорвался"
     public void resetDrinkDate(View view) {
         if (Utils.hasConnection(this)) {
-            updateDateAndTimeInFirebaseDatabase();
-            getDateOfLastDrinkFromDatabase();
+             updateDateAndTimeInFirebaseDatabase();
+             getDateOfLastDrinkFromDatabase();
         }
     }
 
     // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
     // емейлом авторизованного пользователя и если они сходятся - обновляем дату употребления на сервере
     private void updateDateAndTimeInFirebaseDatabase() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference1 = firebaseDatabase.getReference("users");
-        databaseReference1.addValueEventListener(new ValueEventListener() {
+        userDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                    String key = childSnapshot.getKey();
-                    String email = childSnapshot.child("email").getValue(String.class);
+                goOnlineConnectiontoDatabase();
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                        String key = childSnapshot.getKey();
+                        String email = childSnapshot.child("email").getValue(String.class);
 
-                    Log.d("keyS", "Value: " + key);
-                    if (email.equals(auth.getCurrentUser().getEmail())) {
-                        userId = key;
+                        Log.d("keyS", "Value: " + key);
+                        if (email.equals(auth.getCurrentUser().getEmail())) {
+                            userId = key;
+                        }
                     }
+                    Log.d("keyS", userId);
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    Date date = new Date();
+                    lastDrinkDate = dateFormat.format(date);
+                    if (date.toString() != lastDrinkDate) {
+                        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFormat.format(date));
+                    }
+
+                } else {
+                    // code if data does not  exists
+                    Log.d("keyS", "---------------------------");
+                    Log.d("keyS", "ELSE BLOCK RUN!");
                 }
-                Log.d("keyS", userId);
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Date date = new Date();
-                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFormat.format(date));
-//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-//
-//                    String key = dataSnapshot1.getKey();
-//                    String email = dataSnapshot1.child("email").getValue(String.class);
-//
-//                    if (email.equals(auth.getCurrentUser().getEmail())) {
-//                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//                        Date date = new Date();
-//                        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(dateFormat.format(date));
-//
-//                    }
-//                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -368,14 +367,22 @@ public class MainActivity extends AppCompatActivity {
 
         mAdView.resume();
 
-        if (FirebaseDatabase.getInstance() != null)
-        {
-            FirebaseDatabase.getInstance().goOnline();
-        }
+        goOnlineConnectiontoDatabase();
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else {
             Log.d("TAGG", "The interstitial wasn't loaded yet.");
+        }
+    }
+
+    private void goOfflineConnectiontoDatabase() {
+        if (database != null) {
+            database.goOffline();
+        }
+    }
+    private void goOnlineConnectiontoDatabase() {
+        if (database != null) {
+            database.goOnline();
         }
     }
 
@@ -385,16 +392,18 @@ public class MainActivity extends AppCompatActivity {
 
         super.onPause();
 
-        if(FirebaseDatabase.getInstance()!=null)
-        {
-            FirebaseDatabase.getInstance().goOffline();
-        }
+        goOfflineConnectiontoDatabase();
     }
+
 
     @Override
     protected void onDestroy() {
         mAdView.destroy();
 
+        goOfflineConnectiontoDatabase();
+
         super.onDestroy();
     }
+
+
 }
