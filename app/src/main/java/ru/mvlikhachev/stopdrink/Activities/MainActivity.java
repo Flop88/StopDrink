@@ -364,7 +364,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-
         mAdView.resume();
 
         goOnlineConnectiontoDatabase();
