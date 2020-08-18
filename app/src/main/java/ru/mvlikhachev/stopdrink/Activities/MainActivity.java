@@ -11,13 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -45,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "useridFromDb";
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
@@ -69,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    // AdMob
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 ///////////////////////////////////////////////////////////////////
 
     @Override
@@ -83,20 +87,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // AdMob
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
-        mAdView = new AdView(this);
-
-        mAdView = findViewById(R.id.adViewBottom);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
+        showAdMob();
 
 ///////// Initialization block
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
@@ -142,8 +133,39 @@ public class MainActivity extends AppCompatActivity {
                     "Default Name");
             lastDrinkDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                     "2000/01/01 00:00:00");
+            Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void showAdMob() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = new AdView(this);
+
+        mAdView = findViewById(R.id.adViewBottom);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3120800894638034/9851550730");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
     }
 
 
@@ -349,6 +371,11 @@ public class MainActivity extends AppCompatActivity {
         if (FirebaseDatabase.getInstance() != null)
         {
             FirebaseDatabase.getInstance().goOnline();
+        }
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAGG", "The interstitial wasn't loaded yet.");
         }
     }
 
