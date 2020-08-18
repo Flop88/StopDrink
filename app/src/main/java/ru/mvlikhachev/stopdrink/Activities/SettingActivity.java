@@ -115,9 +115,7 @@ public class SettingActivity extends AppCompatActivity {
                 newDay= String.valueOf(dayOfMonth);
             }
         });
-
         renameTextInputEditText.setText(oldName);
-
     }
 
     public void onclick(View view) {
@@ -218,56 +216,12 @@ public class SettingActivity extends AppCompatActivity {
                 Log.d("userid", "newMinute: " + newMinute);
                 Log.d("userid", "newDate: " + newDate);
                 userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
-                goOfflineConnection();
-
-
-//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-//
-//                    String key = dataSnapshot1.getKey();
-//                    String email = dataSnapshot1.child("email").getValue(String.class);
-//                    String name = dataSnapshot1.child("name").getValue(String.class);
-//
-//                    Log.d("setValue", "getUserId method: " + key);
-//                    Log.d("setValue", "getUserId method: " + email);
-//                    Log.d("setValue", "getUserId method: " + name);
-//
-//                    if (email.equals(auth.getCurrentUser().getEmail())) {
-//                        idKey = key;
-//                        Log.d("setValue", "In loop " + idKey);
-//                        updateData(idKey);
-//                    }
-//                }
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         };
         databaseReference.addValueEventListener(valueEventListener);
-    }
-
-    private void updateData(String key) {
-
-        long iMonth = Integer.parseInt(newMonth);
-        long iDay = Integer.parseInt(newDay);
-
-        newName = renameTextInputLayout.getEditText().getText().toString();
-
-        if (iMonth < 10) {
-            newMonth = "0" + iMonth;
-        }
-        if (iDay < 10) {
-            newDay = "0" + iDay;
-        }
-
-        newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
-
-        Log.d("setValue", newDate);
-        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
-
-        Log.d("setValue", newName);
-        userDatabaseReference.child(key).child("name").setValue(newName);
-        return;
     }
 
     private void goOnlineConnection() {
