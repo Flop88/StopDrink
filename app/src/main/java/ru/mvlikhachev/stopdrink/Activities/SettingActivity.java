@@ -36,14 +36,11 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "useridFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 ///////////////////////////////////////////////////////////////////
 
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
-
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
 
     private FirebaseAuth auth;
 
@@ -106,6 +103,8 @@ public class SettingActivity extends AppCompatActivity {
                 "Default Name");
         oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "Default Name");
+        userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                "qwerty");
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -146,7 +145,7 @@ public class SettingActivity extends AppCompatActivity {
             finish();
         }
         if (Utils.hasConnection(this)) {
-            getUserId();
+            updateData();
             //databaseReference.removeEventListener(valueEventListener);
 
 
@@ -160,98 +159,14 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
+    private void updateData() {
+        // Set new name
+        newName = renameTextInputLayout.getEditText().getText().toString();
+        userDatabaseReference.child(userId).child("name").setValue(newName);
 
-
-    // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
-    // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
-    private void getUserId() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("users");
-
-        valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                    String key = childSnapshot.getKey();
-                    String email = childSnapshot.child("email").getValue(String.class);
-
-                    Log.d("keyS", "Value: " + key);
-                    if (email.equals(auth.getCurrentUser().getEmail())) {
-                        userId = key;
-                    }
-                }
-                Log.d("userid", userId);
-
-                // Set new name
-                newName = renameTextInputLayout.getEditText().getText().toString();
-                Log.d("userid", "newName: " + newName);
-                Log.d("userid", " ");
-                userDatabaseReference.child(userId).child("name").setValue(newName);
-
-                //set new date
-                long iMonth = Integer.parseInt(newMonth);
-                long iDay = Integer.parseInt(newDay);
-
-                if (iMonth < 10) {
-                    newMonth = "0" + iMonth;
-                }
-                if (iDay < 10) {
-                    newDay = "0" + iDay;
-                }
-                if (myHour < 10) {
-                    newHour = "0" + myHour;
-                } else {
-                    newHour = String.valueOf(myHour);
-                }
-//                if (myMinute < 10) {
-//                    newMinute = "0" + myMinute;
-//                } else {
-//                    newMinute = String.valueOf(myMinute);
-//                }
-                newMinute = "00";
-
-                newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
-                Log.d("userid", "newYear: " + newYear);
-                Log.d("userid", "newMonth: " + newMonth);
-                Log.d("userid", "newDay: " + newDay);
-                Log.d("userid", "newHour: " + newHour);
-                Log.d("userid", "newMinute: " + newMinute);
-                Log.d("userid", "newDate: " + newDate);
-                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
-                goOfflineConnection();
-
-
-//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-//
-//                    String key = dataSnapshot1.getKey();
-//                    String email = dataSnapshot1.child("email").getValue(String.class);
-//                    String name = dataSnapshot1.child("name").getValue(String.class);
-//
-//                    Log.d("setValue", "getUserId method: " + key);
-//                    Log.d("setValue", "getUserId method: " + email);
-//                    Log.d("setValue", "getUserId method: " + name);
-//
-//                    if (email.equals(auth.getCurrentUser().getEmail())) {
-//                        idKey = key;
-//                        Log.d("setValue", "In loop " + idKey);
-//                        updateData(idKey);
-//                    }
-//                }
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        };
-        databaseReference.addValueEventListener(valueEventListener);
-    }
-
-    private void updateData(String key) {
-
+        //set new date
         long iMonth = Integer.parseInt(newMonth);
         long iDay = Integer.parseInt(newDay);
-
-        newName = renameTextInputLayout.getEditText().getText().toString();
 
         if (iMonth < 10) {
             newMonth = "0" + iMonth;
@@ -259,15 +174,21 @@ public class SettingActivity extends AppCompatActivity {
         if (iDay < 10) {
             newDay = "0" + iDay;
         }
+        if (myHour < 10) {
+            newHour = "0" + myHour;
+        } else {
+            newHour = String.valueOf(myHour);
+        }
+        if (myMinute < 10) {
+            newMinute = "0" + myMinute;
+        } else {
+            newMinute = String.valueOf(myMinute);
+        }
 
-        newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
+        newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
 
-        Log.d("setValue", newDate);
-        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
-
-        Log.d("setValue", newName);
-        userDatabaseReference.child(key).child("name").setValue(newName);
-        return;
+        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+        goOfflineConnection();
     }
 
     private void goOnlineConnection() {
