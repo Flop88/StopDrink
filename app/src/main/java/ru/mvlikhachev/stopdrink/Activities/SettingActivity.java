@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.DAO.Utils;
 
@@ -106,13 +108,17 @@ public class SettingActivity extends AppCompatActivity {
         userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty");
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                newYear = String.valueOf(year);
-                newMonth = String.valueOf(month + 1);
-                newDay= String.valueOf(dayOfMonth);
-            }
+        // Устанавливаем текущую дату максимальным числом в календаре
+        Calendar calendar = Calendar.getInstance();
+        long currentDate = calendar.getTimeInMillis();
+        Log.d("currentDate", String.valueOf(currentDate));
+        calendarView.setMaxDate(currentDate);
+
+
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            newYear = String.valueOf(year);
+            newMonth = String.valueOf(month + 1);
+            newDay= String.valueOf(dayOfMonth);
         });
 
         renameTextInputEditText.setText(oldName);
