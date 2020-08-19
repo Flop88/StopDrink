@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
@@ -336,6 +337,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("keyS", "Value: " + key);
                         if (email.equals(auth.getCurrentUser().getEmail())) {
                             userId = key;
+
+                            // Save "userId" on local storage
+                            editor.putString(APP_PREFERENCES_KEY_USERID, userId);
+                            editor.apply();
                         }
                     }
                     Log.d("keyS", userId);
@@ -366,7 +371,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mAdView.resume();
 
+        getDateOfLastDrinkFromDatabase();
         goOnlineConnectiontoDatabase();
+
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else {
