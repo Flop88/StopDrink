@@ -108,10 +108,13 @@ public class SettingActivity extends AppCompatActivity {
         userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty");
 
+        Log.d("settingActivityData", "oldName: " + oldName);
+        Log.d("settingActivityData", "oldDate: " + oldDate);
+        Log.d("settingActivityData", "userId: " + userId);
+
         // Устанавливаем текущую дату максимальным числом в календаре
         Calendar calendar = Calendar.getInstance();
         long currentDate = calendar.getTimeInMillis();
-        Log.d("currentDate", String.valueOf(currentDate));
         calendarView.setMaxDate(currentDate);
 
 
@@ -146,16 +149,10 @@ public class SettingActivity extends AppCompatActivity {
 
     public void saveNewData(View view) {
 
-        if (oldDate.equals(newDate) && oldName.equals(newName)) {
-            startActivity(new Intent(SettingActivity.this, MainActivity.class));
-            finish();
-        }
         if (Utils.hasConnection(this)) {
             updateData();
             //databaseReference.removeEventListener(valueEventListener);
 
-
-            Log.d("setValue", "In saveNewData ID: " + userId);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(SettingActivity.this, MainActivity.class);
@@ -166,10 +163,12 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void updateData() {
-        // Set new name
-        newName = renameTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).child("name").setValue(newName);
+        setNewNameInDb();
+        setNewDataInDb();
 
+    }
+
+    private void setNewDataInDb() {
         //set new date
         long iMonth = Integer.parseInt(newMonth);
         long iDay = Integer.parseInt(newDay);
@@ -194,7 +193,18 @@ public class SettingActivity extends AppCompatActivity {
         newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
 
         userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
-        goOfflineConnection();
+
+        editor.putString(APP_PREFERENCES_KEY_DATE, newDate);
+        editor.apply();
+    }
+
+    private void setNewNameInDb() {
+        // Set new name
+        newName = renameTextInputLayout.getEditText().getText().toString();
+        userDatabaseReference.child(userId).child("name").setValue(newName);
+
+        editor.putString(APP_PREFERENCES_KEY_NAME, newName);
+        editor.apply();
     }
 
     private void goOnlineConnection() {

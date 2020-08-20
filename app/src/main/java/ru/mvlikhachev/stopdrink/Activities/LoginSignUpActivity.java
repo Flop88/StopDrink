@@ -26,10 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import ru.mvlikhachev.stopdrink.DAO.Utils;
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 
@@ -88,7 +86,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
 
         authorizationUi();
-        
+
         auth = FirebaseAuth.getInstance();
 
         database = FirebaseDatabase.getInstance();
@@ -98,7 +96,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(LoginSignUpActivity.this, MainActivity.class));
         }
-        
+
     }
     private boolean validateEmail() {
 
@@ -147,8 +145,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
         if (passwordInput.isEmpty()) {
             textInputPassword.setError("Введите Ваше имя!");
             return false;
-        } else if (passwordInput.length() > 7) {
-            textInputPassword.setError("Пароль должно быть меньше 7 символов!");
+        } else if (passwordInput.length() < 6) {
+            textInputPassword.setError("Пароль должно быть больше 6 символов!");
             return false;
         }  else {
             textInputPassword.setError("");
@@ -261,14 +259,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private void startApp() {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-
         Intent intent = new Intent(LoginSignUpActivity.this,
                 MainActivity.class);
 
         intent.putExtra("userName", textInputName.getEditText().getText().toString().trim());
-        intent.putExtra("drinkDate", dateFormat.format(date));
+        intent.putExtra("drinkDate", Utils.getCurrentDate());
 
         startActivity(intent);
         finish();
@@ -278,16 +273,13 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         User currentUser = new User();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-
         currentUser.setId(user.getUid());
         currentUser.setEmail(user.getEmail());
         currentUser.setName(textInputName.getEditText()
-                                         .getText()
-                                         .toString()
-                                         .trim());
-        currentUser.setDateWhenStopDrink(dateFormat.format(date));
+                .getText()
+                .toString()
+                .trim());
+        currentUser.setDateWhenStopDrink(Utils.getCurrentDate());
 
         usersDatabaseReference.push().setValue(currentUser);
 
