@@ -178,6 +178,45 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Get name from firebase database method
+    private void getNameFromDatabase() {
+        userChildeEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    username = user.getName();
+                    helloUsernameTextView.setText("Здраствуйте, " + username);
+
+                    // Save "username" on local storage
+                    editor.putString(APP_PREFERENCES_KEY_NAME, username);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        userDatabaseReference.addChildEventListener(userChildeEventListener);
+    }
 
     // Get date when user last drink alcohol from firebase database method
     private void getDateOfLastDrinkFromDatabase() {
@@ -219,45 +258,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
-    // Get name from firebase database method
-    private void getNameFromDatabase() {
-        userChildeEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User user = snapshot.getValue(User.class);
-                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    username = user.getName();
-                    helloUsernameTextView.setText("Здраствуйте, " + username);
-
-                    // Save "username" on local storage
-                    editor.putString(APP_PREFERENCES_KEY_NAME, username);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        userDatabaseReference.addChildEventListener(userChildeEventListener);
-    }
 
     // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
     private String getUserId() {
