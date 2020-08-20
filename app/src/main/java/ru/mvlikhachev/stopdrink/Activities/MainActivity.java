@@ -295,23 +295,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sign_out:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
-                finish();
-                return true;
-            case R.id.about_program:
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                return true;
-            case R.id.settings_programm:
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        // Если пользователь авторизован - сразу открыть мэйн активити
+        if (auth.getCurrentUser() != null) {
+            switch (item.getItemId()) {
+                case R.id.sign_out:
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
+                    finish();
+                    return true;
+                case R.id.about_program:
+                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                    return true;
+                case R.id.settings_programm:
+                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
+        return super.onOptionsItemSelected(item); // хз зачем, но без нее не работает
     }
 
     // Button "Сорвался"
@@ -334,27 +338,23 @@ public class MainActivity extends AppCompatActivity {
                         String key = childSnapshot.getKey();
                         String email = childSnapshot.child("email").getValue(String.class);
 
-                        Log.d("keyS", "Value: " + key);
                         if (email.equals(auth.getCurrentUser().getEmail())) {
                             userId = key;
-
                             // Save "userId" on local storage
                             editor.putString(APP_PREFERENCES_KEY_USERID, userId);
                             editor.apply();
                         }
                     }
-                    Log.d("keyS", userId);
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     Date date = new Date();
                     lastDrinkDate = dateFormat.format(date);
-                    if (date.toString() != lastDrinkDate) {
-                        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFormat.format(date));
-                    }
+                    String dateFirebase = dateFormat.format(date);
 
-                } else {
-                    // code if data does not  exists
-                    Log.d("keyS", "---------------------------");
-                    Log.d("keyS", "ELSE BLOCK RUN!");
+                    if (date.toString() != lastDrinkDate) {
+                        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFirebase);
+                        editor.putString(APP_PREFERENCES_KEY_DATE, dateFirebase);
+                        editor.apply();
+                    }
                 }
             }
 
@@ -362,6 +362,17 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    private void goOfflineConnectiontoDatabase() {
+        if (database != null) {
+            database.goOffline();
+        }
+    }
+    private void goOnlineConnectiontoDatabase() {
+        if (database != null) {
+            database.goOnline();
+        }
     }
 
 
@@ -378,17 +389,6 @@ public class MainActivity extends AppCompatActivity {
             mInterstitialAd.show();
         } else {
             Log.d("TAGG", "The interstitial wasn't loaded yet.");
-        }
-    }
-
-    private void goOfflineConnectiontoDatabase() {
-        if (database != null) {
-            database.goOffline();
-        }
-    }
-    private void goOnlineConnectiontoDatabase() {
-        if (database != null) {
-            database.goOnline();
         }
     }
 

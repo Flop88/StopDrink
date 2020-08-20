@@ -147,8 +147,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
         if (passwordInput.isEmpty()) {
             textInputPassword.setError("Введите Ваше имя!");
             return false;
-        } else if (passwordInput.length() > 7) {
-            textInputPassword.setError("Пароль должно быть меньше 7 символов!");
+        } else if (passwordInput.length() < 6) {
+            textInputPassword.setError("Пароль должно быть больше 6 символов!");
             return false;
         }  else {
             textInputPassword.setError("");

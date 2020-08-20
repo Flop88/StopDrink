@@ -194,6 +194,13 @@ public class SettingActivity extends AppCompatActivity {
         newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
 
         userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+
+        // Update database reference
+        // Save "username" on local storage
+        editor.putString(APP_PREFERENCES_KEY_DATE, newName);
+        editor.putString(APP_PREFERENCES_KEY_DATE, newDate);
+        editor.apply();
+
         goOfflineConnection();
     }
 
