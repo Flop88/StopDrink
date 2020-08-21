@@ -1,21 +1,29 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -32,15 +40,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.DAO.Utils;
+import ru.mvlikhachev.stopdrink.Utils.Utils;
+import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,19 +54,23 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+
+    public static final String CHANNEL_ID = "exampleChannel";
+    public static final int NOTIFICATION_ID = 1;
 ///////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
     private TextView timeTextView;
-    private Button resetTimeButton;
+    private ImageView logoImageView;
 ///////////////////////////////////////////////////////////////////
 
     ///////////////////////// DATA ////////////////////////////////////
     private String username;
     private String lastDrinkDate;
     private String userId;
+    private String daysWithoutDrink;
 ///////////////////////////////////////////////////////////////////
 
     ////////////////////////// FIREBASE ///////////////////////////////
@@ -83,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 ///////////////////////////////////////////////////////////////////
 
+    private NotificationManagerCompat notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
-        resetTimeButton = findViewById(R.id.resetTimeButton);
+        logoImageView = findViewById(R.id.logoImageView);
 
         sharedPreferences = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -109,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = getUserId();
+        daysWithoutDrink = "0";
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
@@ -146,8 +157,53 @@ public class MainActivity extends AppCompatActivity {
                     "2000/01/01 00:00:00");
             Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
+        notificationManager = NotificationManagerCompat.from(this);
+
+
+        logoImageView.setOnLongClickListener(v -> {
+
+            createNotificationChannel();
+            showNotification();
+            return false;
+        });
     }
 
+    // Create notification method
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Example Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    // Show notification method
+    public void showNotification() {
+        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+                R.layout.notification_collapsed);
+        RemoteViews expandedView = new RemoteViews(getPackageName(),
+                R.layout.notification_expanded);
+        Intent clickIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,
+                0, clickIntent, 0);
+        collapsedView.setTextViewText(R.id.notificationHelloTextView, "Поздравляем!");
+        collapsedView.setTextViewText(R.id.descriptionNotificationHelloTextView, "Вы не пьете - " + daysWithoutDrink + " дней");
+        expandedView.setTextViewText(R.id.expandedDaysTextViw, "Не пью дней - " + daysWithoutDrink + "!");
+        expandedView.setOnClickPendingIntent(R.id.expandedDaysTextViw, clickPendingIntent);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setCustomContentView(collapsedView)
+                .setCustomBigContentView(expandedView)
+                //.setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .build();
+        notificationManager.notify(1, notification);
+    }
+
+    // AdMob show AD method
     private void showAdMob() {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -188,7 +244,14 @@ public class MainActivity extends AppCompatActivity {
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     lastDrinkDate = user.getDateWhenStopDrink();
                     String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
+                    daysWithoutDrink = dates[0];
                     setNotDrinkTime(dates[0],dates[1],dates[2]);
+
+                    // Show notification if hour = 00 and minute = 00
+                    if (dates[1].equals("00") && dates[2].equals("00")) {
+                        showNotificationWithDate(dates[0]);
+                    }
+
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
@@ -217,6 +280,24 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
+    }
+
+    private void showNotificationWithDate(String date) {
+        switch (date) {
+            case "7":
+            case "14":
+            case "21":
+            case "50":
+            case "100":
+            case "150":
+            case "200":
+            case "250":
+            case "300":
+            case "365":
+                createNotificationChannel();
+                showNotification();
+                break;
+        }
     }
 
     // Get name from firebase database method
@@ -297,6 +378,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Set date data in TextView
     private void setNotDrinkTime(String days, String hours, String minutes) {
         daysTextView.setText(days + " дней");
         timeTextView.setText(hours + ":" + minutes);
@@ -307,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         if (Utils.hasConnection(this)) {
             String id = getUserId();
             String updateDate = Utils.getCurrentDate();
-           // Log.d("resetDrink", "вставим дату - " + updateDate);
+            // Log.d("resetDrink", "вставим дату - " + updateDate);
             userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
 
             String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
@@ -391,9 +473,9 @@ public class MainActivity extends AppCompatActivity {
                     lastDrinkDate = Utils.getCurrentDate();
                     String dateFirebase = Utils.getCurrentDate();
 
-                        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFirebase);
-                        editor.putString(APP_PREFERENCES_KEY_DATE, dateFirebase);
-                        editor.apply();
+                    userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFirebase);
+                    editor.putString(APP_PREFERENCES_KEY_DATE, dateFirebase);
+                    editor.apply();
                 }
             }
 
