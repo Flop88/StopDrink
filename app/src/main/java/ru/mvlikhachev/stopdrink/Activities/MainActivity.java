@@ -166,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
     });
     }
+
+    // Create notification method
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Show notification method
     public void showNotification() {
         RemoteViews collapsedView = new RemoteViews(getPackageName(),
                 R.layout.notification_collapsed);
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(1, notification);
     }
 
-
+    // AdMob show AD method
     private void showAdMob() {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -242,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                     String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
                     daysWithoutDrink = dates[0];
                     setNotDrinkTime(dates[0],dates[1],dates[2]);
+                    showNotificationWithDate(dates[0]);
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
@@ -270,6 +274,24 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
+    }
+
+    private void showNotificationWithDate(String date) {
+        switch (date) {
+            case "7":
+            case "14":
+            case "21":
+            case "50":
+            case "100":
+            case "150":
+            case "200":
+            case "250":
+            case "300":
+            case "365":
+                createNotificationChannel();
+                showNotification();
+                break;
+        }
     }
 
     // Get name from firebase database method
@@ -350,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Set date data in TextView
     private void setNotDrinkTime(String days, String hours, String minutes) {
         daysTextView.setText(days + " дней");
         timeTextView.setText(hours + ":" + minutes);
