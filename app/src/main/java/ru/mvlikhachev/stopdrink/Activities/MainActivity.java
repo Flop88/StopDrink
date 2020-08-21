@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         }
         notificationManager = NotificationManagerCompat.from(this);
 
+
         logoImageView.setOnLongClickListener(v -> {
 
             createNotificationChannel();
@@ -245,7 +246,12 @@ public class MainActivity extends AppCompatActivity {
                     String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
                     daysWithoutDrink = dates[0];
                     setNotDrinkTime(dates[0],dates[1],dates[2]);
-                    showNotificationWithDate(dates[0]);
+
+                    // Show notification if hour = 00 and minute = 00
+                    if (dates[1].equals("00") && dates[2].equals("00")) {
+                        showNotificationWithDate(dates[0]);
+                    }
+
 
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
