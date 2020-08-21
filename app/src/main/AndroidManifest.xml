@@ -39,6 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".Utils.NotificationReceiver" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
