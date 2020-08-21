@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private String username;
     private String lastDrinkDate;
     private String userId;
+    private String daysWithoutDrink;
 ///////////////////////////////////////////////////////////////////
 
     ////////////////////////// FIREBASE ///////////////////////////////
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = getUserId();
+        daysWithoutDrink = "0";
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
@@ -184,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
         Intent clickIntent = new Intent(this, NotificationReceiver.class);
         PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,
                 0, clickIntent, 0);
-        collapsedView.setTextViewText(R.id.text_view_collapsed_1, "Hello World!");
+        collapsedView.setTextViewText(R.id.notificationHelloTextView, "Поздравляем!");
+        collapsedView.setTextViewText(R.id.descriptionNotificationHelloTextView, "Вы не пьете - " + daysWithoutDrink + " дней");
         expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -237,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     lastDrinkDate = user.getDateWhenStopDrink();
                     String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
+                    daysWithoutDrink = dates[0];
                     setNotDrinkTime(dates[0],dates[1],dates[2]);
 
                     // Save "username" on local storage

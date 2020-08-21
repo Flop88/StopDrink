@@ -16,19 +16,18 @@
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="9"
-        android:gravity="left"
-        android:paddingTop="12dp"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text_view_collapsed_1"
+            android:id="@+id/notificationHelloTextView"
             style="@style/TextAppearance.Compat.Notification.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Message!"
             android:textColor="@color/colorPrimary" />
         <TextView
-            android:id="@+id/text_view_collapsed_2"
+            android:id="@+id/descriptionNotificationHelloTextView"
             style="@style/TextAppearance.Compat.Notification.Info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
