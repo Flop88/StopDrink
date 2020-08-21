@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="256dp"
+    android:layout_height="280dp"
     android:orientation="vertical">
     <TextView
         android:id="@+id/text_view_expanded"
         style="@style/TextAppearance.Compat.Notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_light"
+        android:background="@color/primaryDarkColor"
         android:padding="8dp"
-        android:text="This is a custom notification"
+        android:text="@string/app_name"
         android:textAlignment="center"
         android:textColor="#FFF" />
-    <ImageView
-        android:id="@+id/image_view_expanded"
+
+
+    <TextView
+        android:id="@+id/expandedDaysTextViw"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher_logo" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Не пью дней - 23"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+
+        android:background="@drawable/logo_without_text" />
 </LinearLayout>

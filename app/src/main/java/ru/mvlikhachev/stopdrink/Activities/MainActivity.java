@@ -188,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
                 0, clickIntent, 0);
         collapsedView.setTextViewText(R.id.notificationHelloTextView, "Поздравляем!");
         collapsedView.setTextViewText(R.id.descriptionNotificationHelloTextView, "Вы не пьете - " + daysWithoutDrink + " дней");
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo);
-        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
+        expandedView.setTextViewText(R.id.expandedDaysTextViw, "Не пью дней - " + daysWithoutDrink + "!");
+        expandedView.setOnClickPendingIntent(R.id.expandedDaysTextViw, clickPendingIntent);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setCustomContentView(collapsedView)
