@@ -13,14 +13,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -28,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.DAO.Utils;
+import ru.mvlikhachev.stopdrink.Utils.Utils;
 
 
 public class SettingActivity extends AppCompatActivity {

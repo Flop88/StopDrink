@@ -1,21 +1,29 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -32,15 +40,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.DAO.Utils;
+import ru.mvlikhachev.stopdrink.Utils.Utils;
+import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,13 +54,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+
+    public static final String CHANNEL_ID = "exampleChannel";
+    public static final int NOTIFICATION_ID = 1;
 ///////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
     private TextView timeTextView;
-    private Button resetTimeButton;
+    private ImageView logoImageView;
 ///////////////////////////////////////////////////////////////////
 
     ///////////////////////// DATA ////////////////////////////////////
@@ -83,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 ///////////////////////////////////////////////////////////////////
 
+    private NotificationManagerCompat notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
-        resetTimeButton = findViewById(R.id.resetTimeButton);
+        logoImageView = findViewById(R.id.logoImageView);
 
         sharedPreferences = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -146,7 +155,47 @@ public class MainActivity extends AppCompatActivity {
                     "2000/01/01 00:00:00");
             Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
+        notificationManager = NotificationManagerCompat.from(this);
+
+        logoImageView.setOnLongClickListener(v -> {
+
+            createNotificationChannel();
+            showNotification();
+            return false;
+    });
     }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Example Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    public void showNotification() {
+        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+                R.layout.notification_collapsed);
+        RemoteViews expandedView = new RemoteViews(getPackageName(),
+                R.layout.notification_expanded);
+        Intent clickIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,
+                0, clickIntent, 0);
+        collapsedView.setTextViewText(R.id.text_view_collapsed_1, "Hello World!");
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo);
+        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setCustomContentView(collapsedView)
+                .setCustomBigContentView(expandedView)
+                //.setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .build();
+        notificationManager.notify(1, notification);
+    }
+
 
     private void showAdMob() {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
