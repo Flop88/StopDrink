@@ -32,6 +32,8 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +41,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 
 import ru.mvlikhachev.stopdrink.Model.User;
@@ -54,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
-
-    public static final String CHANNEL_ID = "exampleChannel";
-    public static final int NOTIFICATION_ID = 1;
 ///////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////
@@ -162,46 +163,26 @@ public class MainActivity extends AppCompatActivity {
 
         logoImageView.setOnLongClickListener(v -> {
 
-            createNotificationChannel();
-            showNotification();
+            NotificationReceiver.createNotificationChannel(this);
+            Notification notification = NotificationReceiver.showNotification(this, daysWithoutDrink);
+            notificationManager.notify(1, notification);
+
             return false;
     });
     }
 
-    // Create notification method
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Example Channel",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-    }
-
-    // Show notification method
-    public void showNotification() {
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
-                R.layout.notification_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
-                R.layout.notification_expanded);
-        Intent clickIntent = new Intent(this, NotificationReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,
-                0, clickIntent, 0);
-        collapsedView.setTextViewText(R.id.notificationHelloTextView, "Поздравляем!");
-        collapsedView.setTextViewText(R.id.descriptionNotificationHelloTextView, "Вы не пьете - " + daysWithoutDrink + " дней");
-        expandedView.setTextViewText(R.id.expandedDaysTextViw, "Не пью дней - " + daysWithoutDrink + "!");
-        expandedView.setOnClickPendingIntent(R.id.expandedDaysTextViw, clickPendingIntent);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setCustomContentView(collapsedView)
-                .setCustomBigContentView(expandedView)
-                //.setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .build();
-        notificationManager.notify(1, notification);
-    }
+//    // Create notification method
+//    private void createNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(
+//                    CHANNEL_ID,
+//                    "Example Channel",
+//                    NotificationManager.IMPORTANCE_HIGH
+//            );
+//            NotificationManager manager = getSystemService(NotificationManager.class);
+//            manager.createNotificationChannel(channel);
+//        }
+//    }
 
     // AdMob show AD method
     private void showAdMob() {
@@ -294,8 +275,9 @@ public class MainActivity extends AppCompatActivity {
             case "250":
             case "300":
             case "365":
-                createNotificationChannel();
-                showNotification();
+                NotificationReceiver.createNotificationChannel(this);
+                Notification notification = NotificationReceiver.showNotification(this, daysWithoutDrink);
+                notificationManager.notify(1, notification);
                 break;
         }
     }
