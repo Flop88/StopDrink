@@ -1,8 +1,24 @@
 package ru.mvlikhachev.stopdrink.Utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,6 +26,47 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utils {
+    //////////////////////// Constants ////////////////////////////////
+    // Константа файла сохранения настроек
+    public static final String APP_PREFERENCES = "datasetting";
+    public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
+    public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+///////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////
+    private TextView helloUsernameTextView;
+    private TextView daysTextView;
+    private TextView timeTextView;
+    private ImageView logoImageView;
+///////////////////////////////////////////////////////////////////
+
+    ///////////////////////// DATA ////////////////////////////////////
+    private String username;
+    private String lastDrinkDate;
+    private String userId;
+    private String daysWithoutDrink;
+///////////////////////////////////////////////////////////////////
+
+    ////////////////////////// FIREBASE ///////////////////////////////
+    private FirebaseDatabase database;
+    private DatabaseReference userDatabaseReference;
+    private ChildEventListener userChildeEventListener;
+    private ChildEventListener loadDateUserChildeEventListener;
+
+    private FirebaseAuth auth;
+
+    // AdMob
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+///////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+///////////////////////////////////////////////////////////////////
+
+    private NotificationManagerCompat notificationManager;
 
     // Проверка подключения к интернету
     public static boolean hasConnection(final Context context) {
@@ -79,5 +136,82 @@ public class Utils {
         result[2] = minutesString;
 
         return result;
+    }
+
+    public static void goOfflineConnectiontoDatabase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if (database != null) {
+            database.goOffline();
+        }
+    }
+    public static void goOnlineConnectiontoDatabase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if (database != null) {
+            database.goOnline();
+        }
+    }
+
+    // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
+    public static String getUserId(Context context) {
+        final String[] result = {""};
+        SharedPreferences sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userDatabaseReference = database.getReference().child("users");
+        if (Utils.hasConnection(context)) {
+            userDatabaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    goOnlineConnectiontoDatabase();
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                            String key = childSnapshot.getKey();
+                            String email = childSnapshot.child("email").getValue(String.class);
+
+                            if (email.equals(auth.getCurrentUser().getEmail())) {
+                                result[0] = key;
+                                // Save "userId" on local storage
+
+                                editor.putString(APP_PREFERENCES_KEY_USERID, result[0]);
+                                editor.apply();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                    "qwerty");
+
+            return result[0];
+        } else {
+            return  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                    "qwerty");
+        }
+    }
+
+    // Show notification method
+    public static void showNotificationWithDate(Context context, String date) {
+        switch (date) {
+            case "7":
+            case "14":
+            case "21":
+            case "50":
+            case "100":
+            case "150":
+            case "200":
+            case "250":
+            case "300":
+            case "365":
+                NotificationReceiver.createNotificationChannel(context);
+                NotificationReceiver.showNotification(context, date);
+                break;
+        }
     }
 }

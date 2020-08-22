@@ -45,7 +45,8 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
     // Show notification method
-    public static Notification showNotification(Context context, String day) {
+    public static void showNotification(Context context, String day) {
+        NotificationManagerCompat notificationManager;
         RemoteViews collapsedView = new RemoteViews(context.getPackageName(),
                 R.layout.notification_collapsed);
         RemoteViews expandedView = new RemoteViews(context.getPackageName(),
@@ -63,6 +64,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setCustomBigContentView(expandedView)
                 //.setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .build();
-        return notification;
+        notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(1, notification);
     }
 }

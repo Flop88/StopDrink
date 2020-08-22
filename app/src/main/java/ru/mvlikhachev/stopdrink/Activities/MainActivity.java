@@ -50,44 +50,38 @@ import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 
+import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
+import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
-    //////////////////////// Constants ////////////////////////////////
+//////////////////////// Constants ////////////////////////////////////
     // Константа файла сохранения настроек
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
-///////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////
+////////////////////// INITIALIZATION /////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
     private TextView timeTextView;
     private ImageView logoImageView;
-///////////////////////////////////////////////////////////////////
-
-    ///////////////////////// DATA ////////////////////////////////////
+ ///////////////////////// DATA ////////////////////////////////////
     private String username;
     private String lastDrinkDate;
     private String userId;
     private String daysWithoutDrink;
-///////////////////////////////////////////////////////////////////
-
-    ////////////////////////// FIREBASE ///////////////////////////////
+ ////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
     private ChildEventListener loadDateUserChildeEventListener;
-
     private FirebaseAuth auth;
 
     // AdMob
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
 ///////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 ///////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
-        userId = getUserId();
+        userId = Utils.getUserId(this);
         daysWithoutDrink = "0";
 //////// End initialization block
 
@@ -164,32 +158,16 @@ public class MainActivity extends AppCompatActivity {
         logoImageView.setOnLongClickListener(v -> {
 
             NotificationReceiver.createNotificationChannel(this);
-            Notification notification = NotificationReceiver.showNotification(this, daysWithoutDrink);
-            notificationManager.notify(1, notification);
+            NotificationReceiver.showNotification(this, daysWithoutDrink);
 
             return false;
     });
     }
 
-//    // Create notification method
-//    private void createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(
-//                    CHANNEL_ID,
-//                    "Example Channel",
-//                    NotificationManager.IMPORTANCE_HIGH
-//            );
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            manager.createNotificationChannel(channel);
-//        }
-//    }
-
     // AdMob show AD method
     private void showAdMob() {
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        Log.d("AdMob", "AdMob run...");
+        MobileAds.initialize(this, initializationStatus -> {
         });
 
         mAdView = new AdView(this);
@@ -215,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     // Get date when user last drink alcohol from firebase database method
     private void getDateOfLastDrinkFromDatabase() {
         loadDateUserChildeEventListener = new ChildEventListener() {
@@ -230,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // Show notification if hour = 00 and minute = 00
                     if (dates[1].equals("00") && dates[2].equals("00")) {
-                        showNotificationWithDate(dates[0]);
+                        Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
                     }
 
 
@@ -263,24 +240,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
-    private void showNotificationWithDate(String date) {
-        switch (date) {
-            case "7":
-            case "14":
-            case "21":
-            case "50":
-            case "100":
-            case "150":
-            case "200":
-            case "250":
-            case "300":
-            case "365":
-                NotificationReceiver.createNotificationChannel(this);
-                Notification notification = NotificationReceiver.showNotification(this, daysWithoutDrink);
-                notificationManager.notify(1, notification);
-                break;
-        }
-    }
 
     // Get name from firebase database method
     private void getNameFromDatabase() {
@@ -322,43 +281,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(userChildeEventListener);
     }
 
-    // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
-    private String getUserId() {
-        final String[] result = {""};
-        if (Utils.hasConnection(this)) {
-            userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    goOnlineConnectiontoDatabase();
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                            String key = childSnapshot.getKey();
-                            String email = childSnapshot.child("email").getValue(String.class);
-
-                            if (email.equals(auth.getCurrentUser().getEmail())) {
-                                result[0] = key;
-                                // Save "userId" on local storage
-
-                                editor.putString(APP_PREFERENCES_KEY_USERID, result[0]);
-                                editor.apply();
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                    "qwerty");
-
-            return result[0];
-        } else {
-            return  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                    "qwerty");
-        }
-    }
 
     // Set date data in TextView
     private void setNotDrinkTime(String days, String hours, String minutes) {
@@ -369,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
     // Button "Сорвался"
     public void resetDrinkDate(View view) {
         if (Utils.hasConnection(this)) {
-            String id = getUserId();
+            String id = Utils.getUserId(this);
             String updateDate = Utils.getCurrentDate();
            // Log.d("resetDrink", "вставим дату - " + updateDate);
             userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
@@ -392,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             switch (item.getItemId()) {
                 case R.id.sign_out:
-                    Intent intent = new Intent(MainActivity.this, LoginSignUpActivity.class);
+                    Intent intent = new Intent(this, LoginSignUpActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -413,75 +335,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item); // хз зачем, но без нее не работает
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
-    // емейлом авторизованного пользователя и если они сходятся - обновляем дату употребления на сервере
-    private void updateDateAndTimeInFirebaseDatabase() {
-        userDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                goOnlineConnectiontoDatabase();
-                if (dataSnapshot.exists()) {
-
-                    lastDrinkDate = Utils.getCurrentDate();
-                    String dateFirebase = Utils.getCurrentDate();
-
-                        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(dateFirebase);
-                        editor.putString(APP_PREFERENCES_KEY_DATE, dateFirebase);
-                        editor.apply();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void goOfflineConnectiontoDatabase() {
-        if (database != null) {
-            database.goOffline();
-        }
-    }
-    private void goOnlineConnectiontoDatabase() {
-        if (database != null) {
-            database.goOnline();
-        }
-    }
-
-
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         mAdView.resume();
 
@@ -513,6 +368,5 @@ public class MainActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
-
 
 }
