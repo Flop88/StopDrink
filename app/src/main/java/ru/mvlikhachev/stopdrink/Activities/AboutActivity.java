@@ -2,6 +2,7 @@ package ru.mvlikhachev.stopdrink.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import com.google.android.play.core.tasks.Task;
 
 import ru.mvlikhachev.stopdrink.R;
 
+import static ru.mvlikhachev.stopdrink.Utils.NotificationReceiver.showRatingUserInterface;
+
 public class AboutActivity extends AppCompatActivity {
 
     @Override
@@ -23,23 +26,9 @@ public class AboutActivity extends AppCompatActivity {
 
         // Убрать ActionBar
         getSupportActionBar().hide();
-        showRatingUserInterface(AboutActivity.this);
     }
 
-
-
-    private void showRatingUserInterface(final Activity activity) {
-        final ReviewManager manager = ReviewManagerFactory.create(activity);
-        Task<ReviewInfo> request = manager.requestReviewFlow();
-        request.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                ReviewInfo reviewInfo = task.getResult();
-                Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
-                flow.addOnCompleteListener(task2 -> {
-                    // do nothing
-
-                });
-            }
-        });
+    public void writeReview(View view) {
+        showRatingUserInterface(AboutActivity.this);
     }
 }
