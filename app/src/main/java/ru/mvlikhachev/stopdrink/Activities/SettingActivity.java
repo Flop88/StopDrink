@@ -136,11 +136,11 @@ public class SettingActivity extends AppCompatActivity {
         return super.onCreateDialog(id);
     }
 
-    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            myHour = hourOfDay;
-            myMinute = minute;
-        }
+    TimePickerDialog.OnTimeSetListener myCallBack = (view, hourOfDay, minute) -> {
+        myHour = hourOfDay;
+        myMinute = minute;
+        newHour = String.valueOf(myHour);
+        newMinute = String.valueOf(myMinute);
     };
 
     public void saveNewData(View view) {
@@ -151,11 +151,33 @@ public class SettingActivity extends AppCompatActivity {
             if(!Validations.validateName(renameTextInputLayout)) {
                 return;
             } else {
-                String setdate = setNewDataInDb();
+                if (newYear == null) {
+                    newYear = "2020";
+                }
+                if (newMonth == null) {
+                    newMonth = "01";
+                }
+                if (newDay == null) {
+                    newDay = "01";
+                }
+                if (newHour == null) {
+                    newHour = "01";
+                }
+                if (newMinute == null) {
+                    newMinute = "01";
+                }
+                String setdate = setNewDataInDb(
+                        Integer.parseInt(newYear),
+                        Integer.parseInt(newMonth),
+                        Integer.parseInt(newDay),
+                        Integer.parseInt(newHour),
+                        Integer.parseInt(newMinute)
+                );
+
                 Log.d("setDATA", "setdate: " + setdate);
 
             setNewNameInDb();
-//            updateNewDataInDb();
+            updateNewDataInDb(setdate);
                 //databaseReference.removeEventListener(valueEventListener);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
@@ -167,38 +189,55 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    private void updateNewDataInDb() {
-        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+    private void updateNewDataInDb(String date) {
+        Log.d("setDATA", "setdate in method: " + date);
+        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
 
-        editor.putString(APP_PREFERENCES_KEY_DATE, newDate);
+        editor.putString(APP_PREFERENCES_KEY_DATE, date);
         editor.apply();
     }
 
-    private String setNewDataInDb() {
+    private String setNewDataInDb(int year, int month, int day, int hour, int minute) {
         //set new date
-        long iMonth = Integer.parseInt(newMonth);
-        long iDay = Integer.parseInt(newDay);
+        String updateYear = "0";
+        String updateMonth = "0";
+        String updateDay = "0";
+        String updateHour = "0";
+        String updateMinute = "0";
+        String upDate = "0";
 
-        if (iMonth < 10) {
-            newMonth = "0" + iMonth;
+        if (year == 0 || month == 0 || day == 0 || hour == 0 || minute == 0) {
+            year = 2020;
+            month = 01;
+            day = 01;
+            hour = 01;
+            minute = 01;
         }
-        if (iDay < 10) {
-            newDay = "0" + iDay;
-        }
-        if (myHour < 10) {
-            newHour = "0" + myHour;
+
+        updateYear = String.valueOf(year);
+
+        if (month < 10) {
+            updateMonth = "0" + month;
         } else {
-            newHour = String.valueOf(myHour);
+            updateMonth = String.valueOf(month);
         }
-        if (myMinute < 10) {
-            newMinute = "0" + myMinute;
+        if (day < 10) {
+            updateDay = "0" + day;
         } else {
-            newMinute = String.valueOf(myMinute);
+            updateDay = String.valueOf(day);
         }
-
-        newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
-
-        return newDate;
+        if (hour < 10) {
+            updateHour = "0" + hour;
+        } else {
+            updateHour = String.valueOf(hour);
+        }
+        if (minute < 10) {
+            updateMinute = "0" + minute;
+        } else {
+            updateMinute = String.valueOf(minute);
+        }
+        upDate = updateYear + "/" + updateMonth + "/" + updateDay + " " + updateHour + ":"+ updateMinute+":00";
+        return upDate;
     }
 
     private void setNewNameInDb() {
