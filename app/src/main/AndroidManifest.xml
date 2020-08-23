@@ -17,6 +17,7 @@
             android:value="ca-app-pub-3120800894638034~4236832792"/>
 
         <activity android:name=".Activities.SettingActivity"
+            android:label="Настройки"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.AboutActivity"

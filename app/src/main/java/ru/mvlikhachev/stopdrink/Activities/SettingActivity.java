@@ -78,8 +78,6 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        // Убрать ActionBar
-        getSupportActionBar().hide();
 
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
