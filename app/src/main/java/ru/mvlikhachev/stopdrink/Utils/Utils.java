@@ -34,39 +34,6 @@ public class Utils {
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 ///////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////
-    private TextView helloUsernameTextView;
-    private TextView daysTextView;
-    private TextView timeTextView;
-    private ImageView logoImageView;
-///////////////////////////////////////////////////////////////////
-
-    ///////////////////////// DATA ////////////////////////////////////
-    private String username;
-    private String lastDrinkDate;
-    private String userId;
-    private String daysWithoutDrink;
-///////////////////////////////////////////////////////////////////
-
-    ////////////////////////// FIREBASE ///////////////////////////////
-    private FirebaseDatabase database;
-    private DatabaseReference userDatabaseReference;
-    private ChildEventListener userChildeEventListener;
-    private ChildEventListener loadDateUserChildeEventListener;
-
-    private FirebaseAuth auth;
-
-    // AdMob
-    private AdView mAdView;
-    private InterstitialAd mInterstitialAd;
-///////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-///////////////////////////////////////////////////////////////////
-
-    private NotificationManagerCompat notificationManager;
 
     // Проверка подключения к интернету
     public static boolean hasConnection(final Context context) {

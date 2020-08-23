@@ -1,5 +1,6 @@
 package ru.mvlikhachev.stopdrink.Utils;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,6 +15,11 @@ import androidx.core.app.NotificationManagerCompat;
 import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.Task;
 
 import ru.mvlikhachev.stopdrink.R;
 
@@ -66,5 +72,20 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .build();
         notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(1, notification);
+    }
+
+    // Show review window
+    public static void showRatingUserInterface(final Activity activity) {
+        final ReviewManager manager = ReviewManagerFactory.create(activity);
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+        request.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ReviewInfo reviewInfo = task.getResult();
+                Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
+                flow.addOnCompleteListener(task2 -> {
+                    // do nothing
+                });
+            }
+        });
     }
 }
