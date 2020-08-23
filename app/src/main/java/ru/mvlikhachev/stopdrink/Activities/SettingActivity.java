@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
+import ru.mvlikhachev.stopdrink.Utils.Validations;
 
 
 public class SettingActivity extends AppCompatActivity {
@@ -145,25 +146,35 @@ public class SettingActivity extends AppCompatActivity {
     public void saveNewData(View view) {
 
         if (Utils.hasConnection(this)) {
-            updateData();
-            //databaseReference.removeEventListener(valueEventListener);
 
+            // если поле не прошло валидацию - выводим ошибку
+            if(!Validations.validateName(renameTextInputLayout)) {
+                return;
+            } else {
+                String setdate = setNewDataInDb();
+                Log.d("setDATA", "setdate: " + setdate);
+
+            setNewNameInDb();
+//            updateNewDataInDb();
+                //databaseReference.removeEventListener(valueEventListener);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(SettingActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+            }
         }
     }
 
-    private void updateData() {
-        setNewNameInDb();
-        setNewDataInDb();
+    private void updateNewDataInDb() {
+        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
 
+        editor.putString(APP_PREFERENCES_KEY_DATE, newDate);
+        editor.apply();
     }
 
-    private void setNewDataInDb() {
+    private String setNewDataInDb() {
         //set new date
         long iMonth = Integer.parseInt(newMonth);
         long iDay = Integer.parseInt(newDay);
@@ -187,10 +198,7 @@ public class SettingActivity extends AppCompatActivity {
 
         newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
 
-        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
-
-        editor.putString(APP_PREFERENCES_KEY_DATE, newDate);
-        editor.apply();
+        return newDate;
     }
 
     private void setNewNameInDb() {

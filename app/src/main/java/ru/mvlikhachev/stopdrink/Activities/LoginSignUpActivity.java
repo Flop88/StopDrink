@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.Utils.Validations;
 
 public class LoginSignUpActivity extends AppCompatActivity {
 
@@ -226,7 +227,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     });
         } else { // Registration
 
-            if (!validateEmail() | !validateName() | !validatePassword() | !validateConfirmPassword()) {
+            if (!validateEmail() | !Validations.validateName(textInputName) | !validatePassword() | !validateConfirmPassword()) {
                 return;
             }
 
