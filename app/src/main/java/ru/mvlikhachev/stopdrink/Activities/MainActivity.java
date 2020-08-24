@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -37,6 +38,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ru.mvlikhachev.stopdrink.Fragments.MainFragment;
+import ru.mvlikhachev.stopdrink.Fragments.ProfileFragment;
+import ru.mvlikhachev.stopdrink.Fragments.SettingsFragment;
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.DAO.Utils;
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView timeTextView;
     private Button resetTimeButton;
 ///////////////////////////////////////////////////////////////////
+    private Fragment profileFragment;
+    private Fragment mainFragment;
+    private Fragment settingsFragment;
 
 ///////////////////////// DATA ////////////////////////////////////
     private String username;
