@@ -13,20 +13,21 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
-
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils.Utils;
-import ru.mvlikhachev.stopdrink.Utils.Validations;
+import ru.mvlikhachev.stopdrink.DAO.Utils;
 
 
 public class SettingActivity extends AppCompatActivity {
@@ -36,11 +37,14 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+    public static final String APP_PREFERENCES_KEY_USERID = "useridFromDb";
 ///////////////////////////////////////////////////////////////////
 
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     private FirebaseAuth auth;
 
@@ -79,6 +83,8 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        // Убрать ActionBar
+        getSupportActionBar().hide();
 
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
@@ -101,27 +107,44 @@ public class SettingActivity extends AppCompatActivity {
                 "Default Name");
         oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "Default Name");
-        userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "qwerty");
 
-        Log.d("settingActivityData", "oldName: " + oldName);
-        Log.d("settingActivityData", "oldDate: " + oldDate);
-        Log.d("settingActivityData", "userId: " + userId);
-
-        // Устанавливаем текущую дату максимальным числом в календаре
-        Calendar calendar = Calendar.getInstance();
-        long currentDate = calendar.getTimeInMillis();
-        calendarView.setMaxDate(currentDate);
-
-
-        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            newYear = String.valueOf(year);
-            newMonth = String.valueOf(month + 1);
-            newDay= String.valueOf(dayOfMonth);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                newYear = String.valueOf(year);
+                newMonth = String.valueOf(month + 1);
+                newDay= String.valueOf(dayOfMonth);
+            }
         });
 
         renameTextInputEditText.setText(oldName);
 
+        showBottomNavigation(R.id.settings_page);
+    }
+
+    private void showBottomNavigation(int currentMenu) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(currentMenu);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.profile_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.main_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            MainActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.settings_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            SettingActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+            }
+            return false;
+        });
     }
 
     public void onclick(View view) {
@@ -136,117 +159,137 @@ public class SettingActivity extends AppCompatActivity {
         return super.onCreateDialog(id);
     }
 
-    TimePickerDialog.OnTimeSetListener myCallBack = (view, hourOfDay, minute) -> {
-        myHour = hourOfDay;
-        myMinute = minute;
-        newHour = String.valueOf(myHour);
-        newMinute = String.valueOf(myMinute);
+    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            myHour = hourOfDay;
+            myMinute = minute;
+        }
     };
 
     public void saveNewData(View view) {
 
-        if (Utils.hasConnection(this)) {
-
-            // если поле не прошло валидацию - выводим ошибку
-            if(!Validations.validateName(renameTextInputLayout)) {
-                return;
-            } else {
-                if (newYear == null) {
-                    newYear = "2020";
-                }
-                if (newMonth == null) {
-                    newMonth = "01";
-                }
-                if (newDay == null) {
-                    newDay = "01";
-                }
-                if (newHour == null) {
-                    newHour = "01";
-                }
-                if (newMinute == null) {
-                    newMinute = "01";
-                }
-                String setdate = setNewDataInDb(
-                        Integer.parseInt(newYear),
-                        Integer.parseInt(newMonth),
-                        Integer.parseInt(newDay),
-                        Integer.parseInt(newHour),
-                        Integer.parseInt(newMinute)
-                );
-
-                Log.d("setDATA", "setdate: " + setdate);
-
-            setNewNameInDb();
-            updateNewDataInDb(setdate);
-                //databaseReference.removeEventListener(valueEventListener);
-            Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+        if (oldDate.equals(newDate) && oldName.equals(newName)) {
+            startActivity(new Intent(SettingActivity.this, MainActivity.class));
             finish();
+        }
+        if (Utils.hasConnection(this)) {
+            getUserId();
+            //databaseReference.removeEventListener(valueEventListener);
+
+
+            Log.d("setValue", "In saveNewData ID: " + userId);
+            Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    // Метод получает ID и email текущего пользователя Firebase realtime database, сравнивает с
+    // емейлом авторизованного пользователя и если они сходятся - вызыввает метод updateDate() в который передает ID
+    private void getUserId() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("users");
+
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    String email = childSnapshot.child("email").getValue(String.class);
+
+                    Log.d("keyS", "Value: " + key);
+                    if (email.equals(auth.getCurrentUser().getEmail())) {
+                        userId = key;
+                    }
+                }
+                Log.d("userid", userId);
+
+                // Set new name
+                newName = renameTextInputLayout.getEditText().getText().toString();
+                Log.d("userid", "newName: " + newName);
+                Log.d("userid", " ");
+                userDatabaseReference.child(userId).child("name").setValue(newName);
+
+                //set new date
+                long iMonth = Integer.parseInt(newMonth);
+                long iDay = Integer.parseInt(newDay);
+
+                if (iMonth < 10) {
+                    newMonth = "0" + iMonth;
+                }
+                if (iDay < 10) {
+                    newDay = "0" + iDay;
+                }
+                if (myHour < 10) {
+                    newHour = "0" + myHour;
+                } else {
+                    newHour = String.valueOf(myHour);
+                }
+//                if (myMinute < 10) {
+//                    newMinute = "0" + myMinute;
+//                } else {
+//                    newMinute = String.valueOf(myMinute);
+//                }
+                newMinute = "00";
+
+                newDate = newYear + "/" + newMonth + "/" + newDay + " " + newHour + ":"+ newMinute+":00";
+                Log.d("userid", "newYear: " + newYear);
+                Log.d("userid", "newMonth: " + newMonth);
+                Log.d("userid", "newDay: " + newDay);
+                Log.d("userid", "newHour: " + newHour);
+                Log.d("userid", "newMinute: " + newMinute);
+                Log.d("userid", "newDate: " + newDate);
+                userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(newDate);
+                goOfflineConnection();
+
+
+//                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//
+//                    String key = dataSnapshot1.getKey();
+//                    String email = dataSnapshot1.child("email").getValue(String.class);
+//                    String name = dataSnapshot1.child("name").getValue(String.class);
+//
+//                    Log.d("setValue", "getUserId method: " + key);
+//                    Log.d("setValue", "getUserId method: " + email);
+//                    Log.d("setValue", "getUserId method: " + name);
+//
+//                    if (email.equals(auth.getCurrentUser().getEmail())) {
+//                        idKey = key;
+//                        Log.d("setValue", "In loop " + idKey);
+//                        updateData(idKey);
+//                    }
+//                }
+
             }
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        databaseReference.addValueEventListener(valueEventListener);
     }
 
-    private void updateNewDataInDb(String date) {
-        Log.d("setDATA", "setdate in method: " + date);
-        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
+    private void updateData(String key) {
 
-        editor.putString(APP_PREFERENCES_KEY_DATE, date);
-        editor.apply();
-    }
+        long iMonth = Integer.parseInt(newMonth);
+        long iDay = Integer.parseInt(newDay);
 
-    private String setNewDataInDb(int year, int month, int day, int hour, int minute) {
-        //set new date
-        String updateYear = "0";
-        String updateMonth = "0";
-        String updateDay = "0";
-        String updateHour = "0";
-        String updateMinute = "0";
-        String upDate = "0";
-
-        if (year == 0 || month == 0 || day == 0 || hour == 0 || minute == 0) {
-            year = 2020;
-            month = 01;
-            day = 01;
-            hour = 01;
-            minute = 01;
-        }
-
-        updateYear = String.valueOf(year);
-
-        if (month < 10) {
-            updateMonth = "0" + month;
-        } else {
-            updateMonth = String.valueOf(month);
-        }
-        if (day < 10) {
-            updateDay = "0" + day;
-        } else {
-            updateDay = String.valueOf(day);
-        }
-        if (hour < 10) {
-            updateHour = "0" + hour;
-        } else {
-            updateHour = String.valueOf(hour);
-        }
-        if (minute < 10) {
-            updateMinute = "0" + minute;
-        } else {
-            updateMinute = String.valueOf(minute);
-        }
-        upDate = updateYear + "/" + updateMonth + "/" + updateDay + " " + updateHour + ":"+ updateMinute+":00";
-        return upDate;
-    }
-
-    private void setNewNameInDb() {
-        // Set new name
         newName = renameTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).child("name").setValue(newName);
 
-        editor.putString(APP_PREFERENCES_KEY_NAME, newName);
-        editor.apply();
+        if (iMonth < 10) {
+            newMonth = "0" + iMonth;
+        }
+        if (iDay < 10) {
+            newDay = "0" + iDay;
+        }
+
+        newDate = newYear + "/" + newMonth + "/" + newDay + " " + myHour + ":"+ myMinute+":00";
+
+        Log.d("setValue", newDate);
+        userDatabaseReference.child(key).child("dateWhenStopDrink").setValue(newDate);
+
+        Log.d("setValue", newName);
+        userDatabaseReference.child(key).child("name").setValue(newName);
+        return;
     }
 
     private void goOnlineConnection() {
