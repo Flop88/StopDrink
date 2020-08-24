@@ -27,7 +27,8 @@ public class SplashActivity extends AppCompatActivity {
                 } finally {
                     startActivity(new Intent(
                             SplashActivity.this,
-                            AppActivity.class
+                            LoginSignUpActivity.class
+
                     ));
                 }
             }

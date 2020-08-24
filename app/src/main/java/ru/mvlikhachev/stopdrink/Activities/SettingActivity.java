@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -118,6 +119,32 @@ public class SettingActivity extends AppCompatActivity {
 
         renameTextInputEditText.setText(oldName);
 
+        showBottomNavigation(R.id.settings_page);
+    }
+
+    private void showBottomNavigation(int currentMenu) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(currentMenu);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.profile_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.main_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            MainActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.settings_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            SettingActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+            }
+            return false;
+        });
     }
 
     public void onclick(View view) {
@@ -152,11 +179,6 @@ public class SettingActivity extends AppCompatActivity {
 
             Log.d("setValue", "In saveNewData ID: " + userId);
             Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
         }
     }
 

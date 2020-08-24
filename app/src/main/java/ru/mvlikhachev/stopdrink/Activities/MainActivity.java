@@ -25,6 +25,9 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -143,6 +146,35 @@ public class MainActivity extends AppCompatActivity {
                     "2000/01/01 00:00:00");
             Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
+
+
+        showBottomNavigation(R.id.main_page);
+
+    }
+
+    private void showBottomNavigation(int currentMenu) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(currentMenu);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.profile_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.main_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            MainActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.settings_page:
+                    startActivity(new Intent(getApplicationContext(),
+                            SettingActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+            }
+            return false;
+        });
 
     }
 
