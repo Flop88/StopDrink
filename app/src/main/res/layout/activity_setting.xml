@@ -1,57 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
     tools:context=".Activities.SettingActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/renameTextInputLayout"
-        app:errorEnabled="true"
-        android:layout_marginTop="15dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp" >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/renameTextInputEditText"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/renameTextInputLayout"
+            app:errorEnabled="true"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/renameTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/newName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/newName" />
+            android:clickable="true"
+            android:layout_marginBottom="20dp"
+            android:onClick="onclick"
+            android:gravity="center_horizontal"
+            android:text="@string/setTime"
+            android:textSize="22sp">
+        </TextView>
 
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <CalendarView
-        android:id="@+id/calendarView"
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/saveNewDataButton"
+            android:onClick="saveNewData"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/save"
+            style="@style/ButtonStyle"
+            />
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginBottom="20dp"
-        android:onClick="onclick"
-        android:gravity="center_horizontal"
-        android:text="@string/setTime"
-        android:textSize="22sp">
-    </TextView>
+        android:background="@color/primaryDarkColor"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/primaryLightColor"
+        app:itemTextColor="@color/primaryLightColor"
+        app:menu="@menu/bottom_navigation_menu" />
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/saveNewDataButton"
-        android:onClick="saveNewData"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/save"
-        style="@style/ButtonStyle"
-        />
-
-
-
-
-</LinearLayout>
+</RelativeLayout>

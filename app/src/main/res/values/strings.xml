@@ -24,4 +24,6 @@
     <string name="author_name">M.V.Likhachev</string>
     <string name="version">Версия:</string>
     <string name="version_text">1.0.0</string>
+    <string name="profile">Профиль</string>
+    <string name="main">Главная</string>
 </resources>
