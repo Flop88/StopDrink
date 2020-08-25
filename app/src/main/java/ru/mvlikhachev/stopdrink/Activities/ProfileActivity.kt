@@ -74,8 +74,8 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
-        // Month halfYearWithoutDrink
-        val halfYearCircularProgressBar = findViewById<CircularProgressBar>(R.id.monthCircularProgressBar)
+        //  halfYear ProgressBar
+        val halfYearCircularProgressBar = findViewById<CircularProgressBar>(R.id.halfYearCircularProgressBar)
         halfYearCircularProgressBar.apply {
             if (halfYearWithoutDrink <= HALFYEAR_DATE) {
                 setProgressWithAnimation(halfYearWithoutDrink, 1000)
@@ -85,7 +85,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         setDataOnTextView(username, R.id.profileNameTextView)
-        setDataOnTextView("Days without alohole - $daysWithoutDrink", R.id.profileAboutTextView)
+        setDataOnTextView("Text about me :)", R.id.profileAboutTextView)
         setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
 
         showBottomNavigation(R.id.profile_page)
