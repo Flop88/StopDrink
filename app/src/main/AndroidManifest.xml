@@ -43,7 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:label="Профиль"/>
     </application>
 
 </manifest>

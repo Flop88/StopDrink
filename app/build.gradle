@@ -58,4 +58,7 @@ dependencies {
     // Play Core Library
     implementation 'com.google.android.play:core:1.8.0'
 
+    // ProgressBar
+    implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+
 }
