@@ -42,13 +42,12 @@ class ProfileActivity : AppCompatActivity() {
                 "qwerty")
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
-        val weekWithoutDrink = daysWithoutDrink.toFloat()
-        val monthWithoutDrink = daysWithoutDrink.toFloat()
-        val halfYearWithoutDrink = daysWithoutDrink.toFloat()
+        val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
+        val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
+        val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
-
             if (oldDate != null) {
                 setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000) // =1s
             }
@@ -57,8 +56,8 @@ class ProfileActivity : AppCompatActivity() {
         // Week ProgressBar
         val weekCircularProgressBar = findViewById<CircularProgressBar>(R.id.weekCircularProgressBar)
         weekCircularProgressBar.apply {
-            if (weekWithoutDrink <= WEEK_DATE) {
-                setProgressWithAnimation(weekWithoutDrink, 1000)
+            if (daysWithoutDrink.toInt() <= WEEK_DATE) {
+                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000)
             } else {
                 setProgressWithAnimation(WEEK_DATE.toFloat(), 1000)
             }
@@ -67,8 +66,8 @@ class ProfileActivity : AppCompatActivity() {
         // Month ProgressBar halfYearWithoutDrink
         val monthCircularProgressBar = findViewById<CircularProgressBar>(R.id.monthCircularProgressBar)
         monthCircularProgressBar.apply {
-            if (monthWithoutDrink <= MONTH_DATE) {
-                setProgressWithAnimation(weekWithoutDrink, 1000)
+            if (daysWithoutDrink.toInt() <= MONTH_DATE) {
+                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000)
             } else {
                 setProgressWithAnimation(MONTH_DATE.toFloat(), 1000)
             }
@@ -77,8 +76,8 @@ class ProfileActivity : AppCompatActivity() {
         //  halfYear ProgressBar
         val halfYearCircularProgressBar = findViewById<CircularProgressBar>(R.id.halfYearCircularProgressBar)
         halfYearCircularProgressBar.apply {
-            if (halfYearWithoutDrink <= HALFYEAR_DATE) {
-                setProgressWithAnimation(halfYearWithoutDrink, 1000)
+            if (daysWithoutDrink.toInt() <= HALFYEAR_DATE) {
+                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000)
             } else {
                 setProgressWithAnimation(HALFYEAR_DATE.toFloat(), 1000)
             }
@@ -87,6 +86,28 @@ class ProfileActivity : AppCompatActivity() {
         setDataOnTextView(username, R.id.profileNameTextView)
         setDataOnTextView("Text about me :)", R.id.profileAboutTextView)
         setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
+
+        //Text in little ProgressBar's
+        if (weekWithoutDrink <= 100) {
+            setDataOnTextView("$weekWithoutDrink%", R.id.percentWeekTextInProgressBarTextView)
+        } else {
+            setDataOnTextView("100%", R.id.percentWeekTextInProgressBarTextView)
+        }
+
+        if (monthWithoutDrink <= 100) {
+            setDataOnTextView("$monthWithoutDrink%", R.id.percentMonthTextInProgressBarTextView)
+        } else {
+            setDataOnTextView("100%", R.id.percentMonthTextInProgressBarTextView)
+        }
+
+        if (halfYearWithoutDrink <= 100) {
+            setDataOnTextView("$halfYearWithoutDrink%", R.id.percentHalfYearTextInProgressBarTextView)
+        } else {
+            setDataOnTextView("100%", R.id.percentHalfYearTextInProgressBarTextView)
+        }
+
+
+
 
         showBottomNavigation(R.id.profile_page)
     }
