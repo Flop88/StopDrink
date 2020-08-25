@@ -11,15 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ProfileActivity"></activity>
-        <!-- Sample AdMob App ID: ca-app-pub-3120800894638034~4236832792 -->
+
+ <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3120800894638034~4236832792" />
 
         <activity
             android:name=".Activities.SettingActivity"
-            android:label="Настройки"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.AboutActivity"
@@ -43,8 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".Utils.NotificationReceiver" />
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:label="Профиль"/>
     </application>
 
 </manifest>

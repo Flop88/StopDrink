@@ -7,4 +7,10 @@
     <color name="colorPrimary">#137758</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#F4B110</color>
+    <color name="colorProfileUpBg">#9bb5dc</color>
+
+<!--    Little progress bar-->
+    <color name="colorProgressBarBg">#37729d</color>
+    <color name="colorProgressBar">#d9c793</color>
+
 </resources>

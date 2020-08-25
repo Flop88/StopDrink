@@ -15,14 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.ads.AdListener;
@@ -30,10 +28,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -41,9 +35,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 
 import ru.mvlikhachev.stopdrink.Model.User;
@@ -56,23 +47,23 @@ import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-//////////////////////// Constants ////////////////////////////////////
+    //////////////////////// Constants ////////////////////////////////////
     // Константа файла сохранения настроек
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
-////////////////////// INITIALIZATION /////////////////////////////////
+    ////////////////////// INITIALIZATION /////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
     private TextView timeTextView;
     private ImageView logoImageView;
- ///////////////////////// DATA ////////////////////////////////////
+    ///////////////////////// DATA ////////////////////////////////////
     private String username;
     private String lastDrinkDate;
     private String userId;
     private String daysWithoutDrink;
- ////////////////////////// FIREBASE ///////////////////////////////
+    ////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
@@ -82,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     // AdMob
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
-///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 ///////////////////////////////////////////////////////////////////
@@ -162,9 +153,13 @@ public class MainActivity extends AppCompatActivity {
             NotificationReceiver.showNotification(this, daysWithoutDrink);
 
             return false;
-    });
+        });
 
         showBottomNavigation(R.id.main_page);
+
+        Log.d("experiments", "WEEK: " + 0.07 * 7);
+        Log.d("experiments", "MONTH: ");
+        Log.d("experiments", "HALF-YEAR: ");
     }
 
     // Show bottom navighation menu
@@ -322,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         if (Utils.hasConnection(this)) {
             String id = Utils.getUserId(this);
             String updateDate = Utils.getCurrentDate();
-           // Log.d("resetDrink", "вставим дату - " + updateDate);
+            // Log.d("resetDrink", "вставим дату - " + updateDate);
             userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
 
             String[] dates = Utils.calculateTimeWithoutDrink(updateDate);

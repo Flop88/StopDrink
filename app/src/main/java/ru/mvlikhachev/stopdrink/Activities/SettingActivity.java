@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -124,8 +123,8 @@ public class SettingActivity extends AppCompatActivity {
         renameTextInputEditText.setText(oldName);
 
         showBottomNavigation(R.id.settings_page);
-    }
 
+    }
     // Show bottom navighation menu
     private void showBottomNavigation(int currentMenu) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -204,15 +203,15 @@ public class SettingActivity extends AppCompatActivity {
 
                 Log.d("setDATA", "setdate: " + setdate);
 
-            setNewNameInDb();
-            updateNewDataInDb(setdate);
+                setNewNameInDb();
+                updateNewDataInDb(setdate);
                 //databaseReference.removeEventListener(valueEventListener);
-            Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         }
     }

@@ -1,20 +1,278 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_columnWeight="10"
     tools:context=".Activities.ProfileActivity">
 
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryDarkColor"
-        android:layout_alignParentBottom="true"
-        app:itemIconTint="@color/primaryLightColor"
-        app:itemTextColor="@color/primaryLightColor"
-        app:menu="@menu/bottom_navigation_menu" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:background="@color/colorProfileUpBg"
+            android:orientation="vertical">
+
+
+
+            <ImageView
+                android:id="@+id/profileAvatarImageView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/img" />
+
+            <TextView
+                android:id="@+id/profileNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Maxim Likhachev"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/profileAboutTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Text about me"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:orientation="vertical"
+            android:background="@drawable/fog"
+            >
+
+<!--            <!— Divider&ndash;&gt;-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:orientation="vertical"
+                android:background="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:weightSum="10"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/weekCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_width="2dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progressbar_width="4dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentWeekTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/white"
+                            app:layout_constraintBottom_toBottomOf="@+id/weekCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/weekCircularProgressBar" />"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Исчез похмельный синдром"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/monthCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_width="2dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="30"
+                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progressbar_width="4dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentMonthTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/white"
+                            app:layout_constraintBottom_toBottomOf="@+id/monthCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/monthCircularProgressBar" />"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Восстановление эмоционального
+фона"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/halfYearCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_width="2dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="180"
+                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progressbar_width="4dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentHalfYearTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/white"
+                            app:layout_constraintBottom_toBottomOf="@+id/halfYearCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/halfYearCircularProgressBar" />"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Восстановление нравственных черт"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center">
+
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:id="@+id/circularProgressBar"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    app:cpb_background_progressbar_color="#369b98"
+                    app:cpb_background_progressbar_width="5dp"
+                    app:cpb_progress_direction="to_right"
+                    app:cpb_progress_max="365"
+                    app:cpb_progressbar_color="#8f3495"
+                    app:cpb_progressbar_width="10dp"
+                    app:cpb_round_border="false"
+                    app:cpb_start_angle="0" />
+
+                <TextView
+                    android:id="@+id/daysTextInProgressBarTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="365"
+                    android:textSize="70sp"
+                    android:textStyle="normal"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/circularProgressBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/primaryDarkColor"
+            app:itemIconTint="@color/primaryLightColor"
+            app:itemTextColor="@color/primaryLightColor"
+            app:menu="@menu/bottom_navigation_menu" />
+    </LinearLayout>
+
+
+</LinearLayout>
