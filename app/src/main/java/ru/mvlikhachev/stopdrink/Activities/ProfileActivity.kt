@@ -21,6 +21,10 @@ class ProfileActivity : AppCompatActivity() {
     val APP_PREFERENCES_KEY_DATE = "dateFromDb"
     val APP_PREFERENCES_KEY_USERID = "userIdFromDb"
 
+    val WEEK_DATE = 7
+    val MONTH_DATE = 30
+    val HALFYEAR_DATE = 180
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -38,12 +42,45 @@ class ProfileActivity : AppCompatActivity() {
                 "qwerty")
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
+        val weekWithoutDrink = daysWithoutDrink.toFloat()
+        val monthWithoutDrink = daysWithoutDrink.toFloat()
+        val halfYearWithoutDrink = daysWithoutDrink.toFloat()
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
 
             if (oldDate != null) {
                 setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000) // =1s
+            }
+        }
+
+        // Week ProgressBar
+        val weekCircularProgressBar = findViewById<CircularProgressBar>(R.id.weekCircularProgressBar)
+        weekCircularProgressBar.apply {
+            if (weekWithoutDrink <= WEEK_DATE) {
+                setProgressWithAnimation(weekWithoutDrink, 1000)
+            } else {
+                setProgressWithAnimation(WEEK_DATE.toFloat(), 1000)
+            }
+        }
+
+        // Month ProgressBar halfYearWithoutDrink
+        val monthCircularProgressBar = findViewById<CircularProgressBar>(R.id.monthCircularProgressBar)
+        monthCircularProgressBar.apply {
+            if (monthWithoutDrink <= MONTH_DATE) {
+                setProgressWithAnimation(weekWithoutDrink, 1000)
+            } else {
+                setProgressWithAnimation(MONTH_DATE.toFloat(), 1000)
+            }
+        }
+
+        // Month halfYearWithoutDrink
+        val halfYearCircularProgressBar = findViewById<CircularProgressBar>(R.id.monthCircularProgressBar)
+        halfYearCircularProgressBar.apply {
+            if (halfYearWithoutDrink <= HALFYEAR_DATE) {
+                setProgressWithAnimation(halfYearWithoutDrink, 1000)
+            } else {
+                setProgressWithAnimation(HALFYEAR_DATE.toFloat(), 1000)
             }
         }
 

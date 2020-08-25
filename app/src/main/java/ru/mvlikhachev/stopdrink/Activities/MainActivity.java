@@ -156,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         showBottomNavigation(R.id.main_page);
+
+        Log.d("experiments", "WEEK: " + 0.07 * 7);
+        Log.d("experiments", "MONTH: ");
+        Log.d("experiments", "HALF-YEAR: ");
     }
 
     // Show bottom navighation menu
