@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import ru.mvlikhachev.stopdrink.R
+import ru.mvlikhachev.stopdrink.Utils.Utils
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -30,25 +32,36 @@ class ProfileActivity : AppCompatActivity() {
         )
         val editor = sharedPreferences.edit()
 
+        val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+                "Default Name")
         val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "128")
+        val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+        "qwerty")
+        val date = Utils.calculateTimeWithoutDrink(oldDate)
+        val daysWithoutDrink = date[0]
 
         // Progress bar
-        Log.d("datee","" +  oldDate?.toFloat())
+        Log.d("datee", "" + daysWithoutDrink)
+
+
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
-            // Set Progress
-//            progress = 65f
-            // or with animation
-//            if (oldDate != null) {
 
-                setProgressWithAnimation(65f, 1000)
-//            } // =1s
-
+            if (oldDate != null) {
+                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000) // =1s
+            }
         }
 
-
+        setNameOnTextView(username, R.id.profileNameTextView)
+        setNameOnTextView("Days without alohole - $daysWithoutDrink", R.id.profileAboutTextView)
         showBottomNavigation(R.id.profile_page)
+    }
+
+    private fun setNameOnTextView(text: String?, textView: Int) {
+        val textView: TextView = findViewById<TextView>(textView)
+        textView.setText(text)
+
     }
 
 
