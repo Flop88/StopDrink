@@ -2,7 +2,6 @@ package ru.mvlikhachev.stopdrink.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -30,20 +29,15 @@ class ProfileActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(
                 APP_PREFERENCES, MODE_PRIVATE
         )
-        val editor = sharedPreferences.edit()
 
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name")
         val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "128")
         val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-        "qwerty")
+                "qwerty")
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
-
-        // Progress bar
-        Log.d("datee", "" + daysWithoutDrink)
-
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
@@ -53,15 +47,16 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
-        setNameOnTextView(username, R.id.profileNameTextView)
-        setNameOnTextView("Days without alohole - $daysWithoutDrink", R.id.profileAboutTextView)
+        setDataOnTextView(username, R.id.profileNameTextView)
+        setDataOnTextView("Days without alohole - $daysWithoutDrink", R.id.profileAboutTextView)
+        setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
+
         showBottomNavigation(R.id.profile_page)
     }
 
-    private fun setNameOnTextView(text: String?, textView: Int) {
+    private fun setDataOnTextView(text: String?, textView: Int) {
         val textView: TextView = findViewById<TextView>(textView)
         textView.setText(text)
-
     }
 
 
@@ -96,14 +91,21 @@ class ProfileActivity : AppCompatActivity() {
 
     // Create UP-menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        val customView = (TextView)
         menuInflater.inflate(R.menu.up_navigation, menu)
-//        val params: ActionBar.LayoutParams = ActionBar.LayoutParams(
-//                ActionBar.LayoutParams.MATCH_PARENT,
-//                ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER)
-
-//        customView.setText("Some centered text");
-//        getSupportActionBar()?.setCustomView(customView, params);
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            when (item.itemId) {
+                R.id.settings_programm -> {
+                    val intent = Intent(this, SettingActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
+        // хз зачем, но без нее не работает
+        return super.onOptionsItemSelected(item)
     }
 }
