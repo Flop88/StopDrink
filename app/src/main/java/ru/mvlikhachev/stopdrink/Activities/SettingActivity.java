@@ -5,10 +5,12 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
 
@@ -44,6 +48,8 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+
+    public static final int RC_IMAGE_PICER = 1488;
 ///////////////////////////////////////////////////////////////////
 
     private FirebaseDatabase database;
@@ -57,6 +63,8 @@ public class SettingActivity extends AppCompatActivity {
     private TextInputEditText renameTextInputEditText;
     private TextInputEditText aboutTextInputEditText;
 
+    private ImageView addImageButtonImageView;
+
     private CalendarView calendarView;
 
     private TextView testTextView;
@@ -66,6 +74,10 @@ public class SettingActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
+    // Firebase Storage
+    private FirebaseStorage storage;
+    private StorageReference profileImagesStorageReference;
 
     private String oldName;
     private String newName;
@@ -95,13 +107,16 @@ public class SettingActivity extends AppCompatActivity {
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
         aboutTextInputEditText = findViewById(R.id.aboutTextInputEditText);
         calendarView = findViewById(R.id.calendarView);
+        addImageButtonImageView = findViewById(R.id.addImageButtonImageView);
 
         testTextView = findViewById(R.id.tvTime);
 
         auth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
+        profileImagesStorageReference = storage.getReference().child("avatars");
         goOnlineConnection();
 
         sharedPreferences = this.getSharedPreferences(
@@ -139,6 +154,18 @@ public class SettingActivity extends AppCompatActivity {
         aboutTextInputEditText.setText(textAboutMe);
 
         showBottomNavigation(R.id.settings_page);
+
+
+        addImageButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
+                        RC_IMAGE_PICER);
+            }
+        });
 
     }
 
@@ -353,6 +380,18 @@ public class SettingActivity extends AppCompatActivity {
         if(FirebaseDatabase.getInstance()!=null)
         {
             FirebaseDatabase.getInstance().goOffline();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_IMAGE_PICER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            StorageReference imageReference = profileImagesStorageReference
+                    .child(selectedImageUri.getLastPathSegment());
+            Log.d("UriImage", "" + imageReference);
         }
     }
 
