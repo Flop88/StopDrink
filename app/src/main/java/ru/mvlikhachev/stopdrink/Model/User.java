@@ -1,10 +1,12 @@
 package ru.mvlikhachev.stopdrink.Model;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class User {
 
     private String id;

@@ -20,23 +20,24 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
                 android:layout_gravity="center">
-
 
                 <ImageView
                     android:id="@+id/profileAvatarImageView"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_gravity="center"
                     android:layout_marginTop="40dp"
-                    android:src="@drawable/img" />
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/me" />
+
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="40dp"
+
+                    android:layout_centerInParent="true"
                     android:src="@drawable/circle" />
 
             </RelativeLayout>
@@ -130,8 +131,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Исчез похмельный синдром"
+                        android:layout_gravity="center"
+                        android:text="Неделя"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>
@@ -178,9 +179,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Восстановление эмоционального
-фона"
+                        android:layout_gravity="center"
+                        android:text="Месяц"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>
@@ -227,8 +227,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Восстановление нравственных черт"
+                        android:layout_gravity="center"
+                        android:text="Пол года"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>

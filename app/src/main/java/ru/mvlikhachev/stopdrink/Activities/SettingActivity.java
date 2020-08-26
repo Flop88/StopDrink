@@ -39,6 +39,7 @@ import java.util.Calendar;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.Utils.LoadReferences;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
 
@@ -98,6 +99,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private String userId;
+    private String urlProfileImg;
 
     private ValueEventListener valueEventListener;
 
@@ -129,14 +131,29 @@ public class SettingActivity extends AppCompatActivity {
         );
         editor = sharedPreferences.edit();
 
-        oldName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+        // Если не авторизованы - идев в активити авторизации
+        if (auth.getCurrentUser() == null) {
+            startActivity(new Intent(SettingActivity.this, LoginSignUpActivity.class));
+        }
+
+
+        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                "ID");
+        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name");
-        oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "Default Name");
-        userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "qwerty");
-        textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
-                "Simple text");
+        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+                "Default Name");
+        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+                "Default Name");
+
+        oldName = dbName;
+        oldDate = dbDate;
+        userId = dbid;
+        textAboutMe = dbAbout;
+        urlProfileImg = dbProfileImg;
+
 
         Log.d("settingActivityData", "oldName: " + oldName);
         Log.d("settingActivityData", "oldDate: " + oldDate);
@@ -257,12 +274,21 @@ public class SettingActivity extends AppCompatActivity {
         myMinute = minute;
         newHour = String.valueOf(myHour);
         newMinute = String.valueOf(myMinute);
+
+        Log.d("TIMEE", "" + myHour);
+        Log.d("TIMEE", "" + myMinute);
+        Log.d("TIMEE", "" + newHour);
+        Log.d("TIMEE", "" + newMinute);
     };
 
     public void saveNewData(View view) {
 
         if (Utils.hasConnection(this)) {
-
+            Log.d("DATEE", "" + newYear);
+            Log.d("DATEE", "" + newMonth);
+            Log.d("DATEE", "" + newDay);
+            Log.d("DATEE", "" + newHour);
+            Log.d("DATEE", "" + newMinute);
             // если поле не прошло валидацию - выводим ошибку
             if(!Validations.validateName(renameTextInputLayout)) {
                 return;
@@ -282,6 +308,13 @@ public class SettingActivity extends AppCompatActivity {
                 if (newMinute == null) {
                     newMinute = "01";
                 }
+
+                Log.d("DATEE", "" + newYear);
+                Log.d("DATEE", "" + newMonth);
+                Log.d("DATEE", "" + newDay);
+                Log.d("DATEE", "" + newHour);
+                Log.d("DATEE", "" + newMinute);
+
                 String setdate = setNewDataInDb(
                         Integer.parseInt(newYear),
                         Integer.parseInt(newMonth),
@@ -322,11 +355,15 @@ public class SettingActivity extends AppCompatActivity {
         String updateMinute = "0";
         String upDate = "0";
 
-        if (year == 0 || month == 0 || day == 0 || hour == 0 || minute == 0) {
+        if (year == 0 ) {
             year = 2020;
+        } else if (month == 0 ) {
             month = 01;
+        } else if (day == 0 ) {
             day = 01;
+        }else if ( hour == 0) {
             hour = 01;
+        }else if (minute == 0) {
             minute = 01;
         }
 
@@ -418,9 +455,11 @@ public class SettingActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
 
-                        userDatabaseReference.child(userId).child("profileImage").setValue(downloadUri.toString());
+                        urlProfileImg = downloadUri.toString();
 
-                        editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, downloadUri.toString());
+                        userDatabaseReference.child(userId).child("profileImage").setValue(urlProfileImg);
+
+                        editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, urlProfileImg);
                         editor.apply();
                     } else {
                         // Handle failures
@@ -453,6 +492,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        LoadReferences.deleteInSharedPreferences(this);
         goOfflineConnection();
     }
 }
