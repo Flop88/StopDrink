@@ -19,6 +19,7 @@ class ProfileActivity : AppCompatActivity() {
     val APP_PREFERENCES = "datasetting"
     val APP_PREFERENCES_KEY_NAME = "nameFromDb"
     val APP_PREFERENCES_KEY_DATE = "dateFromDb"
+    val APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb"
     val APP_PREFERENCES_KEY_USERID = "userIdFromDb"
 
     val WEEK_DATE = 7
@@ -36,12 +37,16 @@ class ProfileActivity : AppCompatActivity() {
 
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name")
+        val textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+                "Simple text :)")
         val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "128")
         val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty")
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
+
+        // Percents in progressBar's
         val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
         val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
         val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
@@ -83,9 +88,11 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
+        // set data in textView's
         setDataOnTextView(username, R.id.profileNameTextView)
         setDataOnTextView("Text about me :)", R.id.profileAboutTextView)
         setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
+        setDataOnTextView(textAboutMe, R.id.profileAboutTextView)
 
         //Text in little ProgressBar's
         if (weekWithoutDrink <= 100) {

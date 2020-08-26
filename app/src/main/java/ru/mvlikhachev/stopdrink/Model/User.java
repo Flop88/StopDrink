@@ -11,6 +11,7 @@ public class User {
     private String email;
     private String name;
     private String dateWhenStopDrink;
+    private String aboutMe;
     private String test;
 
     public User() {
@@ -23,12 +24,13 @@ public class User {
         this.test = test;
     }
 
-    public User(String id, String email, String name, String dateWhenStopDrink, String test) {
+    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String test) {
         this.id = id;
         this.email = email;
         this.name = name;
-        this.test = test;
         this.dateWhenStopDrink = dateWhenStopDrink;
+        this.aboutMe = aboutMe;
+        this.test = test;
     }
 
     public User(String dateWhenStopDrink) {
@@ -73,6 +75,14 @@ public class User {
 
     public void setTest(String test) {
         this.test = test;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     @Exclude

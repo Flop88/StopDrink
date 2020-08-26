@@ -12,18 +12,24 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
+import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
@@ -36,16 +42,20 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 ///////////////////////////////////////////////////////////////////
 
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
+    private ChildEventListener aboutChildeEventListener;
 
     private FirebaseAuth auth;
 
     private TextInputLayout renameTextInputLayout;
+    private TextInputLayout aboutTextInputLayout;
     private TextInputEditText renameTextInputEditText;
+    private TextInputEditText aboutTextInputEditText;
 
     private CalendarView calendarView;
 
@@ -61,7 +71,7 @@ public class SettingActivity extends AppCompatActivity {
     private String newName;
 
     private String oldDate;
-    private String newDate;
+    private String textAboutMe;
 
     private String newYear;
     private String newMonth;
@@ -81,7 +91,9 @@ public class SettingActivity extends AppCompatActivity {
 
 
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
+        aboutTextInputLayout = findViewById(R.id.aboutTextInputLayout);
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
+        aboutTextInputEditText = findViewById(R.id.aboutTextInputEditText);
         calendarView = findViewById(R.id.calendarView);
 
         testTextView = findViewById(R.id.tvTime);
@@ -103,9 +115,12 @@ public class SettingActivity extends AppCompatActivity {
                 "Default Name");
         userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty");
+        textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+                "Simple text");
 
         Log.d("settingActivityData", "oldName: " + oldName);
         Log.d("settingActivityData", "oldDate: " + oldDate);
+        Log.d("settingActivityData", "about: " + textAboutMe);
         Log.d("settingActivityData", "userId: " + userId);
 
         // Устанавливаем текущую дату максимальным числом в календаре
@@ -121,10 +136,52 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         renameTextInputEditText.setText(oldName);
+        aboutTextInputEditText.setText(textAboutMe);
 
         showBottomNavigation(R.id.settings_page);
 
     }
+
+
+    // Get text about me from firebase database method
+    private void getNameFromDatabase() {
+        aboutChildeEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    textAboutMe = user.getAboutMe();
+
+                    // Save "username" on local storage
+                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        userDatabaseReference.addChildEventListener(aboutChildeEventListener);
+    }
+
     // Show bottom navighation menu
     private void showBottomNavigation(int currentMenu) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -203,7 +260,8 @@ public class SettingActivity extends AppCompatActivity {
 
                 Log.d("setDATA", "setdate: " + setdate);
 
-                setNewNameInDb();
+                setNewNameInDb(oldName);
+                setTextAboutMeInDb(textAboutMe);
                 updateNewDataInDb(setdate);
                 //databaseReference.removeEventListener(valueEventListener);
                 Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
@@ -217,7 +275,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void updateNewDataInDb(String date) {
-        Log.d("setDATA", "setdate in method: " + date);
         userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
 
         editor.putString(APP_PREFERENCES_KEY_DATE, date);
@@ -267,12 +324,21 @@ public class SettingActivity extends AppCompatActivity {
         return upDate;
     }
 
-    private void setNewNameInDb() {
+    private void setNewNameInDb(String name) {
         // Set new name
-        newName = renameTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).child("name").setValue(newName);
+        name = renameTextInputLayout.getEditText().getText().toString();
+        userDatabaseReference.child(userId).child("name").setValue(name);
 
-        editor.putString(APP_PREFERENCES_KEY_NAME, newName);
+        editor.putString(APP_PREFERENCES_KEY_NAME, name);
+        editor.apply();
+    }
+
+    private void setTextAboutMeInDb(String textAboutMe) {
+        // Set new text about me
+        textAboutMe = aboutTextInputLayout.getEditText().getText().toString();
+        userDatabaseReference.child(userId).child("aboutMe").setValue(textAboutMe);
+
+        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
         editor.apply();
     }
 
