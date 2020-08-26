@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 
@@ -47,6 +51,7 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
+    public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 
     public static final int RC_IMAGE_PICER = 1488;
@@ -390,8 +395,40 @@ public class SettingActivity extends AppCompatActivity {
         if (requestCode == RC_IMAGE_PICER && resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();
             StorageReference imageReference = profileImagesStorageReference
-                    .child(selectedImageUri.getLastPathSegment());
+                    .child(userId + "_" +selectedImageUri.getLastPathSegment());
             Log.d("UriImage", "" + imageReference);
+
+            UploadTask uploadTask = imageReference.putFile(selectedImageUri);
+
+            uploadTask = imageReference.putFile(selectedImageUri);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return imageReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+
+                        userDatabaseReference.child(userId).child("profileImage").setValue(downloadUri.toString());
+
+                        editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, downloadUri.toString());
+                        editor.apply();
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                }
+            });
+
         }
     }
 

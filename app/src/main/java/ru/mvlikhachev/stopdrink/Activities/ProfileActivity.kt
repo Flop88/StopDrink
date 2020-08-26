@@ -16,10 +16,11 @@ class ProfileActivity : AppCompatActivity() {
 
     //////////////////////// Constants ////////////////////////////////////
     // Константа файла сохранения настроек
-    val APP_PREFERENCES = "datasetting"
+    val APP_PREFERENCES: String? = "datasetting"
     val APP_PREFERENCES_KEY_NAME = "nameFromDb"
     val APP_PREFERENCES_KEY_DATE = "dateFromDb"
     val APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb"
+    val APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb"
     val APP_PREFERENCES_KEY_USERID = "userIdFromDb"
 
     val WEEK_DATE = 7
@@ -34,15 +35,17 @@ class ProfileActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(
                 APP_PREFERENCES, MODE_PRIVATE
         )
-
+        val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                "qwerty")
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name")
         val textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
                 "Simple text :)")
         val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
                 "128")
-        val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "qwerty")
+        val profileImageFromDb = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+                "128")
+
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
 
