@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.ktx.Firebase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import ru.mvlikhachev.stopdrink.R
 import ru.mvlikhachev.stopdrink.Utils.Utils
@@ -16,9 +19,11 @@ class ProfileActivity : AppCompatActivity() {
 
     //////////////////////// Constants ////////////////////////////////////
     // Константа файла сохранения настроек
-    val APP_PREFERENCES = "datasetting"
+    val APP_PREFERENCES: String? = "datasetting"
     val APP_PREFERENCES_KEY_NAME = "nameFromDb"
     val APP_PREFERENCES_KEY_DATE = "dateFromDb"
+    val APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb"
+    val APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb"
     val APP_PREFERENCES_KEY_USERID = "userIdFromDb"
 
     val WEEK_DATE = 7
@@ -33,15 +38,32 @@ class ProfileActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(
                 APP_PREFERENCES, MODE_PRIVATE
         )
-
-        val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
-                "Default Name")
-        val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
-                "128")
         val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty")
+        val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+                "Default Name")
+        val textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+                "Simple text :)")
+        val oldDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+                "128")
+        val profileImageFromDb = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+                "128")
+        // Reference to an image file in Cloud Storage
+        val storageReference = profileImageFromDb;
+
+// ImageView in your Activity
+        val imageView = findViewById<ImageView>(R.id.profileAvatarImageView)
+
+// Download directly from StorageReference using Glide
+// (See MyAppGlideModule for Loader registration)
+        Glide.with(this /* context */)
+                .load(storageReference)
+                .into(imageView)
+
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
+
+        // Percents in progressBar's
         val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
         val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
         val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
@@ -83,9 +105,11 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
+        // set data in textView's
         setDataOnTextView(username, R.id.profileNameTextView)
         setDataOnTextView("Text about me :)", R.id.profileAboutTextView)
         setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
+        setDataOnTextView(textAboutMe, R.id.profileAboutTextView)
 
         //Text in little ProgressBar's
         if (weekWithoutDrink <= 100) {
