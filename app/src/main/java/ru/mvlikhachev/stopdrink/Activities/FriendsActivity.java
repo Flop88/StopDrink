@@ -6,21 +6,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.FriendsAdapter;
+import ru.mvlikhachev.stopdrink.Utils.Utils;
 
 
 public class FriendsActivity extends AppCompatActivity {
@@ -32,6 +41,8 @@ public class FriendsActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
+    public static final String APP_PREFERENCES_KEY_CLICKED_USERID = "clickedUserIdFromDb";
+
 
     private DatabaseReference usersDatabaseReference;
     private ChildEventListener usersChildEventListener;
@@ -41,12 +52,21 @@ public class FriendsActivity extends AppCompatActivity {
     private FriendsAdapter friendAdapter;
     private RecyclerView.LayoutManager friendLayoutManager;
 
+    private FirebaseAuth auth;
+    private ImageView avatarView;
+    private ArrayList<String> usersId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        avatarView = findViewById(R.id.avatarCardImageView);
+
+        auth = FirebaseAuth.getInstance();
+
         userArrayList = new ArrayList<>();
+        usersId = new ArrayList<>();
         attachUserDatabaseReferenceListener();
         buildRecyclerView();
 
@@ -61,9 +81,20 @@ public class FriendsActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     User user = snapshot.getValue(User.class);
-                    user.setAvatarMockUpResource(user.getAvatarMockUpResource());
-                    userArrayList.add(user);
-                    friendAdapter.notifyDataSetChanged();
+                    if (!user.getId().equals(auth.getCurrentUser().getUid())) {
+                        // Set Profile Avatar
+                        String avatar = user.getProfileImage();
+                        Log.d("avatar", "User: " + user.getName() +"\n" +
+                                "Avatar: " + avatar);
+                        if (user.getProfileImage() == null) {
+                            user.setAvatarMockUpResource(R.drawable.ic_baseline_person_black);
+                        } else {
+                            user.setAvatarMockUpResource(R.drawable.me);
+                        }
+                        userArrayList.add(user);
+                        friendAdapter.notifyDataSetChanged();
+                    }
+
                 }
 
                 @Override
@@ -91,6 +122,7 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     private void buildRecyclerView() {
+        final String[] friendUserId = {""};
 
         userRecyclerView = findViewById(R.id.friendsListRecyclerView);
         userRecyclerView.setHasFixedSize(true);
@@ -99,6 +131,28 @@ public class FriendsActivity extends AppCompatActivity {
 
         userRecyclerView.setLayoutManager(friendLayoutManager);
         userRecyclerView.setAdapter(friendAdapter);
+
+        usersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+
+
+            friendAdapter.setOnUserClickListener(new FriendsAdapter.OnUserClickListener() {
+                @Override
+                public void onUserClick(int position) {
+                    goToProfile(position);
+                }
+            });
+
+    }
+
+    private void goToProfile(int position) {
+        String clickedUserId = userArrayList.get(position).getId();
+        String clickedGlobalUserId = Utils.getClickedUserId(this, clickedUserId);
+
+
+        Log.d("getUserId", "\n Получили user id : " + usersId + "\n");
+
+
     }
 
     // Show bottom navighation menu
