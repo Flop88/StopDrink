@@ -5,15 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:weightSum="10"
     tools:context=".Activities.FriendsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendsListRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:padding="4dp"
         android:scrollbars="vertical"
         />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryDarkColor"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/primaryLightColor"
+        app:itemTextColor="@color/primaryLightColor"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </LinearLayout>

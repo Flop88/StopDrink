@@ -71,7 +71,7 @@ public class FriendsActivity extends AppCompatActivity {
         buildRecyclerView();
 
 
-//        showBottomNavigation(R.id.friends_page);
+        showBottomNavigation(R.id.friends_page);
     }
 
     private void attachUserDatabaseReferenceListener() {
