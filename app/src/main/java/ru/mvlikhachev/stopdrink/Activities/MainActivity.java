@@ -45,6 +45,7 @@ import ru.mvlikhachev.stopdrink.Utils.LoadReferences;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 
+import static ru.mvlikhachev.stopdrink.Utils.Utils.addDrinkDate;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
 
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
-                case R.id.settings_page:
+                case R.id.friends_page:
                     startActivity(new Intent(getApplicationContext(),
                             SettingActivity.class));
                     overridePendingTransition(0, 0);

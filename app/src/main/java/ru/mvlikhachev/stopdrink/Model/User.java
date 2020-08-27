@@ -3,6 +3,7 @@ package ru.mvlikhachev.stopdrink.Model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,9 @@ public class User {
     private String aboutMe;
     private String profileImage;
     private String test;
+    private ArrayList<String> drinksDate;
+
+    private int avatarMockUpResource;
 
     public User() {
     }
@@ -27,7 +31,7 @@ public class User {
         this.test = test;
     }
 
-    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, String test) {
+    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, String test, ArrayList<String> drinksDate, int avatarMockUpResource) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -35,6 +39,8 @@ public class User {
         this.aboutMe = aboutMe;
         this.profileImage = profileImage;
         this.test = test;
+        this.drinksDate = drinksDate;
+        this.avatarMockUpResource = avatarMockUpResource;
     }
 
     public User(String dateWhenStopDrink) {
@@ -95,6 +101,22 @@ public class User {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public ArrayList<String> getDrinksDate() {
+        return drinksDate;
+    }
+
+    public void setDrinksDate(ArrayList<String> drinksDate) {
+        this.drinksDate = drinksDate;
+    }
+
+    public int getAvatarMockUpResource() {
+        return avatarMockUpResource;
+    }
+
+    public void setAvatarMockUpResource(int avatarMockUpResource) {
+        this.avatarMockUpResource = avatarMockUpResource;
     }
 
     @Exclude
