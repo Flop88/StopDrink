@@ -30,18 +30,22 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.Utils.LoadReferences;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 
+import static ru.mvlikhachev.stopdrink.Utils.Utils.addDrinkDate;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
 
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
+    public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
+    public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
     public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
     ////////////////////// INITIALIZATION /////////////////////////////////
     private TextView helloUsernameTextView;
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userDatabaseReference;
     private ChildEventListener userChildeEventListener;
     private ChildEventListener loadDateUserChildeEventListener;
+    private ChildEventListener aboutChildeEventListener;
+
     private FirebaseAuth auth;
 
     // AdMob
@@ -79,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
 ///////////////////////////////////////////////////////////////////
 
     private NotificationManagerCompat notificationManager;
+
+
+    // TEST
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference = database.getReference().child("users");
 
 
+
+
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = Utils.getUserId(this);
@@ -119,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
             // load name from firebase database
             getNameFromDatabase();
 
-            Log.d("mainActivityData", "User ID: " + userId);
-            Log.d("mainActivityData", "User NAME: " + username + "\n");
             // load last date when user drink alcohol from firebase database
             Thread updateDateThread = new Thread(new Runnable() {
                 @Override
@@ -154,12 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
-
         showBottomNavigation(R.id.main_page);
-
-        Log.d("experiments", "WEEK: " + 0.07 * 7);
-        Log.d("experiments", "MONTH: ");
-        Log.d("experiments", "HALF-YEAR: ");
     }
 
     // Show bottom navighation menu
@@ -178,9 +187,9 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
-                case R.id.settings_page:
+                case R.id.friends_page:
                     startActivity(new Intent(getApplicationContext(),
-                            SettingActivity.class));
+                            FriendsActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
             }
@@ -271,6 +280,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 User user = snapshot.getValue(User.class);
+                Log.e("DANGEEEEER", "USER ID: " + user.getId());
+                Log.e("DANGEEEEER","FIREBASE USER ID: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     username = user.getName();
                     helloUsernameTextView.setText("Здраствуйте, " + username);
@@ -312,17 +323,16 @@ public class MainActivity extends AppCompatActivity {
         timeTextView.setText(hours + ":" + minutes);
     }
 
-    // Button "Сорвался"
+    // Button "сбросить"
     public void resetDrinkDate(View view) {
         if (Utils.hasConnection(this)) {
             String id = Utils.getUserId(this);
             String updateDate = Utils.getCurrentDate();
-            // Log.d("resetDrink", "вставим дату - " + updateDate);
-            userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
+                userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
 
-            String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
-            //Log.d("resetDrink", "и установим новые значения - день:" + dates[0] + " часы:" + dates[1] + " минуты:" + dates[2]);
-            setNotDrinkTime(dates[0],dates[1],dates[2]);
+                String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
+                setNotDrinkTime(dates[0], dates[1], dates[2]);
+
         }
     }
 
@@ -359,6 +369,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item); // хз зачем, но без нее не работает
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -393,4 +404,22 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        LoadReferences.loadDataFromDbAndPutInSharedPreferences(this);
+
+        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+                "ID");
+        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+                "Default Name");
+        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+                "Default Name");
+        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+                "Default Name");
+        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+                "Default Name");
+
+    }
 }

@@ -9,9 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import ru.mvlikhachev.stopdrink.R
+import ru.mvlikhachev.stopdrink.Utils.LoadReferences
 import ru.mvlikhachev.stopdrink.Utils.Utils
 
 
@@ -34,10 +35,21 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+        // Если не авторизованы - идев в активити авторизации
+        //////// End initialization block
+        val auth = FirebaseAuth.getInstance()
+        // Если не авторизованы - идев в активити авторизации
+        if (auth.getCurrentUser() == null) {
+            startActivity(Intent(this@ProfileActivity, LoginSignUpActivity::class.java))
+        }
+
         //SharedPreferences
         val sharedPreferences = getSharedPreferences(
                 APP_PREFERENCES, MODE_PRIVATE
         )
+
+
+
         val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty")
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
@@ -160,9 +172,9 @@ class ProfileActivity : AppCompatActivity() {
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.settings_page -> {
+                R.id.friends_page -> {
                     startActivity(Intent(applicationContext,
-                            SettingActivity::class.java))
+                            FriendsActivity::class.java))
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -189,5 +201,11 @@ class ProfileActivity : AppCompatActivity() {
             }
         // хз зачем, но без нее не работает
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        LoadReferences.deleteInSharedPreferences(this)
     }
 }

@@ -10,8 +10,8 @@
         android:icon="@drawable/ic_baseline_home_24"
         android:title="@string/main"/>
     <item
-        android:id="@+id/settings_page"
-        android:enabled="false"
+        android:id="@+id/friends_page"
+        android:enabled="true"
         android:icon="@drawable/ic_baseline_person_add_24"
         android:title="@string/friends"/>
 </menu>

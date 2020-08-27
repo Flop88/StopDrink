@@ -1,12 +1,14 @@
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:innerRadius="0dp"
-    android:shape="ring"
-    android:thicknessRatio="1.9"
-
-    android:useLevel="false">
-    <solid android:color="@android:color/transparent" />
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+    android:useLevel="false"
+    android:background="@android:color/black"
+    >
+    <size
+        android:height="50dp"
+        android:width="50dp"
+        />
     <stroke
-        android:width="6dp"
-        android:color="@color/colorProfileUpBg" />
+        android:width="10dp"
+        android:color="@android:color/white" />
 </shape>
