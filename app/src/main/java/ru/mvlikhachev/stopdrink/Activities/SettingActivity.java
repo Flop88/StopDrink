@@ -175,7 +175,6 @@ public class SettingActivity extends AppCompatActivity {
         renameTextInputEditText.setText(oldName);
         aboutTextInputEditText.setText(textAboutMe);
 
-        showBottomNavigation(R.id.settings_page);
 
 
         addImageButtonImageView.setOnClickListener(new View.OnClickListener() {
@@ -231,31 +230,7 @@ public class SettingActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(aboutChildeEventListener);
     }
 
-    // Show bottom navighation menu
-    private void showBottomNavigation(int currentMenu) {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(currentMenu);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.profile_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            ProfileActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.main_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            MainActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.settings_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            SettingActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-            }
-            return false;
-        });
-    }
+
 
     public void onclick(View view) {
         showDialog(DIALOG_TIME);

@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.friends_page:
                     startActivity(new Intent(getApplicationContext(),
-                            SettingActivity.class));
+                            FriendsActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
             }

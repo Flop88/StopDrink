@@ -174,7 +174,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
                 R.id.friends_page -> {
                     startActivity(Intent(applicationContext,
-                            SettingActivity::class.java))
+                            FriendsActivity::class.java))
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
