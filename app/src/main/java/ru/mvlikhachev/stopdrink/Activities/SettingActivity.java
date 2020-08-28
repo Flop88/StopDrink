@@ -337,9 +337,9 @@ public class SettingActivity extends AppCompatActivity {
         } else if (day == 0 ) {
             day = 01;
         }else if ( hour == 0) {
-            hour = 01;
+            hour = 0;
         }else if (minute == 0) {
-            minute = 01;
+            minute = 0;
         }
 
         updateYear = String.valueOf(year);
