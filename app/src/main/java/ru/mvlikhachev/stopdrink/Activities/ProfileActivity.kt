@@ -173,8 +173,8 @@ class ProfileActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.friends_page -> {
-                    startActivity(Intent(applicationContext,
-                            FriendsActivity::class.java))
+//                    startActivity(Intent(applicationContext,
+//                            FriendsActivity::class.java))
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }

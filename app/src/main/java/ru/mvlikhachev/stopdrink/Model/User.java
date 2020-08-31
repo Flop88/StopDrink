@@ -16,7 +16,6 @@ public class User {
     private String dateWhenStopDrink;
     private String aboutMe;
     private String profileImage;
-    private String test;
     private ArrayList<String> drinksDate;
 
     private int avatarMockUpResource;
@@ -24,21 +23,19 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String email, String test) {
+    public User(String id, String name, String email) {
         this.id = id;
         this.email = email;
         this.name = name;
-        this.test = test;
     }
 
-    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, String test, ArrayList<String> drinksDate, int avatarMockUpResource) {
+    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate, int avatarMockUpResource) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.dateWhenStopDrink = dateWhenStopDrink;
         this.aboutMe = aboutMe;
         this.profileImage = profileImage;
-        this.test = test;
         this.drinksDate = drinksDate;
         this.avatarMockUpResource = avatarMockUpResource;
     }
@@ -79,13 +76,6 @@ public class User {
         this.dateWhenStopDrink = dateWhenStopDrink;
     }
 
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test = test;
-    }
 
     public String getAboutMe() {
         return aboutMe;
@@ -126,7 +116,6 @@ public class User {
         result.put("name", name);
         result.put("email", email);
         result.put("dateWhenStopDrink", dateWhenStopDrink);
-        result.put("test", test);
 
         return result;
     }

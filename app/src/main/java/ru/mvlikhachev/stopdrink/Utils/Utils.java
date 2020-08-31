@@ -151,8 +151,10 @@ public class Utils {
                             if (email.equals(auth.getCurrentUser().getEmail())) {
                                 result[0] = key;
                                 // Save "userId" on local storage
-                                editor.putString(APP_PREFERENCES_KEY_USERID, result[0]);
-                                editor.apply();
+                                if (result[0].length() == 20) {
+                                    editor.putString(APP_PREFERENCES_KEY_USERID, result[0]);
+                                    editor.apply();
+                                }
                             }
                         }
                     }
@@ -173,49 +175,49 @@ public class Utils {
     }
 
 
-    // Получаем clicked user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_CLICKED_USERID
-    public static String getClickedUserId(Context context, String clickedUserid) {
-        final String[] result = {""};
-        SharedPreferences sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userDatabaseReference = database.getReference().child("users");
-
-        if (Utils.hasConnection(context)) {
-            userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    goOnlineConnectiontoDatabase();
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                            String key = childSnapshot.getKey();
-                            String userid = childSnapshot.child("id").getValue(String.class);
-
-                            if (userid.equals(clickedUserid)) {
-                                result[0] = key;
-                                Log.d("getUserId", "Добавили: " + key);
-                                editor.putString(APP_PREFERENCES_KEY_CLICKED_USERID, key);
-                                editor.apply();
-
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
-                    "qwerty");
-            Log.d("getUserId", "Отправили: " + result[0]);
-            return result[0];
-        } else {
-            return  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
-                    "qwerty");
-        }
-    }
+//    // Получаем clicked user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_CLICKED_USERID
+//    public static String getClickedUserId(Context context, String clickedUserid) {
+//        final String[] result = {""};
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference userDatabaseReference = database.getReference().child("users");
+//
+//        if (Utils.hasConnection(context)) {
+//            userDatabaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    goOnlineConnectiontoDatabase();
+//                    if (dataSnapshot.exists()) {
+//                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+//                            String key = childSnapshot.getKey();
+//                            String userid = childSnapshot.child("id").getValue(String.class);
+//
+//                            if (userid.equals(clickedUserid)) {
+//                                result[0] = key;
+//                                Log.d("getUserId", "Добавили: " + key);
+//                                editor.putString(APP_PREFERENCES_KEY_CLICKED_USERID, key);
+//                                editor.apply();
+//
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                }
+//            });
+//            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
+//                    "qwerty");
+//            Log.d("getUserId", "Отправили: " + result[0]);
+//            return result[0];
+//        } else {
+//            return  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
+//                    "qwerty");
+//        }
+//    }
 
     // Show notification method
     public static void showNotificationWithDate(Context context, String date) {
