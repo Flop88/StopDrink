@@ -2,6 +2,7 @@ package ru.mvlikhachev.stopdrink.Activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -72,6 +73,9 @@ class ProfileActivity : AppCompatActivity() {
                 .load(storageReference)
                 .into(imageView)
 
+        Log.d("loaddata", "" + textAboutMe)
+        Log.d("loaddata", "" + storageReference)
+
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]
 
@@ -119,7 +123,6 @@ class ProfileActivity : AppCompatActivity() {
 
         // set data in textView's
         setDataOnTextView(username, R.id.profileNameTextView)
-        setDataOnTextView("Text about me :)", R.id.profileAboutTextView)
         setDataOnTextView(daysWithoutDrink, R.id.daysTextInProgressBarTextView)
         setDataOnTextView(textAboutMe, R.id.profileAboutTextView)
 

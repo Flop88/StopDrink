@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -91,6 +92,8 @@ public class SettingActivity extends AppCompatActivity {
     private String oldDate;
     private String textAboutMe;
 
+    private String realId;
+
     private String newYear;
     private String newMonth;
     private String newDay;
@@ -109,6 +112,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
 
+
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
         aboutTextInputLayout = findViewById(R.id.aboutTextInputLayout);
         renameTextInputEditText = findViewById(R.id.renameTextInputEditText);
@@ -120,6 +124,9 @@ public class SettingActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
+
+        User currentUser = new User();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
@@ -137,28 +144,27 @@ public class SettingActivity extends AppCompatActivity {
         }
 
 
-        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "ID");
-        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
-                "Default Name");
-        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
-                "Default Name");
-        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
-                "Default Name");
-        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
-                "Default Name");
+        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME, "Username");
+        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE, "2020/01/01 01:01:00");
+        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME, "Text about me");
+        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE, "йцу");
+        String dbId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qweqweqweqwe");
 
         oldName = dbName;
         oldDate = dbDate;
-        userId = dbid;
+        userId = dbId;
         textAboutMe = dbAbout;
         urlProfileImg = dbProfileImg;
 
 
         Log.d("settingActivityData", "oldName: " + oldName);
         Log.d("settingActivityData", "oldDate: " + oldDate);
-        Log.d("settingActivityData", "about: " + textAboutMe);
         Log.d("settingActivityData", "userId: " + userId);
+        Log.d("settingActivityData", "textAboutMe: " + textAboutMe);
+        Log.d("settingActivityData", "urlProfileImg: " + urlProfileImg);
+
+        realId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qwe");
+        Log.d("settingActivityData", "ID: " + realId);
 
         // Устанавливаем текущую дату максимальным числом в календаре
         Calendar calendar = Calendar.getInstance();
@@ -191,47 +197,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
 
-    // Get text about me from firebase database method
-    private void getNameFromDatabase() {
-        aboutChildeEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User user = snapshot.getValue(User.class);
-                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    textAboutMe = user.getAboutMe();
-
-                    // Save "username" on local storage
-                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        userDatabaseReference.addChildEventListener(aboutChildeEventListener);
-    }
-
-
-
     public void onclick(View view) {
         showDialog(DIALOG_TIME);
     }
@@ -249,21 +214,11 @@ public class SettingActivity extends AppCompatActivity {
         myMinute = minute;
         newHour = String.valueOf(myHour);
         newMinute = String.valueOf(myMinute);
-
-        Log.d("TIMEE", "" + myHour);
-        Log.d("TIMEE", "" + myMinute);
-        Log.d("TIMEE", "" + newHour);
-        Log.d("TIMEE", "" + newMinute);
     };
 
     public void saveNewData(View view) {
 
         if (Utils.hasConnection(this)) {
-            Log.d("DATEE", "" + newYear);
-            Log.d("DATEE", "" + newMonth);
-            Log.d("DATEE", "" + newDay);
-            Log.d("DATEE", "" + newHour);
-            Log.d("DATEE", "" + newMinute);
             // если поле не прошло валидацию - выводим ошибку
             if(!Validations.validateName(renameTextInputLayout)) {
                 return;
@@ -284,12 +239,6 @@ public class SettingActivity extends AppCompatActivity {
                     newMinute = "01";
                 }
 
-                Log.d("DATEE", "" + newYear);
-                Log.d("DATEE", "" + newMonth);
-                Log.d("DATEE", "" + newDay);
-                Log.d("DATEE", "" + newHour);
-                Log.d("DATEE", "" + newMinute);
-
                 String setdate = setNewDataInDb(
                         Integer.parseInt(newYear),
                         Integer.parseInt(newMonth),
@@ -298,13 +247,12 @@ public class SettingActivity extends AppCompatActivity {
                         Integer.parseInt(newMinute)
                 );
 
-                Log.d("setDATA", "setdate: " + setdate);
 
-                setNewNameInDb(oldName);
-                setTextAboutMeInDb(textAboutMe);
-                updateNewDataInDb(setdate);
+                updateDataInDb(realId, oldName, setdate);
+//                setNewNameInDb(oldName);
+//                setTextAboutMeInDb(textAboutMe);
+//                updateNewDataInDb(setdate);
                 //databaseReference.removeEventListener(valueEventListener);
-                Toast.makeText(this, "Готово! ", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -314,12 +262,6 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    private void updateNewDataInDb(String date) {
-        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
-
-        editor.putString(APP_PREFERENCES_KEY_DATE, date);
-        editor.apply();
-    }
 
     private String setNewDataInDb(int year, int month, int day, int hour, int minute) {
         //set new date
@@ -337,9 +279,9 @@ public class SettingActivity extends AppCompatActivity {
         } else if (day == 0 ) {
             day = 01;
         }else if ( hour == 0) {
-            hour = 01;
+            hour = 0;
         }else if (minute == 0) {
-            minute = 01;
+            minute = 0;
         }
 
         updateYear = String.valueOf(year);
@@ -368,23 +310,42 @@ public class SettingActivity extends AppCompatActivity {
         return upDate;
     }
 
-    private void setNewNameInDb(String name) {
+    private void updateDataInDb(String id, String name, String date) {
         // Set new name
+        User currentUser = new User();
+
         name = renameTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).child("name").setValue(name);
+        String aboutMe = aboutTextInputLayout.getEditText().getText().toString();
+        String profileImage = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+                "https://pixabay.com/ru/images/download/man-303792_640.png");
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        if (Utils.hasConnection(this)) {
+
+            currentUser.setId(firebaseUser.getUid());
+            currentUser.setEmail(firebaseUser.getEmail());
+            currentUser.setName(name);
+            currentUser.setAboutMe(aboutMe);
+            currentUser.setDateWhenStopDrink(date);
+//        currentUser.setAvatarMockUpResource(0);
+            currentUser.setProfileImage(urlProfileImg);
+            if (id.length() == 20  && firebaseUser.getUid() != id) {
+                userDatabaseReference.child(id).setValue(currentUser);
+            } else {
+                Toast.makeText(this, "Update ERROR", Toast.LENGTH_SHORT).show();
+            }
+        }
+
 
         editor.putString(APP_PREFERENCES_KEY_NAME, name);
+        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, aboutMe);
+        editor.putString(APP_PREFERENCES_KEY_DATE, date);
+        editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, profileImage);
         editor.apply();
     }
 
-    private void setTextAboutMeInDb(String textAboutMe) {
-        // Set new text about me
-        textAboutMe = aboutTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).child("aboutMe").setValue(textAboutMe);
-
-        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
-        editor.apply();
-    }
 
     private void goOnlineConnection() {
         if (FirebaseDatabase.getInstance() != null)
@@ -432,8 +393,6 @@ public class SettingActivity extends AppCompatActivity {
 
                         urlProfileImg = downloadUri.toString();
 
-                        userDatabaseReference.child(userId).child("profileImage").setValue(urlProfileImg);
-
                         editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, urlProfileImg);
                         editor.apply();
                     } else {
@@ -466,8 +425,8 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        LoadReferences.deleteInSharedPreferences(this);
+//
+//        LoadReferences.deleteInSharedPreferences(this);
         goOfflineConnection();
     }
 }
