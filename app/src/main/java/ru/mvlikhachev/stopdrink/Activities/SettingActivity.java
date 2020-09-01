@@ -183,15 +183,12 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
-        addImageButtonImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
-                        RC_IMAGE_PICER);
-            }
+        addImageButtonImageView.setOnClickListener( view -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/jpeg");
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
+                    RC_IMAGE_PICER);
         });
 
     }
@@ -393,16 +390,6 @@ public class SettingActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void setTextAboutMeInDb(String textAboutMe) {
-        // Set new text about me
-        User currentUser = new User();
-
-        textAboutMe = aboutTextInputLayout.getEditText().getText().toString();
-        userDatabaseReference.child(userId).setValue(textAboutMe);
-
-        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
-        editor.apply();
-    }
 
     private void goOnlineConnection() {
         if (FirebaseDatabase.getInstance() != null)

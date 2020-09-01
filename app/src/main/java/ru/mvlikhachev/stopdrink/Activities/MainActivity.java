@@ -194,11 +194,6 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
-                case R.id.friends_page:
-//                    startActivity(new Intent(getApplicationContext(),
-//                            FriendsActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
             }
             return false;
         });
@@ -293,8 +288,13 @@ public class MainActivity extends AppCompatActivity {
                     username = user.getName();
                     helloUsernameTextView.setText("Здраствуйте, " + username);
 
+                    String about = user.getAboutMe();
+                    String url = user.getProfileImage();
+
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_NAME, username);
+                    editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, url);
+                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, about);
                     editor.apply();
                 }
             }
