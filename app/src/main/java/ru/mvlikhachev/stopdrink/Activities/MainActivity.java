@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
@@ -123,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = Utils.getUserId(this);
         daysWithoutDrink = "0";
+
+        if (userId.length() == 20 && firebaseUser.getUid() != userId) {
+            editor.putString(APP_PREFERENCES_KEY_USERID, userId);
+            editor.apply();
+        }
+        Log.d("currentID", "Current id: " + userId);
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
@@ -185,11 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.main_page:
                     startActivity(new Intent(getApplicationContext(),
                             MainActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.friends_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            FriendsActivity.class));
                     overridePendingTransition(0, 0);
                     return true;
             }
@@ -286,8 +288,13 @@ public class MainActivity extends AppCompatActivity {
                     username = user.getName();
                     helloUsernameTextView.setText("Здраствуйте, " + username);
 
+                    String about = user.getAboutMe();
+                    String url = user.getProfileImage();
+
                     // Save "username" on local storage
                     editor.putString(APP_PREFERENCES_KEY_NAME, username);
+                    editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, url);
+                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, about);
                     editor.apply();
                 }
             }
@@ -408,18 +415,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        LoadReferences.loadDataFromDbAndPutInSharedPreferences(this);
-
-        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "ID");
-        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
-                "Default Name");
-        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
-                "Default Name");
-        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
-                "Default Name");
-        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
-                "Default Name");
+//        LoadReferences.loadDataFromDbAndPutInSharedPreferences(this);
+//
+//        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
+//                "ID");
+//        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
+//                "Default Name");
+//        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
+//                "Default Name");
+//        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
+//                "Default Name");
+//        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
+//                "Default Name");
 
     }
 }

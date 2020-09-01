@@ -147,7 +147,7 @@ public class SettingActivity extends AppCompatActivity {
         String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME, "Username");
         String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE, "2020/01/01 01:01:00");
         String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME, "Text about me");
-        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE, "йцу");
+        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE, "2020/01/01 01:01:00");
         String dbId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qweqweqweqwe");
 
         oldName = dbName;
@@ -183,18 +183,56 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
-        addImageButtonImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
-                        RC_IMAGE_PICER);
-            }
+        addImageButtonImageView.setOnClickListener( view -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/jpeg");
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
+                    RC_IMAGE_PICER);
         });
 
     }
+
+
+    // Get text about me from firebase database method
+    private void getNameFromDatabase() {
+        aboutChildeEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User user = snapshot.getValue(User.class);
+                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    textAboutMe = user.getAboutMe();
+
+                    // Save "username" on local storage
+                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        userDatabaseReference.addChildEventListener(aboutChildeEventListener);
+    }
+
 
 
     public void onclick(View view) {
@@ -248,7 +286,7 @@ public class SettingActivity extends AppCompatActivity {
                 );
 
 
-                updateDataInDb(realId, oldName, setdate);
+                updateDataInDb(realId, oldName, textAboutMe, setdate);
 //                setNewNameInDb(oldName);
 //                setTextAboutMeInDb(textAboutMe);
 //                updateNewDataInDb(setdate);
@@ -262,6 +300,12 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
+    private void updateNewDataInDb(String date) {
+        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
+
+        editor.putString(APP_PREFERENCES_KEY_DATE, date);
+        editor.apply();
+    }
 
     private String setNewDataInDb(int year, int month, int day, int hour, int minute) {
         //set new date
@@ -310,12 +354,12 @@ public class SettingActivity extends AppCompatActivity {
         return upDate;
     }
 
-    private void updateDataInDb(String id, String name, String date) {
+    private void updateDataInDb(String id, String name, String textAboutMe, String date) {
         // Set new name
         User currentUser = new User();
 
         name = renameTextInputLayout.getEditText().getText().toString();
-        String aboutMe = aboutTextInputLayout.getEditText().getText().toString();
+        textAboutMe = aboutTextInputLayout.getEditText().getText().toString();
         String profileImage = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
                 "https://pixabay.com/ru/images/download/man-303792_640.png");
 
@@ -327,10 +371,10 @@ public class SettingActivity extends AppCompatActivity {
             currentUser.setId(firebaseUser.getUid());
             currentUser.setEmail(firebaseUser.getEmail());
             currentUser.setName(name);
-            currentUser.setAboutMe(aboutMe);
+            currentUser.setAboutMe(textAboutMe);
             currentUser.setDateWhenStopDrink(date);
 //        currentUser.setAvatarMockUpResource(0);
-            currentUser.setProfileImage(urlProfileImg);
+            currentUser.setProfileImage(profileImage);
             if (id.length() == 20  && firebaseUser.getUid() != id) {
                 userDatabaseReference.child(id).setValue(currentUser);
             } else {
@@ -340,7 +384,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
         editor.putString(APP_PREFERENCES_KEY_NAME, name);
-        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, aboutMe);
+        editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, textAboutMe);
         editor.putString(APP_PREFERENCES_KEY_DATE, date);
         editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, profileImage);
         editor.apply();

@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
+import ru.mvlikhachev.stopdrink.Model.User
 import ru.mvlikhachev.stopdrink.R
 import ru.mvlikhachev.stopdrink.Utils.LoadReferences
 import ru.mvlikhachev.stopdrink.Utils.Utils
@@ -31,6 +34,10 @@ class ProfileActivity : AppCompatActivity() {
     val WEEK_DATE = 7
     val MONTH_DATE = 30
     val HALFYEAR_DATE = 180
+    val YEAR_DATE = 365
+
+    private lateinit var database: FirebaseDatabase
+    private lateinit var userDatabaseReference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +55,36 @@ class ProfileActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(
                 APP_PREFERENCES, MODE_PRIVATE
         )
+
+        database = FirebaseDatabase.getInstance()
+        userDatabaseReference = database.getReference().child("users")
+// ...
+
+        val userListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+//                val user = dataSnapshot.getValue<User>()
+                val user = dataSnapshot.child("users").getValue<User>()
+//                val user = dataSnapshot.getValue<User>(User::class.java)
+
+                val username = user?.name
+                val aboutMe = user?.aboutMe
+                val profileImg = user?.profileImage
+
+                Log.d("TAG", "USER $user")
+                Log.d("TAG", "NAME $username")
+                Log.d("TAG", "About me $aboutMe")
+                Log.d("TAG", "Img $profileImg")
+                // ...
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
+                // ...
+            }
+        }
+        userDatabaseReference.addValueEventListener(userListener)
 
 
 
@@ -83,6 +120,7 @@ class ProfileActivity : AppCompatActivity() {
         val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
         val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
         val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
+        val yearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 355) * 100)
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
@@ -120,6 +158,15 @@ class ProfileActivity : AppCompatActivity() {
                 setProgressWithAnimation(HALFYEAR_DATE.toFloat(), 1000)
             }
         }
+        //  Year ProgressBar
+        val yearCircularProgressBar = findViewById<CircularProgressBar>(R.id.yearCircularProgressBar)
+        yearCircularProgressBar.apply {
+            if (daysWithoutDrink.toInt() <= YEAR_DATE) {
+                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000)
+            } else {
+                setProgressWithAnimation(YEAR_DATE.toFloat(), 1000)
+            }
+        }
 
         // set data in textView's
         setDataOnTextView(username, R.id.profileNameTextView)
@@ -143,6 +190,12 @@ class ProfileActivity : AppCompatActivity() {
             setDataOnTextView("$halfYearWithoutDrink%", R.id.percentHalfYearTextInProgressBarTextView)
         } else {
             setDataOnTextView("100%", R.id.percentHalfYearTextInProgressBarTextView)
+        }
+
+        if (yearWithoutDrink <= 100) {
+            setDataOnTextView("$yearWithoutDrink%", R.id.percentYearTextInProgressBarTextView)
+        } else {
+            setDataOnTextView("100%", R.id.percentYearTextInProgressBarTextView)
         }
 
 
@@ -172,12 +225,6 @@ class ProfileActivity : AppCompatActivity() {
                 R.id.main_page -> {
                     startActivity(Intent(applicationContext,
                             MainActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.friends_page -> {
-                    startActivity(Intent(applicationContext,
-                            FriendsActivity::class.java))
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
