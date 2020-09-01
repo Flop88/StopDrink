@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +38,6 @@ import java.util.Calendar;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils.LoadReferences;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
 
@@ -156,15 +153,7 @@ public class SettingActivity extends AppCompatActivity {
         textAboutMe = dbAbout;
         urlProfileImg = dbProfileImg;
 
-
-        Log.d("settingActivityData", "oldName: " + oldName);
-        Log.d("settingActivityData", "oldDate: " + oldDate);
-        Log.d("settingActivityData", "userId: " + userId);
-        Log.d("settingActivityData", "textAboutMe: " + textAboutMe);
-        Log.d("settingActivityData", "urlProfileImg: " + urlProfileImg);
-
         realId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qwe");
-        Log.d("settingActivityData", "ID: " + realId);
 
         // Устанавливаем текущую дату максимальным числом в календаре
         Calendar calendar = Calendar.getInstance();
@@ -413,7 +402,6 @@ public class SettingActivity extends AppCompatActivity {
             Uri selectedImageUri = data.getData();
             StorageReference imageReference = profileImagesStorageReference
                     .child(userId + "_" +selectedImageUri.getLastPathSegment());
-            Log.d("UriImage", "" + imageReference);
 
             UploadTask uploadTask = imageReference.putFile(selectedImageUri);
 

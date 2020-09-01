@@ -2,7 +2,6 @@ package ru.mvlikhachev.stopdrink.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -11,10 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
-import ru.mvlikhachev.stopdrink.Model.User
 import ru.mvlikhachev.stopdrink.R
 import ru.mvlikhachev.stopdrink.Utils.LoadReferences
 import ru.mvlikhachev.stopdrink.Utils.Utils
@@ -60,34 +58,6 @@ class ProfileActivity : AppCompatActivity() {
         userDatabaseReference = database.getReference().child("users")
 // ...
 
-        val userListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-//                val user = dataSnapshot.getValue<User>()
-                val user = dataSnapshot.child("users").getValue<User>()
-//                val user = dataSnapshot.getValue<User>(User::class.java)
-
-                val username = user?.name
-                val aboutMe = user?.aboutMe
-                val profileImg = user?.profileImage
-
-                Log.d("TAG", "USER $user")
-                Log.d("TAG", "NAME $username")
-                Log.d("TAG", "About me $aboutMe")
-                Log.d("TAG", "Img $profileImg")
-                // ...
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w("TAG", "loadPost:onCancelled", databaseError.toException())
-                // ...
-            }
-        }
-        userDatabaseReference.addValueEventListener(userListener)
-
-
-
         val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
                 "qwerty")
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
@@ -110,8 +80,6 @@ class ProfileActivity : AppCompatActivity() {
                 .load(storageReference)
                 .into(imageView)
 
-        Log.d("loaddata", "" + textAboutMe)
-        Log.d("loaddata", "" + storageReference)
 
         val date = Utils.calculateTimeWithoutDrink(oldDate)
         val daysWithoutDrink = date[0]

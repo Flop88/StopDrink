@@ -1,13 +1,8 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,16 +31,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 
 import ru.mvlikhachev.stopdrink.Model.User;
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils.LoadReferences;
-import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
+import ru.mvlikhachev.stopdrink.Utils.Utils;
 
-import static ru.mvlikhachev.stopdrink.Utils.Utils.addDrinkDate;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
 
@@ -129,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(APP_PREFERENCES_KEY_USERID, userId);
             editor.apply();
         }
-        Log.d("currentID", "Current id: " + userId);
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
@@ -282,8 +272,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 User user = snapshot.getValue(User.class);
-                Log.e("DANGEEEEER", "USER ID: " + user.getId());
-                Log.e("DANGEEEEER","FIREBASE USER ID: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     username = user.getName();
                     helloUsernameTextView.setText("Здраствуйте, " + username);

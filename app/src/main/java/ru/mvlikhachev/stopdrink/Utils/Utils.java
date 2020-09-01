@@ -4,16 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,10 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 import ru.mvlikhachev.stopdrink.Model.User;
 
@@ -175,50 +165,6 @@ public class Utils {
     }
 
 
-//    // Получаем clicked user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_CLICKED_USERID
-//    public static String getClickedUserId(Context context, String clickedUserid) {
-//        final String[] result = {""};
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference userDatabaseReference = database.getReference().child("users");
-//
-//        if (Utils.hasConnection(context)) {
-//            userDatabaseReference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    goOnlineConnectiontoDatabase();
-//                    if (dataSnapshot.exists()) {
-//                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-//                            String key = childSnapshot.getKey();
-//                            String userid = childSnapshot.child("id").getValue(String.class);
-//
-//                            if (userid.equals(clickedUserid)) {
-//                                result[0] = key;
-//                                Log.d("getUserId", "Добавили: " + key);
-//                                editor.putString(APP_PREFERENCES_KEY_CLICKED_USERID, key);
-//                                editor.apply();
-//
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//                }
-//            });
-//            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
-//                    "qwerty");
-//            Log.d("getUserId", "Отправили: " + result[0]);
-//            return result[0];
-//        } else {
-//            return  sharedPreferences.getString(APP_PREFERENCES_KEY_CLICKED_USERID,
-//                    "qwerty");
-//        }
-//    }
-
     // Show notification method
     public static void showNotificationWithDate(Context context, String date) {
         switch (date) {
@@ -266,10 +212,6 @@ public class Utils {
                             set.add(dateList.get(i));
                         }
                     }
-
-                    //userDatabaseReference.child(userId).child("drink_date").setValue(set.add(date));
-                    Log.d("sett", "setInOnChildAdded: " + set);
-                    Log.d("sett", "setInOnChildAdded: " + set.size());
                 }
 
             }
@@ -299,7 +241,5 @@ public class Utils {
 
         set.add(date);
         userDatabaseReference.child(userId).child("drink_date").setValue(set);
-        Log.d("sett", "set: " + set);
-        Log.d("sett", "set: " + set.size());
     }
 }
