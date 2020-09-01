@@ -32,7 +32,6 @@ class ProfileActivity : AppCompatActivity() {
     val WEEK_DATE = 7
     val MONTH_DATE = 30
     val HALFYEAR_DATE = 180
-    val YEAR_DATE = 365
 
     private lateinit var database: FirebaseDatabase
     private lateinit var userDatabaseReference: DatabaseReference
@@ -41,9 +40,9 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // Если не авторизованы - идев в активити авторизации
-        //////// End initialization block
+
         val auth = FirebaseAuth.getInstance()
+
         // Если не авторизованы - идев в активити авторизации
         if (auth.getCurrentUser() == null) {
             startActivity(Intent(this@ProfileActivity, LoginSignUpActivity::class.java))
@@ -88,7 +87,7 @@ class ProfileActivity : AppCompatActivity() {
         val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
         val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
         val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
-        val yearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 355) * 100)
+        val yearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 360) * 100)
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
@@ -126,15 +125,6 @@ class ProfileActivity : AppCompatActivity() {
                 setProgressWithAnimation(HALFYEAR_DATE.toFloat(), 1000)
             }
         }
-        //  Year ProgressBar
-        val yearCircularProgressBar = findViewById<CircularProgressBar>(R.id.yearCircularProgressBar)
-        yearCircularProgressBar.apply {
-            if (daysWithoutDrink.toInt() <= YEAR_DATE) {
-                setProgressWithAnimation(daysWithoutDrink.toFloat(), 1000)
-            } else {
-                setProgressWithAnimation(YEAR_DATE.toFloat(), 1000)
-            }
-        }
 
         // set data in textView's
         setDataOnTextView(username, R.id.profileNameTextView)
@@ -160,11 +150,6 @@ class ProfileActivity : AppCompatActivity() {
             setDataOnTextView("100%", R.id.percentHalfYearTextInProgressBarTextView)
         }
 
-        if (yearWithoutDrink <= 100) {
-            setDataOnTextView("$yearWithoutDrink%", R.id.percentYearTextInProgressBarTextView)
-        } else {
-            setDataOnTextView("100%", R.id.percentYearTextInProgressBarTextView)
-        }
 
 
 
