@@ -1,6 +1,5 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageView;
@@ -18,6 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -84,6 +89,10 @@ public class SettingActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference profileImagesStorageReference;
 
+    // AdMob
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+
     private String oldName;
     private String newName;
 
@@ -108,9 +117,6 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
-        ActionBar ab = getActionBar();
-        ab.setTitle("Настройки");
 
 
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);
@@ -143,6 +149,8 @@ public class SettingActivity extends AppCompatActivity {
             startActivity(new Intent(SettingActivity.this, LoginSignUpActivity.class));
         }
 
+        // AdMob
+        showAdMob();
 
         String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME, "Username");
         String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE, "2020/01/01 01:01:00");
@@ -181,6 +189,36 @@ public class SettingActivity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
             startActivityForResult(Intent.createChooser(intent, "Выберите картинку"),
                     RC_IMAGE_PICER);
+        });
+
+    }
+
+    private void showAdMob() {
+
+        Log.d("AdMob", "AdMob run...");
+        MobileAds.initialize(this, initializationStatus -> {
+        });
+
+        mAdView = new AdView(this);
+
+        mAdView = findViewById(R.id.adViewBottomSettings);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3120800894638034/9851550730");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
         });
 
     }

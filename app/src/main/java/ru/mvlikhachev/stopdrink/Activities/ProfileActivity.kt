@@ -87,7 +87,6 @@ class ProfileActivity : AppCompatActivity() {
         val weekWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 7) * 100)
         val monthWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 30) * 100)
         val halfYearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 180) * 100)
-        val yearWithoutDrink = Math.round((daysWithoutDrink.toFloat() / 360) * 100)
 
         val circularProgressBar = findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
