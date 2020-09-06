@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="20dp"
+    android:background="@color/primaryColorBg"
+    android:orientation="horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:padding="4dp">
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/dayListCircularProgressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                app:cpb_background_progressbar_width="6dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progress_max="7"
+                app:cpb_progressbar_color="@color/colorProgressBarList"
+                app:cpb_progressbar_width="3dp"
+                app:cpb_round_border="false"
+                app:cpb_start_angle="0" />
+
+            <TextView
+                android:id="@+id/percentDayListTextInProgressBarTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100%"
+                android:textSize="10sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="@+id/dayListCircularProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/dayListCircularProgressBar" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:text="3 дня без алкоголя"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:text="Стало легче"
+                android:textStyle="italic" />
+        </LinearLayout>
+    </LinearLayout>

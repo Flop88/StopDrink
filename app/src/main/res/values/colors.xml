@@ -14,5 +14,8 @@
     <!--    Little progress bar-->
     <color name="colorProgressBarBg">#8aacc8</color>
     <color name="colorProgressBar">#bbdefb</color>
+    <!--    Little progress bar-->
+    <color name="colorProgressBarListBg">#C1A459</color>
+    <color name="colorProgressBarList">#C8AB73</color>
 
 </resources>

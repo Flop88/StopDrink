@@ -1,5 +1,6 @@
 package ru.mvlikhachev.stopdrink.Activities;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -108,6 +109,8 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        ActionBar ab = getActionBar();
+        ab.setTitle("Настройки");
 
 
         renameTextInputLayout = findViewById(R.id.renameTextInputLayout);

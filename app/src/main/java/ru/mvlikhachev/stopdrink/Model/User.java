@@ -18,8 +18,6 @@ public class User {
     private String profileImage;
     private ArrayList<String> drinksDate;
 
-    private int avatarMockUpResource;
-
     public User() {
     }
 
@@ -37,7 +35,6 @@ public class User {
         this.aboutMe = aboutMe;
         this.profileImage = profileImage;
         this.drinksDate = drinksDate;
-        this.avatarMockUpResource = avatarMockUpResource;
     }
 
     public User(String dateWhenStopDrink) {
@@ -101,13 +98,6 @@ public class User {
         this.drinksDate = drinksDate;
     }
 
-    public int getAvatarMockUpResource() {
-        return avatarMockUpResource;
-    }
-
-    public void setAvatarMockUpResource(int avatarMockUpResource) {
-        this.avatarMockUpResource = avatarMockUpResource;
-    }
 
     @Exclude
     public Map<String, Object> toMap() {

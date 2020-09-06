@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,271 +7,1676 @@
     android:layout_columnWeight="10"
     tools:context=".Activities.ProfileActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="vertical"
-            android:background="@android:color/white">
-
-            <RelativeLayout
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="-20dp">
-
-                <ImageView
-                    android:id="@+id/profileAvatarImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/me" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/circle" />
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/profileNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Maxim Likhachev"
-                android:textStyle="bold"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/profileAboutTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Text about me"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="6"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primaryColorBg"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:weightSum="8">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-20dp">
+
+                    <ImageView
+                        android:id="@+id/profileAvatarImageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/me" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/circle" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/profileNameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Maxim Likhachev"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/profileAboutTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Text about me"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="vertical">
+
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryColorBg"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="8">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp">
+
+                            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                                android:id="@+id/weekCircularProgressBar"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                                app:cpb_background_progressbar_width="6dp"
+                                app:cpb_progress_direction="to_right"
+                                app:cpb_progress_max="7"
+                                app:cpb_progressbar_color="@color/colorProgressBar"
+                                app:cpb_progressbar_width="3dp"
+                                app:cpb_round_border="false"
+                                app:cpb_start_angle="0" />
+
+                            <TextView
+                                android:id="@+id/percentWeekTextInProgressBarTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100%"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                app:layout_constraintBottom_toBottomOf="@+id/weekCircularProgressBar"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/weekCircularProgressBar" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Неделя" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp">
+
+                            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                                android:id="@+id/monthCircularProgressBar"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                                app:cpb_background_progressbar_width="6dp"
+                                app:cpb_progress_direction="to_right"
+                                app:cpb_progress_max="30"
+                                app:cpb_progressbar_color="@color/colorProgressBar"
+                                app:cpb_progressbar_width="3dp"
+                                app:cpb_round_border="false"
+                                app:cpb_start_angle="0" />
+
+                            <TextView
+                                android:id="@+id/percentMonthTextInProgressBarTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100%"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                app:layout_constraintBottom_toBottomOf="@+id/monthCircularProgressBar"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/monthCircularProgressBar" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Месяц" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp">
+
+                            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                                android:id="@+id/halfYearCircularProgressBar"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                                app:cpb_background_progressbar_width="6dp"
+                                app:cpb_progress_direction="to_right"
+                                app:cpb_progress_max="180"
+                                app:cpb_progressbar_color="@color/colorProgressBar"
+                                app:cpb_progressbar_width="3dp"
+                                app:cpb_round_border="false"
+                                app:cpb_start_angle="0" />
+
+                            <TextView
+                                android:id="@+id/percentHalfYearTextInProgressBarTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100%"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                app:layout_constraintBottom_toBottomOf="@+id/halfYearCircularProgressBar"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/halfYearCircularProgressBar" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Пол года" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp">
+
+                    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                        android:id="@+id/circularProgressBar"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
+                        app:cpb_background_progressbar_color="#8aacc8"
+                        app:cpb_background_progressbar_width="15dp"
+                        app:cpb_progress_direction="to_right"
+                        app:cpb_progress_max="365"
+                        app:cpb_progressbar_color="#bbdefb"
+                        app:cpb_progressbar_width="10dp"
+                        app:cpb_round_border="false"
+                        app:cpb_start_angle="0"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/daysTextInProgressBarTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="365"
+                        android:textSize="70sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toBottomOf="@+id/circularProgressBar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Little card -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryDarkColor"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Достижения"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:padding="4dp" />
+
+
+<!--       Гореть мне в аду за такую херню, но переделаю потом)))-->
+
+                </LinearLayout>
+<!--                1-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
 
                         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                            android:id="@+id/weekCircularProgressBar"
+                            android:id="@+id/dayListCircularProgressBar"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
-                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
                             app:cpb_background_progressbar_width="6dp"
                             app:cpb_progress_direction="to_right"
                             app:cpb_progress_max="7"
-                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
                             app:cpb_progressbar_width="3dp"
                             app:cpb_round_border="false"
                             app:cpb_start_angle="0" />
 
                         <TextView
-                            android:id="@+id/percentWeekTextInProgressBarTextView"
+                            android:id="@+id/percentDayListTextInProgressBarTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="100%"
                             android:textSize="10sp"
                             android:textStyle="normal"
-                            app:layout_constraintBottom_toBottomOf="@+id/weekCircularProgressBar"
+                            app:layout_constraintBottom_toBottomOf="@+id/dayListCircularProgressBar"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/weekCircularProgressBar" />"/>
+                            app:layout_constraintTop_toTopOf="@+id/dayListCircularProgressBar" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Неделя" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="1 день без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
+<!--                2-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
 
                         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                            android:id="@+id/monthCircularProgressBar"
+                            android:id="@+id/day2ListCircularProgressBar"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
-                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
                             app:cpb_background_progressbar_width="6dp"
                             app:cpb_progress_direction="to_right"
-                            app:cpb_progress_max="30"
-                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
                             app:cpb_progressbar_width="3dp"
                             app:cpb_round_border="false"
                             app:cpb_start_angle="0" />
 
                         <TextView
-                            android:id="@+id/percentMonthTextInProgressBarTextView"
+                            android:id="@+id/percentDay2ListTextInProgressBarTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="100%"
                             android:textSize="10sp"
                             android:textStyle="normal"
-                            app:layout_constraintBottom_toBottomOf="@+id/monthCircularProgressBar"
+                            app:layout_constraintBottom_toBottomOf="@+id/day2ListCircularProgressBar"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/monthCircularProgressBar" />"/>
+                            app:layout_constraintTop_toTopOf="@+id/day2ListCircularProgressBar" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Месяц" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="2 дня без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
+<!--                3-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
 
                         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                            android:id="@+id/halfYearCircularProgressBar"
+                            android:id="@+id/day3ListCircularProgressBar"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
-                            app:cpb_background_progressbar_color="@color/colorProgressBarBg"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
                             app:cpb_background_progressbar_width="6dp"
                             app:cpb_progress_direction="to_right"
-                            app:cpb_progress_max="180"
-                            app:cpb_progressbar_color="@color/colorProgressBar"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
                             app:cpb_progressbar_width="3dp"
                             app:cpb_round_border="false"
                             app:cpb_start_angle="0" />
 
                         <TextView
-                            android:id="@+id/percentHalfYearTextInProgressBarTextView"
+                            android:id="@+id/percentDay3ListTextInProgressBarTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="100%"
                             android:textSize="10sp"
                             android:textStyle="normal"
-                            app:layout_constraintBottom_toBottomOf="@+id/halfYearCircularProgressBar"
+                            app:layout_constraintBottom_toBottomOf="@+id/day3ListCircularProgressBar"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/halfYearCircularProgressBar" />
-                        "/>
+                            app:layout_constraintTop_toTopOf="@+id/day3ListCircularProgressBar" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="3 дня без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+<!--                4-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day4ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay4ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day4ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day4ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="4 дня без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                5-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day5ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay5ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day5ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day5ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="5 дня без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                6-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day6ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay6ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day6ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day6ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="6 дня без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                7-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day7ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay7ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day7ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day7ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="Неделя без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                14-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day14ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay14ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day14ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day14ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="2 недели без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                21-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day21ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay21ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day21ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day21ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="3 недели без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                30-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day30ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay30ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day30ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day30ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="1 месяц без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                60-->
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/primaryColorBg"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:padding="4dp">
+
+                    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                        android:id="@+id/day60ListCircularProgressBar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                        app:cpb_background_progressbar_width="6dp"
+                        app:cpb_progress_direction="to_right"
+                        app:cpb_progress_max="7"
+                        app:cpb_progressbar_color="@color/colorProgressBarList"
+                        app:cpb_progressbar_width="3dp"
+                        app:cpb_round_border="false"
+                        app:cpb_start_angle="0" />
+
+                    <TextView
+                        android:id="@+id/percentDay60ListTextInProgressBarTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100%"
+                        android:textSize="10sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toBottomOf="@+id/day60ListCircularProgressBar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/day60ListCircularProgressBar" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Пол года" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="2 месяца без алкоголя"
+                        android:textStyle="bold" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="2dp"
+                        android:text="Стало легче"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+<!--                90-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day90ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay90ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day90ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day90ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="3 месяца без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
                 </LinearLayout>
 
+<!--                120-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day120ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay120ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day120ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day120ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="4 месяца без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                150-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day150ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay150ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day150ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day150ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="5 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                180-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day180ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay180ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day180ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day180ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="6 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                210-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day210ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay210ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day210ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day210ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="7 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                240-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day240ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay240ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day240ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day240ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="8 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                270-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day270ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay270ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day270ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day270ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="9 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                300-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day300ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay300ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day300ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day300ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="10 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day330ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay330ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day330ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day330ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="11 месяцев без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+<!--                365-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primaryColorBg"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:padding="4dp">
+
+                        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                            android:id="@+id/day365ListCircularProgressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            app:cpb_background_progressbar_color="@color/colorProgressBarListBg"
+                            app:cpb_background_progressbar_width="6dp"
+                            app:cpb_progress_direction="to_right"
+                            app:cpb_progress_max="7"
+                            app:cpb_progressbar_color="@color/colorProgressBarList"
+                            app:cpb_progressbar_width="3dp"
+                            app:cpb_round_border="false"
+                            app:cpb_start_angle="0" />
+
+                        <TextView
+                            android:id="@+id/percentDay365ListTextInProgressBarTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100%"
+                            android:textSize="10sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/day365ListCircularProgressBar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/day365ListCircularProgressBar" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="1 год без алкоголя"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="2dp"
+                            android:text="Стало легче"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
 
 
             </LinearLayout>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp">
-
-                <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                    android:id="@+id/circularProgressBar"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    app:cpb_background_progressbar_color="#8aacc8"
-                    app:cpb_background_progressbar_width="15dp"
-                    app:cpb_progress_direction="to_right"
-                    app:cpb_progress_max="365"
-                    app:cpb_progressbar_color="#bbdefb"
-                    app:cpb_progressbar_width="10dp"
-                    app:cpb_round_border="false"
-                    app:cpb_start_angle="0"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="0dp" />
-
-                <TextView
-                    android:id="@+id/daysTextInProgressBarTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="365"
-                    android:textSize="70sp"
-                    android:textStyle="normal"
-                    app:layout_constraintBottom_toBottomOf="@+id/circularProgressBar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
         </LinearLayout>
+    </ScrollView>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/primaryDarkColor"
-            app:itemIconTint="@color/primaryLightColor"
-            app:itemTextColor="@color/primaryLightColor"
-            app:menu="@menu/bottom_navigation_menu" />
-    </LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primaryDarkColor"
+        app:itemIconTint="@color/primaryLightColor"
+        app:itemTextColor="@color/primaryLightColor"
+        app:menu="@menu/bottom_navigation_menu" />
 
 
-</LinearLayout>
+</RelativeLayout>
