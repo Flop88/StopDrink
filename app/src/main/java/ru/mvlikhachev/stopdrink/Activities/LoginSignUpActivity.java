@@ -41,6 +41,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private Button loginSignUpButton;
     private TextView toggleLoginSignUpTextView;
+    private TextView dangedLoginSignUpTextView;
 
     private boolean isLoginModeActive;
 
@@ -80,6 +81,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         textInputName = findViewById(R.id.textInputName);
         textInputPassword = findViewById(R.id.textInputPassword);
         textInputConfirmPassword = findViewById(R.id.textInputConfirmPassword);
+        dangedLoginSignUpTextView = findViewById(R.id.dangedLoginSignUpTextView);
 
         loginSignUpButton = findViewById(R.id.loginSignUpButton);
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
@@ -181,6 +183,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         toggleLoginSignUpTextView.setText("Или авторизуйтесь");
         textInputConfirmPassword.setVisibility(View.VISIBLE);
         textInputName.setVisibility(View.VISIBLE);
+        dangedLoginSignUpTextView.setVisibility(View.VISIBLE);
     }
     private void authorizationUi() {
         isLoginModeActive = true;
@@ -188,6 +191,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         toggleLoginSignUpTextView.setText("Или зарегистрируйтесь");
         textInputConfirmPassword.setVisibility(View.GONE);
         textInputName.setVisibility(View.GONE);
+        dangedLoginSignUpTextView.setVisibility(View.GONE);
     }
 
     public void toggleLoginSignUp(View view) {

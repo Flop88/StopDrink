@@ -403,18 +403,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        LoadReferences.loadDataFromDbAndPutInSharedPreferences(this);
-//
-//        String dbid = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-//                "ID");
-//        String dbName = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
-//                "Default Name");
-//        String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE,
-//                "Default Name");
-//        String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
-//                "Default Name");
-//        String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE,
-//                "Default Name");
-
     }
 }

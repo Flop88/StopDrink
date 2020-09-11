@@ -87,6 +87,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dangedLoginSignUpTextView"
+        android:text="Все ваши данные будут зашифрованы и не попадут 3-им лицам. Пароль не увидит даже разработчик приложения."
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:textSize="12sp"
+        android:textColor="@color/primaryDarkColor" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

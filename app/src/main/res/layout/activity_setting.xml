@@ -7,97 +7,97 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activities.SettingActivity">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp" >
-
-<!--    Name-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/renameTextInputLayout"
-        app:errorEnabled="true"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/renameTextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/newName" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="10"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
 
+            <!--    Name-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/aboutTextInputLayout"
-                app:errorEnabled="true"
+                android:id="@+id/renameTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_weight="8"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/aboutTextInputEditText"
+                    android:id="@+id/renameTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/aboutMe" />
+                    android:hint="@string/newName"
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/addImageButtonImageView"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_image_24"
-                android:layout_weight="2" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/aboutTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="8"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/aboutTextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/aboutMe"
+                        android:inputType="textEmailAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/addImageButtonImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_baseline_image_24" />
+
+            </LinearLayout>
+
+
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:onClick="onclick"
+                android:text="@string/setTime"
+                android:textSize="22sp"></TextView>
+
+
+            <Button
+                android:id="@+id/saveNewDataButton"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="saveNewData"
+                android:text="@string/save" />
 
         </LinearLayout>
 
-
-
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginBottom="10dp"
-        android:onClick="onclick"
-        android:gravity="center_horizontal"
-        android:text="@string/setTime"
-        android:textSize="22sp">
-    </TextView>
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/saveNewDataButton"
-        android:onClick="saveNewData"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/save"
-        style="@style/ButtonStyle"
-        />
-
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewBottomSettings"
