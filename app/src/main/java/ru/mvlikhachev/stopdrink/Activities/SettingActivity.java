@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -314,10 +313,6 @@ public class SettingActivity extends AppCompatActivity {
 
 
                 updateDataInDb(userId, oldName, textAboutMe, setdate);
-//                setNewNameInDb(oldName);
-//                setTextAboutMeInDb(textAboutMe);
-//                updateNewDataInDb(setdate);
-                //databaseReference.removeEventListener(valueEventListener);
 
                 Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -325,13 +320,6 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
             }
         }
-    }
-
-    private void updateNewDataInDb(String date) {
-        userDatabaseReference.child(userId).child("dateWhenStopDrink").setValue(date);
-
-        editor.putString(APP_PREFERENCES_KEY_DATE, date);
-        editor.apply();
     }
 
     private String setNewDataInDb(int year, int month, int day, int hour, int minute) {
@@ -400,14 +388,10 @@ public class SettingActivity extends AppCompatActivity {
             currentUser.setName(name);
             currentUser.setAboutMe(textAboutMe);
             currentUser.setDateWhenStopDrink(date);
-//        currentUser.setAvatarMockUpResource(0);
             currentUser.setProfileImage(profileImage);
-            if (id.length() == 20  && firebaseUser.getUid() != id) {
-                userDatabaseReference.child(id).setValue(currentUser);
-            } else {
-                Toast.makeText(this, "Update ERROR", Toast.LENGTH_SHORT).show();
+
+            userDatabaseReference.child(id).setValue(currentUser);
             }
-        }
 
 
         editor.putString(APP_PREFERENCES_KEY_NAME, name);
