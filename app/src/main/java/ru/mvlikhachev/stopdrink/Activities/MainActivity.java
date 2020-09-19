@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
-        userId = Utils.getUserId(this);
+        userId = Utils.getUserId();
         daysWithoutDrink = "0";
 
 //////// End initialization block
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
     // Button "сбросить"
     public void resetDrinkDate(View view) {
         if (Utils.hasConnection(this)) {
-            String id = Utils.getUserId(this);
+            String id = Utils.getUserId();
             String updateDate = Utils.getCurrentDate();
                 userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
 

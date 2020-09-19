@@ -57,7 +57,6 @@ public class SettingActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 
     public static final int RC_IMAGE_PICER = 1488;
 ///////////////////////////////////////////////////////////////////
@@ -99,7 +98,7 @@ public class SettingActivity extends AppCompatActivity {
     private String oldDate;
     private String textAboutMe;
 
-    private String realId;
+
 
     private String newYear;
     private String newMonth;
@@ -156,15 +155,13 @@ public class SettingActivity extends AppCompatActivity {
         String dbDate = sharedPreferences.getString(APP_PREFERENCES_KEY_DATE, "2020/01/01 01:01:00");
         String dbAbout = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME, "Text about me");
         String dbProfileImg = sharedPreferences.getString(APP_PREFERENCES_KEY_PROFILE_IMAGE, "2020/01/01 01:01:00");
-        String dbId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qweqweqweqwe");
+
 
         oldName = dbName;
         oldDate = dbDate;
-        userId = dbId;
+        userId = Utils.getUserId();
         textAboutMe = dbAbout;
         urlProfileImg = dbProfileImg;
-
-        realId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID, "qwe");
 
         // Устанавливаем текущую дату максимальным числом в календаре
         Calendar calendar = Calendar.getInstance();
@@ -316,7 +313,7 @@ public class SettingActivity extends AppCompatActivity {
                 );
 
 
-                updateDataInDb(realId, oldName, textAboutMe, setdate);
+                updateDataInDb(userId, oldName, textAboutMe, setdate);
 //                setNewNameInDb(oldName);
 //                setTextAboutMeInDb(textAboutMe);
 //                updateNewDataInDb(setdate);

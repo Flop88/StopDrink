@@ -119,7 +119,7 @@ public class Utils {
     }
 
     // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
-    public static String getUserId(Context context) {
+    public static String getUserId() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 

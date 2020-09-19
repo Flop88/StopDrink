@@ -27,7 +27,6 @@ class ProfileActivity : AppCompatActivity() {
     val APP_PREFERENCES_KEY_DATE = "dateFromDb"
     val APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb"
     val APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb"
-    val APP_PREFERENCES_KEY_USERID = "userIdFromDb"
 
     val WEEK_DATE = 7
     val MONTH_DATE = 30
@@ -57,8 +56,7 @@ class ProfileActivity : AppCompatActivity() {
         userDatabaseReference = database.getReference().child("users")
 // ...
 
-        val userId = sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                "qwerty")
+        val userId = Utils.getUserId()
         val username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                 "Default Name")
         val textAboutMe = sharedPreferences.getString(APP_PREFERENCES_KEY_ABOUT_ME,
