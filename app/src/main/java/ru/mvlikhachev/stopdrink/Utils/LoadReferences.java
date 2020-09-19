@@ -24,7 +24,6 @@ public class LoadReferences {
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
 
     public static final int RC_IMAGE_PICER = 1488;
 
@@ -47,7 +46,6 @@ public class LoadReferences {
                 if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                     // Save DATA on local storage
-                    editor.putString(APP_PREFERENCES_KEY_USERID, " ");
                     editor.putString(APP_PREFERENCES_KEY_NAME, " ");
                     editor.putString(APP_PREFERENCES_KEY_DATE, " ");
                     editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, " ");

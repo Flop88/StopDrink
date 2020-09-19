@@ -1,39 +1,19 @@
 package ru.mvlikhachev.stopdrink.Utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-import ru.mvlikhachev.stopdrink.Model.User;
-
 public class Utils {
-    //////////////////////// Constants ////////////////////////////////
-    // Константа файла сохранения настроек
-    public static final String APP_PREFERENCES = "datasetting";
-    public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
-    public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
-    public static final String APP_PREFERENCES_KEY_CLICKED_USERID = "clickedUserIdFromDb";
-///////////////////////////////////////////////////////////////////
-
 
     // Проверка подключения к интернету
     public static boolean hasConnection(final Context context) {
@@ -144,64 +124,5 @@ public class Utils {
                 NotificationReceiver.showNotification(context, date);
                 break;
         }
-    }
-
-    // Add drink date in db
-    public static void addDrinkDate(Context context, String userId) {
-//        HashSet<String> set = new HashSet<>();
-
-        ArrayList<String> db = new ArrayList<>();
-        ArrayList<String> set = new ArrayList<>();
-        String date = getCurrentDate();
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userDatabaseReference = database.getReference().child("users");
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                APP_PREFERENCES,
-                Context.MODE_PRIVATE
-        );
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        ChildEventListener dataChildeEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User user = snapshot.getValue(User.class);
-                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    ArrayList<String> dateList = user.getDrinksDate();
-
-                    if(dateList != null) {
-                        for (int i = 0; i < dateList.size(); ++i) {
-                            set.add(dateList.get(i));
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        userDatabaseReference.addChildEventListener(dataChildeEventListener);
-
-        set.add(date);
-        userDatabaseReference.child(userId).child("drink_date").setValue(set);
     }
 }

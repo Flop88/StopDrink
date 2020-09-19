@@ -155,33 +155,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateConfirmPassword() {
-
-        String passwordInput = textInputPassword
-                .getEditText()
-                .getText()
-                .toString()
-                .trim();
-        String confirmPasswordInput = textInputConfirmPassword
-                .getEditText()
-                .getText()
-                .toString()
-                .trim();
-
-        if (!passwordInput.equals(confirmPasswordInput)) {
-            textInputPassword.setError("Пароли должны совпадать");
-            return false;
-        } else {
-            textInputPassword.setError("");
-            return true;
-        }
-    }
-
     private void registarionUi() {
         isLoginModeActive = false;
         loginSignUpButton.setText("Зарегистрироваться");
         toggleLoginSignUpTextView.setText("Или авторизуйтесь");
-        textInputConfirmPassword.setVisibility(View.VISIBLE);
+        textInputConfirmPassword.setVisibility(View.GONE); // Временно отключаем подтверждение пароля
         textInputName.setVisibility(View.VISIBLE);
         dangedLoginSignUpTextView.setVisibility(View.VISIBLE);
     }
@@ -230,7 +208,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     });
         } else { // Registration
 
-            if (!validateEmail() | !Validations.validateName(textInputName) | !validatePassword() | !validateConfirmPassword()) {
+            if (!validateEmail() | !Validations.validateName(textInputName) | !validatePassword() ) { // | !validateConfirmPassword()
                 return;
             }
 

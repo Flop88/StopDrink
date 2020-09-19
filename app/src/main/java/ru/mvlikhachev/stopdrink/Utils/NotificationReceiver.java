@@ -25,7 +25,6 @@ import ru.mvlikhachev.stopdrink.R;
 public class NotificationReceiver extends BroadcastReceiver {
 
     public static final String CHANNEL_ID = "exampleChannel";
-    public static final int NOTIFICATION_ID = 1;
 
 
     private NotificationManagerCompat notificationManager;
