@@ -9,12 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -120,48 +120,10 @@ public class Utils {
 
     // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
     public static String getUserId(Context context) {
-        final String[] result = {""};
-        SharedPreferences sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userDatabaseReference = database.getReference().child("users");
-        if (Utils.hasConnection(context)) {
-            userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    goOnlineConnectiontoDatabase();
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                            String key = childSnapshot.getKey();
-                            String email = childSnapshot.child("email").getValue(String.class);
-
-                            if (email.equals(auth.getCurrentUser().getEmail())) {
-                                result[0] = key;
-                                // Save "userId" on local storage
-                                if (result[0].length() == 20) {
-                                    editor.putString(APP_PREFERENCES_KEY_USERID, result[0]);
-                                    editor.apply();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-            result[0] =  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                    "qwerty");
-
-            return result[0];
-        } else {
-            return  sharedPreferences.getString(APP_PREFERENCES_KEY_USERID,
-                    "qwerty");
-        }
+        return firebaseUser.getUid();
     }
 
 

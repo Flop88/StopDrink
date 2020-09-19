@@ -284,7 +284,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 .trim());
         currentUser.setDateWhenStopDrink(Utils.getCurrentDate());
 
-        usersDatabaseReference.push().setValue(currentUser);
+        usersDatabaseReference.child(user.getUid()).setValue(currentUser);
 
     }
 

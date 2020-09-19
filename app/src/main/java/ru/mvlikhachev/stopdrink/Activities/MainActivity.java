@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
     public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
     public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
-    public static final String APP_PREFERENCES_KEY_USERID = "userIdFromDb";
     ////////////////////// INITIALIZATION /////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
@@ -116,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
         userId = Utils.getUserId(this);
         daysWithoutDrink = "0";
 
-        if (userId.length() == 20 && firebaseUser.getUid() != userId) {
-            editor.putString(APP_PREFERENCES_KEY_USERID, userId);
-            editor.apply();
-        }
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
