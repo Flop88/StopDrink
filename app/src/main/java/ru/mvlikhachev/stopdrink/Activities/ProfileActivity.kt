@@ -7,12 +7,14 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
+import ru.mvlikhachev.stopdrink.Adapter.CardAdapter
 import ru.mvlikhachev.stopdrink.R
 import ru.mvlikhachev.stopdrink.Utils.LoadReferences
 import ru.mvlikhachev.stopdrink.Utils.Utils
@@ -35,10 +37,13 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var userDatabaseReference: DatabaseReference
 
+    //Adapter
+    private lateinit var cardAdapter: CardAdapter
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-
 
         val auth = FirebaseAuth.getInstance()
 
@@ -150,8 +155,15 @@ class ProfileActivity : AppCompatActivity() {
 
 
 
+        fillCardRecyclerView()
 
         showBottomNavigation(R.id.profile_page)
+    }
+
+    private fun fillCardRecyclerView() {
+
+        recyclerView = findViewById(R.id.cardItemRecyclerView)
+//        cardAdapter = CardAdapter(arrayList)
     }
 
     private fun setDataOnTextView(text: String?, textView: Int) {
