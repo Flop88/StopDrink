@@ -1,5 +1,11 @@
 package ru.mvlikhachev.stopdrink.model;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.library.baseAdapters.BR;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -8,8 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class User {
+@Entity(tableName = "users_table")
+public class User extends BaseObservable {
 
+    @PrimaryKey(autoGenerate = true)
     private String id;
     private String email;
     private String name;
@@ -41,61 +49,75 @@ public class User {
         this.dateWhenStopDrink = dateWhenStopDrink;
     }
 
+    @Bindable
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+        notifyPropertyChanged(BR.id);
     }
 
+    @Bindable
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+        notifyPropertyChanged(BR.email);
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(BR.name);
     }
 
+    @Bindable
     public String getDateWhenStopDrink() {
         return dateWhenStopDrink;
     }
 
     public void setDateWhenStopDrink(String dateWhenStopDrink) {
         this.dateWhenStopDrink = dateWhenStopDrink;
+        notifyPropertyChanged(BR.dateWhenStopDrink);
     }
 
 
+    @Bindable
     public String getAboutMe() {
         return aboutMe;
     }
 
     public void setAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
+        notifyPropertyChanged(BR.aboutMe);
     }
 
+    @Bindable
     public String getProfileImage() {
         return profileImage;
     }
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+        notifyPropertyChanged(BR.profileImage);
     }
 
+    @Bindable
     public ArrayList<String> getDrinksDate() {
         return drinksDate;
     }
 
     public void setDrinksDate(ArrayList<String> drinksDate) {
         this.drinksDate = drinksDate;
+        notifyPropertyChanged(BR.drinksDate);
     }
 
 
