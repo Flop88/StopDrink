@@ -18,6 +18,7 @@ import java.util.Map;
 public class User extends BaseObservable {
 
     @PrimaryKey(autoGenerate = true)
+    private int dbId;
     private String id;
     private String uid;
     private String email;
@@ -25,7 +26,6 @@ public class User extends BaseObservable {
     private String dateWhenStopDrink;
     private String aboutMe;
     private String profileImage;
-    private ArrayList<String> drinksDate;
 
     public User() {
     }
@@ -36,7 +36,8 @@ public class User extends BaseObservable {
         this.name = name;
     }
 
-    public User(String id, String uid, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate) {
+    public User(int dbId, String id, String uid, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate) {
+        this.dbId = dbId;
         this.id = id;
         this.uid = uid;
         this.email = email;
@@ -44,7 +45,6 @@ public class User extends BaseObservable {
         this.dateWhenStopDrink = dateWhenStopDrink;
         this.aboutMe = aboutMe;
         this.profileImage = profileImage;
-        this.drinksDate = drinksDate;
     }
 
     public User(String dateWhenStopDrink) {
@@ -113,16 +113,6 @@ public class User extends BaseObservable {
     }
 
     @Bindable
-    public ArrayList<String> getDrinksDate() {
-        return drinksDate;
-    }
-
-    public void setDrinksDate(ArrayList<String> drinksDate) {
-        this.drinksDate = drinksDate;
-        notifyPropertyChanged(BR.drinksDate);
-    }
-
-    @Bindable
     public String getUid() {
         return uid;
     }
@@ -130,6 +120,16 @@ public class User extends BaseObservable {
     public void setUid(String uid) {
         this.uid = uid;
         notifyPropertyChanged(BR.uid);
+    }
+
+    @Bindable
+    public int getDbId() {
+        return dbId;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
+        notifyPropertyChanged(BR.dbId);
     }
 
     @Exclude

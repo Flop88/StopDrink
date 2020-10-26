@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -32,10 +33,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
+import ru.mvlikhachev.stopdrink.model.User;
+import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
 
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
@@ -78,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
     private NotificationManagerCompat notificationManager;
 
+    //
+    private MainActivityViewModel mainActivityViewModel;
+
 
     // TEST
 
@@ -93,6 +98,26 @@ public class MainActivity extends AppCompatActivity {
         showAdMob();
 
 ///////// Initialization block
+        mainActivityViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(MainActivityViewModel.class);
+
+        User testUser = new User();
+        testUser.setUid("2");
+        testUser.setName("Anton");
+        mainActivityViewModel.addNewUser(testUser);
+
+        mainActivityViewModel.getUser("2").observe(this, user -> {
+            Log.d("TAGUSER", "Add: " + user.getName());
+        });
+
+        testUser.setName("Ne Anton");
+        mainActivityViewModel.updateUser(testUser);
+
+        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
+
+
+
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);

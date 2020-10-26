@@ -50,7 +50,8 @@ public abstract class UsersDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
 
             User adminUser = new User();
-            adminUser.setId("1");
+            adminUser.setDbId(1);
+            adminUser.setUid("1");
             adminUser.setEmail("admin");
             adminUser.setName("admin");
 
