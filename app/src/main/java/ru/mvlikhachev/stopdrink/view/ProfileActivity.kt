@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.Activities
+package ru.mvlikhachev.stopdrink.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -151,12 +151,8 @@ class ProfileActivity : AppCompatActivity() {
         } else {
             setDataOnTextView("100%", R.id.percentHalfYearTextInProgressBarTextView)
         }
-
-
-
-
+        
         fillCardRecyclerView()
-
         showBottomNavigation(R.id.profile_page)
     }
 

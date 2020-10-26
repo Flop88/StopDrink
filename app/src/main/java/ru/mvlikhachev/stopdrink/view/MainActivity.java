@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.Activities;
+package ru.mvlikhachev.stopdrink.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ru.mvlikhachev.stopdrink.Model.User;
+import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;

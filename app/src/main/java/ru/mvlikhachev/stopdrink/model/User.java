@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.Model;
+package ru.mvlikhachev.stopdrink.model;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;

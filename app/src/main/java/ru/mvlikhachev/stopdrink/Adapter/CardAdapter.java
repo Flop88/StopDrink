@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import ru.mvlikhachev.stopdrink.Model.User;
+import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder>{

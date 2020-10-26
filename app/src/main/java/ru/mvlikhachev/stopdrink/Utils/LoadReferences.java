@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ru.mvlikhachev.stopdrink.Model.User;
+import ru.mvlikhachev.stopdrink.model.User;
 
 public class LoadReferences {
 

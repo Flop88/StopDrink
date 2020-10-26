@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.Activities;
+package ru.mvlikhachev.stopdrink.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ru.mvlikhachev.stopdrink.Model.User;
+import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;

@@ -30,6 +30,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -67,5 +70,20 @@ dependencies {
 
     // ProgressBar
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+
+
+    // Room
+    implementation "androidx.room:room-runtime:2.2.5"
+    annotationProcessor "androidx.room:room-compiler:2.2.5"
+
+    // MVVM
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+//    // Annotation processor
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
 
 }

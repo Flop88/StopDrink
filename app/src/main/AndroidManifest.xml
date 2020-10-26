@@ -18,24 +18,24 @@
             android:value="ca-app-pub-3120800894638034~4236832792" />
 
         <activity
-            android:name=".Activities.SettingActivity"
+            android:name=".view.SettingActivity"
             android:label="Настройки"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.AboutActivity"
+            android:name=".view.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.LoginSignUpActivity"
+            android:name=".view.LoginSignUpActivity"
             android:label="Вход"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".view.MainActivity"
             android:label="Я Не Пью!"
             android:noHistory="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name=".view.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ProfileActivity"
+            android:name=".view.ProfileActivity"
             android:label="Профиль"
             android:screenOrientation="portrait"/>
     </application>

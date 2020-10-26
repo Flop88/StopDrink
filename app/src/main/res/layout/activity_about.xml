@@ -7,7 +7,7 @@
 
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".Activities.AboutActivity">
+    tools:context=".view.AboutActivity">
 
     <ImageView
         android:layout_marginTop="20dp"

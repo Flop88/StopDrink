@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.Activities;
+package ru.mvlikhachev.stopdrink.view;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -41,7 +41,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 
-import ru.mvlikhachev.stopdrink.Model.User;
+import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
