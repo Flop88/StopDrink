@@ -19,6 +19,7 @@ public class User extends BaseObservable {
 
     @PrimaryKey(autoGenerate = true)
     private String id;
+    private String uid;
     private String email;
     private String name;
     private String dateWhenStopDrink;
@@ -35,8 +36,9 @@ public class User extends BaseObservable {
         this.name = name;
     }
 
-    public User(String id, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate, int avatarMockUpResource) {
+    public User(String id, String uid, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate) {
         this.id = id;
+        this.uid = uid;
         this.email = email;
         this.name = name;
         this.dateWhenStopDrink = dateWhenStopDrink;
@@ -120,6 +122,15 @@ public class User extends BaseObservable {
         notifyPropertyChanged(BR.drinksDate);
     }
 
+    @Bindable
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+        notifyPropertyChanged(BR.uid);
+    }
 
     @Exclude
     public Map<String, Object> toMap() {
