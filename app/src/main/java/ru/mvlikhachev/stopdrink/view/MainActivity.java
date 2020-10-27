@@ -102,19 +102,19 @@ public class MainActivity extends AppCompatActivity {
                 .AndroidViewModelFactory(getApplication())
                 .create(MainActivityViewModel.class);
 
-        User testUser = new User();
-        testUser.setUid("2");
-        testUser.setName("Anton");
-        mainActivityViewModel.addNewUser(testUser);
-
-        mainActivityViewModel.getUser("2").observe(this, user -> {
-            Log.d("TAGUSER", "Add: " + user.getName());
-        });
-
-        testUser.setName("Ne Anton");
-        mainActivityViewModel.updateUser(testUser);
-
-        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
+//        User testUser = new User();
+//        testUser.setUid("2");
+//        testUser.setName("Anton");
+//        mainActivityViewModel.addNewUser(testUser);
+//
+//        mainActivityViewModel.getUser("2").observe(this, user -> {
+//            Log.d("TAGUSER", "Add: " + user.getName());
+//        });
+//
+//        testUser.setName("Ne Anton");
+//        mainActivityViewModel.updateUser(testUser);
+//
+//        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
 
 
 

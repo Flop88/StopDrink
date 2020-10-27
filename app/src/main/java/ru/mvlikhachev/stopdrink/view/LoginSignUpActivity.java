@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,6 +30,7 @@ import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
+import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
 
 public class LoginSignUpActivity extends AppCompatActivity {
 
@@ -52,6 +54,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private DatabaseReference usersDatabaseReference;
 
     private AdView mAdView;
+
+    private MainActivityViewModel mainActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,10 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         loginSignUpButton = findViewById(R.id.loginSignUpButton);
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
+
+        mainActivityViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(MainActivityViewModel.class);
 
         authorizationUi();
 
@@ -255,14 +263,16 @@ public class LoginSignUpActivity extends AppCompatActivity {
         User currentUser = new User();
 
         currentUser.setId(user.getUid());
+        currentUser.setUid(user.getUid());
         currentUser.setEmail(user.getEmail());
         currentUser.setName(textInputName.getEditText()
                 .getText()
                 .toString()
                 .trim());
+
         currentUser.setDateWhenStopDrink(Utils.getCurrentDate());
 
-        usersDatabaseReference.child(user.getUid()).setValue(currentUser);
+        mainActivityViewModel.addNewUser(currentUser);
 
     }
 
