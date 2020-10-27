@@ -2,7 +2,6 @@ package ru.mvlikhachev.stopdrink.service;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -56,16 +55,9 @@ public class UserRepository {
         protected Void doInBackground(User... users) {
             // Add to Room
             userDao.insert(users[0]);
-            Log.d("getUid", "\n UserRepo + InsertUserAsyncTask: ");
-            Log.d("getUid", "Пользователь зарегестрирован и в несен в БД: ");
-            Log.d("getUid", "UID: " + users[0].getUid());
-            Log.d("getUid", "Email: " + users[0].getEmail());
-            Log.d("getUid", "Name: " + users[0].getName());
-            Log.d("getUid", "DATE: " + users[0].getDateWhenStopDrink());
 
             // Add to Firebase Database
             usersDatabaseReference.child(users[0].getUid()).setValue(users[0]);
-            Log.d("getUid", "Все это дело улетело в firebase");
             return null;
         }
     }

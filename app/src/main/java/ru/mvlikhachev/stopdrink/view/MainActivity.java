@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,15 +27,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
-import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
 
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
@@ -184,11 +180,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData(String uid) {
         mainActivityViewModel.getUser(uid).observe(this, user -> {
-            Log.d("TAGUSER", "Current name: " + user.getName());
-            Log.d("TAGUSER", "Current name: " + user.getDateWhenStopDrink());
             helloUsernameTextView.setText("Здраствуйте, " + user.getName());
             lastDrinkDate = user.getDateWhenStopDrink();
-            Log.d("DrinkDate", "Last in loadData: " + lastDrinkDate);
 
             setTime();
 
@@ -196,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setTime() {
-        Log.d("DrinkDate", "Last in setTime: " + lastDrinkDate);
         String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
         daysWithoutDrink = dates[0];
         setNotDrinkTime(dates[0],dates[1],dates[2]);
@@ -255,53 +247,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-    }
-
-    // Get date when user last drink alcohol from firebase database method
-    private void getDateOfLastDrinkFromDatabase() {
-        loadDateUserChildeEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User user = snapshot.getValue(User.class);
-                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    lastDrinkDate = user.getDateWhenStopDrink();
-                    String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
-                    daysWithoutDrink = dates[0];
-                    setNotDrinkTime(dates[0],dates[1],dates[2]);
-
-                    // Show notification if hour = 00 and minute = 00
-                    if (dates[1].equals("00") && dates[2].equals("00")) {
-                        Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
-                    }
-
-
-                    // Save "username" on local storage
-                    editor.putString(APP_PREFERENCES_KEY_DATE, lastDrinkDate);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
     // Set date data in TextView
