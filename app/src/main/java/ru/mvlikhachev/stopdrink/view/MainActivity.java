@@ -102,20 +102,19 @@ public class MainActivity extends AppCompatActivity {
                 .AndroidViewModelFactory(getApplication())
                 .create(MainActivityViewModel.class);
 
-        User testUser = new User();
-        testUser.setUid("2");
-        testUser.setName("Anton");
-        mainActivityViewModel.addNewUser(testUser);
-
-        mainActivityViewModel.getUser("2").observe(this, user -> {
-            Log.d("TAGUSER", "Add: " + user.getName());
-        });
-
-        testUser.setName("Ne Anton");
-        mainActivityViewModel.updateUser(testUser);
-
-        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
-
+//        User testUser = new User();
+//        testUser.setUid("2");
+//        testUser.setName("Anton");
+//        mainActivityViewModel.addNewUser(testUser);
+//
+//        mainActivityViewModel.getUser("2").observe(this, user -> {
+//            Log.d("TAGUSER", "Add: " + user.getName());
+//        });
+//
+//        testUser.setName("Ne Anton");
+//        mainActivityViewModel.updateUser(testUser);
+//
+//        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
 
 
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
@@ -133,8 +132,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference = database.getReference().child("users");
 
 
-
-
         username = "";
         lastDrinkDate = "2000/01/01 00:00:00";
         userId = Utils.getUserId();
@@ -149,20 +146,17 @@ public class MainActivity extends AppCompatActivity {
 
         goOnlineConnectiontoDatabase();
         if (Utils.hasConnection(this)) {
-            // load name from firebase database
-            getNameFromDatabase();
+
+            loadData(firebaseUser.getUid());
 
             // load last date when user drink alcohol from firebase database
-            Thread updateDateThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while(true){
-                        try {
-                            getDateOfLastDrinkFromDatabase();
-                            Thread.sleep(60000); //1000 - 1 сек
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
+            Thread updateDateThread = new Thread(() -> {
+                while(true){
+                    try {
+                        setTime();
+                        Thread.sleep(60000); //1000 - 1 сек
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
                     }
                 }
             });
@@ -186,6 +180,31 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
         showBottomNavigation(R.id.main_page);
+    }
+
+    private void loadData(String uid) {
+        mainActivityViewModel.getUser(uid).observe(this, user -> {
+            Log.d("TAGUSER", "Current name: " + user.getName());
+            Log.d("TAGUSER", "Current name: " + user.getDateWhenStopDrink());
+            helloUsernameTextView.setText("Здраствуйте, " + user.getName());
+            lastDrinkDate = user.getDateWhenStopDrink();
+            Log.d("DrinkDate", "Last in loadData: " + lastDrinkDate);
+
+            setTime();
+
+        });
+    }
+
+    private void setTime() {
+        Log.d("DrinkDate", "Last in setTime: " + lastDrinkDate);
+        String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
+        daysWithoutDrink = dates[0];
+        setNotDrinkTime(dates[0],dates[1],dates[2]);
+
+        // Show notification if hour = 00 and minute = 00
+        if (dates[1].equals("00") && dates[2].equals("00")) {
+            Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
+        }
     }
 
     // Show bottom navighation menu
@@ -285,53 +304,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference.addChildEventListener(loadDateUserChildeEventListener);
     }
 
-
-    // Get name from firebase database method
-    private void getNameFromDatabase() {
-        userChildeEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User user = snapshot.getValue(User.class);
-                if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    username = user.getName();
-                    helloUsernameTextView.setText("Здраствуйте, " + username);
-
-                    String about = user.getAboutMe();
-                    String url = user.getProfileImage();
-
-                    // Save "username" on local storage
-                    editor.putString(APP_PREFERENCES_KEY_NAME, username);
-                    editor.putString(APP_PREFERENCES_KEY_PROFILE_IMAGE, url);
-                    editor.putString(APP_PREFERENCES_KEY_ABOUT_ME, about);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        userDatabaseReference.addChildEventListener(userChildeEventListener);
-    }
-
-
     // Set date data in TextView
     private void setNotDrinkTime(String days, String hours, String minutes) {
         daysTextView.setText(days + " дней");
@@ -390,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mAdView.resume();
 
-        getDateOfLastDrinkFromDatabase();
+        setTime();
         goOnlineConnectiontoDatabase();
 
         if (mInterstitialAd.isLoaded()) {
