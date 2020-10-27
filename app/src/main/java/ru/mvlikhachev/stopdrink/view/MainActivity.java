@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 //        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
 
 
-
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
@@ -131,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
-
-
 
 
         username = "";
@@ -150,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
         goOnlineConnectiontoDatabase();
         if (Utils.hasConnection(this)) {
             // load name from firebase database
-            getNameFromDatabase();
+//            getNameFromDatabase();
+            loadData(firebaseUser.getUid());
 
             // load last date when user drink alcohol from firebase database
             Thread updateDateThread = new Thread(new Runnable() {
@@ -186,6 +184,14 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
         showBottomNavigation(R.id.main_page);
+    }
+
+    private void loadData(String uid) {
+        mainActivityViewModel.getUser(uid).observe(this, user -> {
+            Log.d("TAGUSER", "Current name: " + user.getName());
+            helloUsernameTextView.setText("Здраствуйте, " + user.getName());
+
+        });
     }
 
     // Show bottom navighation menu

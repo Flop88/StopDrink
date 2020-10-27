@@ -24,16 +24,16 @@ public class UserRepository {
 
     public UserRepository(Application application) {
 
-            UsersDatabase database = UsersDatabase.getInstance(application);
-            userDao = database.getUserDao();
+        UsersDatabase database = UsersDatabase.getInstance(application);
+        userDao = database.getUserDao();
 
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            usersDatabaseReference = firebaseDatabase.getReference().child("users");
-        }
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        usersDatabaseReference = firebaseDatabase.getReference().child("users");
+    }
 
-        public LiveData<User> getUserByUid(String uid) {
-            return userDao.getUserByUid(uid);
-        }
+    public LiveData<User> getUserByUid(String uid) {
+        return userDao.getUserByUid(uid);
+    }
 
 
 
