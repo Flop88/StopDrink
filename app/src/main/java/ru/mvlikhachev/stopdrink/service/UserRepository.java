@@ -64,20 +64,25 @@ public class UserRepository {
 
     // Update
     public void updatetUser(User user) {
-        new UpdateUserAsyncTask(userDao).execute(user);
+        new UpdateUserAsyncTask(userDao, usersDatabaseReference).execute(user);
     }
 
     private static class UpdateUserAsyncTask extends AsyncTask<User, Void, Void> {
 
         UserDao userDao;
+        DatabaseReference usersDatabaseReference;
 
-        public UpdateUserAsyncTask(UserDao userDao) {
+        public UpdateUserAsyncTask(UserDao userDao, DatabaseReference usersDatabaseReference) {
             this.userDao = userDao;
+            this.usersDatabaseReference = usersDatabaseReference;
         }
 
         @Override
         protected Void doInBackground(User... users) {
             userDao.update(users[0]);
+
+            // Add to Firebase Database
+            usersDatabaseReference.child(users[0].getUid()).setValue(users[0]);
             return null;
         }
     }

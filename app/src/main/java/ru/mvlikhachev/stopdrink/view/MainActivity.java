@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdListener;
@@ -26,13 +27,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
+import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
 
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "datasetting";
     public static final String APP_PREFERENCES_KEY_NAME = "nameFromDb";
     public static final String APP_PREFERENCES_KEY_DATE = "dateFromDb";
-    public static final String APP_PREFERENCES_KEY_ABOUT_ME = "aboutMeFromDb";
-    public static final String APP_PREFERENCES_KEY_PROFILE_IMAGE = "profileImageFromDb";
     ////////////////////// INITIALIZATION /////////////////////////////////
     private TextView helloUsernameTextView;
     private TextView daysTextView;
@@ -60,11 +59,9 @@ public class MainActivity extends AppCompatActivity {
     ////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
-    private ChildEventListener userChildeEventListener;
-    private ChildEventListener loadDateUserChildeEventListener;
-    private ChildEventListener aboutChildeEventListener;
 
     private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
 
     // AdMob
     private AdView mAdView;
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         auth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = auth.getCurrentUser();
+        firebaseUser = auth.getCurrentUser();
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
@@ -199,6 +196,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Set date data in TextView
+    private void setNotDrinkTime(String days, String hours, String minutes) {
+        daysTextView.setText(days + " дней");
+        timeTextView.setText(hours + ":" + minutes);
+    }
+    LiveData<User> getUser() {
+        return mainActivityViewModel.getUser(firebaseUser.getUid());
+    }
+
+    // Button "сбросить"
+    public void resetDrinkDate(View view) {
+        if (Utils.hasConnection(this)) {
+
+            String updateDate = Utils.getCurrentDate();
+            String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
+            daysWithoutDrink = dates[0];
+            setNotDrinkTime(dates[0],dates[1],dates[2]);
+
+            LiveData<User> cUser = mainActivityViewModel.getUser(firebaseUser.getUid());
+
+            mainActivityViewModel.getUser(firebaseUser.getUid()).observe(this, user -> {
+
+                if (!user.getDateWhenStopDrink().equals(updateDate)) {
+                    user.setDateWhenStopDrink(updateDate);
+                }
+            });
+
+            // Show notification if hour = 00 and minute = 00
+            if (dates[1].equals("00") && dates[2].equals("00")) {
+                Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
+            }
+        }
+    }
+
     // Show bottom navighation menu
     private void showBottomNavigation(int currentMenu) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -247,25 +278,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-    }
-
-    // Set date data in TextView
-    private void setNotDrinkTime(String days, String hours, String minutes) {
-        daysTextView.setText(days + " дней");
-        timeTextView.setText(hours + ":" + minutes);
-    }
-
-    // Button "сбросить"
-    public void resetDrinkDate(View view) {
-        if (Utils.hasConnection(this)) {
-            String id = Utils.getUserId();
-            String updateDate = Utils.getCurrentDate();
-                userDatabaseReference.child(id).child("dateWhenStopDrink").setValue(updateDate);
-
-                String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
-                setNotDrinkTime(dates[0], dates[1], dates[2]);
-
-        }
     }
 
     @Override

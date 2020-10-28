@@ -22,12 +22,14 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public LiveData<User> getUser(String uid) {
         user = userRepository.getUserByUid(uid);
+
         return user;
     }
 
     public void addNewUser(User user) {
         userRepository.insertUser(user);
     }
+
     public void updateUser(User user) {
         userRepository.updatetUser(user);
     }
