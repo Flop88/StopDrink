@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

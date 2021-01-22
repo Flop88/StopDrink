@@ -11,31 +11,31 @@
         android:roundIcon="@mipmap/ic_launcher_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+        <activity android:name=".screens.Room.RoomNavigationActivity"></activity>
+        <activity android:name=".screens.ChooseActivity" /> <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3120800894638034~4236832792" />
 
         <activity
-            android:name=".view.SettingActivity"
+            android:name=".screens.SettingActivity"
             android:label="Настройки"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.AboutActivity"
+            android:name=".screens.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginSignUpActivity"
+            android:name=".screens.LoginSignUpActivity"
             android:label="Вход"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.MainActivity"
+            android:name=".screens.MainActivity"
             android:label="Я Не Пью!"
             android:noHistory="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.SplashActivity"
+            android:name=".screens.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,9 +44,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ProfileActivity"
+            android:name=".screens.ProfileActivity"
             android:label="Профиль"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

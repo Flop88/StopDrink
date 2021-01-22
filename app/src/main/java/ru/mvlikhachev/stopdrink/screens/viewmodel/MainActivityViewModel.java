@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view.viewmodel;
+package ru.mvlikhachev.stopdrink.screens.viewmodel;
 
 import android.app.Application;
 

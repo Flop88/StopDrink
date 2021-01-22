@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
-import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
+import ru.mvlikhachev.stopdrink.screens.viewmodel.MainActivityViewModel;
 
 public class LoginSignUpActivity extends AppCompatActivity {
 
