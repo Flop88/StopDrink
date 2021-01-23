@@ -62,6 +62,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_sign_up);
 
+
         // AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -86,7 +87,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
         textInputPassword = findViewById(R.id.textInputPassword);
         textInputConfirmPassword = findViewById(R.id.textInputConfirmPassword);
         dangedLoginSignUpTextView = findViewById(R.id.dangedLoginSignUpTextView);
-
         loginSignUpButton = findViewById(R.id.loginSignUpButton);
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
 
