@@ -95,7 +95,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 .create(MainActivityViewModel.class);
 
         authorizationUi();
-
         auth = FirebaseAuth.getInstance();
 
         database = FirebaseDatabase.getInstance();
