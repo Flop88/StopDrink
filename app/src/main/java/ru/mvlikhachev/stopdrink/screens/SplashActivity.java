@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
                 } finally {
                     startActivity(new Intent(
                             SplashActivity.this,
-                            LoginSignUpActivity.class
+                            ChooseActivity.class
 
                     ));
                 }

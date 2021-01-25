@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +34,7 @@ import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.model.User;
-import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
+import ru.mvlikhachev.stopdrink.screens.viewmodel.MainActivityViewModel;
 
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
 import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;

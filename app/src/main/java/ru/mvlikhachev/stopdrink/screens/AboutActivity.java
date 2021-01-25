@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.content.Intent;
 import android.net.Uri;

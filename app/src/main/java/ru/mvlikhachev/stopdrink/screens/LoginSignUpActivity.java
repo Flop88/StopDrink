@@ -1,4 +1,4 @@
-package ru.mvlikhachev.stopdrink.view;
+package ru.mvlikhachev.stopdrink.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
 import ru.mvlikhachev.stopdrink.Utils.Validations;
-import ru.mvlikhachev.stopdrink.view.viewmodel.MainActivityViewModel;
+import ru.mvlikhachev.stopdrink.screens.viewmodel.MainActivityViewModel;
 
 public class LoginSignUpActivity extends AppCompatActivity {
 
@@ -45,22 +45,22 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private TextView toggleLoginSignUpTextView;
     private TextView dangedLoginSignUpTextView;
 
+
     private boolean isLoginModeActive;
 
     // Firebase
     private FirebaseAuth auth;
-
     private FirebaseDatabase database;
     private DatabaseReference usersDatabaseReference;
 
     private AdView mAdView;
 
     private MainActivityViewModel mainActivityViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_sign_up);
+
 
         // AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -86,7 +86,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
         textInputPassword = findViewById(R.id.textInputPassword);
         textInputConfirmPassword = findViewById(R.id.textInputConfirmPassword);
         dangedLoginSignUpTextView = findViewById(R.id.dangedLoginSignUpTextView);
-
         loginSignUpButton = findViewById(R.id.loginSignUpButton);
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
 
@@ -95,7 +94,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 .create(MainActivityViewModel.class);
 
         authorizationUi();
-
         auth = FirebaseAuth.getInstance();
 
         database = FirebaseDatabase.getInstance();
@@ -131,6 +129,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 .toString()
                 .trim();
 
+
         if (nameInput.isEmpty()) {
             textInputName.setError("Введите Ваше имя!");
             return false;
@@ -144,7 +143,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
     }
 
     private boolean validatePassword() {
-
         String passwordInput = textInputPassword
                 .getEditText()
                 .getText()
