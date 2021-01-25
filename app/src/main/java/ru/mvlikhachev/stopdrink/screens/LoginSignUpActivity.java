@@ -45,18 +45,17 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private TextView toggleLoginSignUpTextView;
     private TextView dangedLoginSignUpTextView;
 
+
     private boolean isLoginModeActive;
 
     // Firebase
     private FirebaseAuth auth;
-
     private FirebaseDatabase database;
     private DatabaseReference usersDatabaseReference;
 
     private AdView mAdView;
 
     private MainActivityViewModel mainActivityViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +129,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 .toString()
                 .trim();
 
+
         if (nameInput.isEmpty()) {
             textInputName.setError("Введите Ваше имя!");
             return false;
@@ -143,7 +143,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
     }
 
     private boolean validatePassword() {
-
         String passwordInput = textInputPassword
                 .getEditText()
                 .getText()
