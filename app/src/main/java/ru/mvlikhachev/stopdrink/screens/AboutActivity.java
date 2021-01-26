@@ -3,14 +3,13 @@ package ru.mvlikhachev.stopdrink.screens;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.mvlikhachev.stopdrink.R;
 
-import static ru.mvlikhachev.stopdrink.Utils.NotificationReceiver.showRatingUserInterface;
+
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -45,7 +44,4 @@ public class AboutActivity extends AppCompatActivity {
         });
     }
 
-    public void writeReview(View view) {
-        showRatingUserInterface(AboutActivity.this);
-    }
 }

@@ -4,40 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ru.mvlikhachev.stopdrink.R;
-import ru.mvlikhachev.stopdrink.Utils.NotificationReceiver;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
-import ru.mvlikhachev.stopdrink.model.User;
-import ru.mvlikhachev.stopdrink.screens.viewmodel.MainActivityViewModel;
-
-import static ru.mvlikhachev.stopdrink.Utils.Utils.goOfflineConnectiontoDatabase;
-import static ru.mvlikhachev.stopdrink.Utils.Utils.goOnlineConnectiontoDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     private NotificationManagerCompat notificationManager;
 
-    //
-    private MainActivityViewModel mainActivityViewModel;
 
 
     // TEST
@@ -86,28 +66,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // AdMob
-        showAdMob();
-
-///////// Initialization block
-        mainActivityViewModel = new ViewModelProvider
-                .AndroidViewModelFactory(getApplication())
-                .create(MainActivityViewModel.class);
-
-//        User testUser = new User();
-//        testUser.setUid("2");
-//        testUser.setName("Anton");
-//        mainActivityViewModel.addNewUser(testUser);
-//
-//        mainActivityViewModel.getUser("2").observe(this, user -> {
-//            Log.d("TAGUSER", "Add: " + user.getName());
-//        });
-//
-//        testUser.setName("Ne Anton");
-//        mainActivityViewModel.updateUser(testUser);
-//
-//        mainActivityViewModel.getUser("2").observe(this, user -> Log.d("TAGUSER", "Update: " + user.getName()));
 
 
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
@@ -125,11 +83,6 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference = database.getReference().child("users");
 
 
-        username = "";
-        lastDrinkDate = "2000/01/01 00:00:00";
-        userId = Utils.getUserId();
-        daysWithoutDrink = "0";
-
 //////// End initialization block
 
         // Если не авторизованы - идев в активити авторизации
@@ -137,16 +90,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
         }
 
-        goOnlineConnectiontoDatabase();
+
         if (Utils.hasConnection(this)) {
 
-            loadData(firebaseUser.getUid());
+
 
             // load last date when user drink alcohol from firebase database
             Thread updateDateThread = new Thread(() -> {
                 while(true){
                     try {
-                        setTime();
                         Thread.sleep(60000); //1000 - 1 сек
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
@@ -163,194 +115,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
         notificationManager = NotificationManagerCompat.from(this);
-
-
-        logoImageView.setOnLongClickListener(v -> {
-
-            NotificationReceiver.createNotificationChannel(this);
-            NotificationReceiver.showNotification(this, daysWithoutDrink);
-
-            return false;
-        });
-        showBottomNavigation(R.id.main_page);
+        
     }
 
-    private void loadData(String uid) {
-        mainActivityViewModel.getUser(uid).observe(this, user -> {
-            helloUsernameTextView.setText("Здраствуйте, " + user.getName());
-            lastDrinkDate = user.getDateWhenStopDrink();
-
-            setTime();
-
-        });
-    }
-
-    private void setTime() {
-        String[] dates = Utils.calculateTimeWithoutDrink(lastDrinkDate);
-        daysWithoutDrink = dates[0];
-        setNotDrinkTime(dates[0],dates[1],dates[2]);
-
-        // Show notification if hour = 00 and minute = 00
-        if (dates[1].equals("00") && dates[2].equals("00")) {
-            Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
-        }
-    }
-
-    // Set date data in TextView
-    private void setNotDrinkTime(String days, String hours, String minutes) {
-        daysTextView.setText(days + " дней");
-        timeTextView.setText(hours + ":" + minutes);
-    }
-    LiveData<User> getUser() {
-        return mainActivityViewModel.getUser(firebaseUser.getUid());
-    }
-
-    // Button "сбросить"
-    public void resetDrinkDate(View view) {
-        if (Utils.hasConnection(this)) {
-
-            String updateDate = Utils.getCurrentDate();
-            String[] dates = Utils.calculateTimeWithoutDrink(updateDate);
-            daysWithoutDrink = dates[0];
-            setNotDrinkTime(dates[0],dates[1],dates[2]);
-
-            LiveData<User> cUser = mainActivityViewModel.getUser(firebaseUser.getUid());
-
-            mainActivityViewModel.getUser(firebaseUser.getUid()).observe(this, user -> {
-
-                if (!user.getDateWhenStopDrink().equals(updateDate)) {
-                    user.setDateWhenStopDrink(updateDate);
-                }
-            });
-
-            // Show notification if hour = 00 and minute = 00
-            if (dates[1].equals("00") && dates[2].equals("00")) {
-                Utils.showNotificationWithDate(getApplicationContext(),dates[0]);
-            }
-        }
-    }
-
-    // Show bottom navighation menu
-    private void showBottomNavigation(int currentMenu) {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(currentMenu);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.profile_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            ProfileActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.main_page:
-                    startActivity(new Intent(getApplicationContext(),
-                            MainActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-            }
-            return false;
-        });
-    }
-
-    // AdMob show AD method
-    private void showAdMob() {
-        Log.d("AdMob", "AdMob run...");
-        MobileAds.initialize(this, initializationStatus -> {
-        });
-
-        mAdView = new AdView(this);
-
-        mAdView = findViewById(R.id.adViewBottom);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("D831A2241D7E1E3B316D46B94FAEE642")
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3120800894638034/9851550730");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                // Load the next interstitial.
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Если пользователь авторизован - сразу открыть мэйн активити
-        if (auth.getCurrentUser() != null) {
-            switch (item.getItemId()) {
-                case R.id.sign_out:
-                    Intent intent = new Intent(this, LoginSignUpActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                    FirebaseAuth.getInstance().signOut();
-                    return true;
-                case R.id.about_program:
-                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                    return true;
-                case R.id.settings_programm:
-                    Intent intentSettings = new Intent(MainActivity.this, SettingActivity.class);
-                    intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intentSettings);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
-        }
-        return super.onOptionsItemSelected(item); // хз зачем, но без нее не работает
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAdView.resume();
-
-        setTime();
-        goOnlineConnectiontoDatabase();
-
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Log.d("TAGG", "The interstitial wasn't loaded yet.");
-        }
-    }
-
-    @Override
-    public void onPause() {
-        mAdView.pause();
-
-        super.onPause();
-
-        goOfflineConnectiontoDatabase();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        mAdView.destroy();
-
-        goOfflineConnectiontoDatabase();
-
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 }

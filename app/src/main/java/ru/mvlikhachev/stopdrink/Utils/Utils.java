@@ -4,10 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,44 +81,4 @@ public class Utils {
         return result;
     }
 
-    public static void goOfflineConnectiontoDatabase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        if (database != null) {
-            database.goOffline();
-        }
-    }
-    public static void goOnlineConnectiontoDatabase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        if (database != null) {
-            database.goOnline();
-        }
-    }
-
-    // Получаем user id из Firebase и присваиваем его в userId и помещаем в APP_PREFERENCES_KEY_USERID
-    public static String getUserId() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        return firebaseUser.getUid();
-    }
-
-
-    // Show notification method
-    public static void showNotificationWithDate(Context context, String date) {
-        switch (date) {
-            case "7":
-            case "14":
-            case "21":
-            case "50":
-            case "100":
-            case "150":
-            case "200":
-            case "250":
-            case "300":
-            case "365":
-                NotificationReceiver.createNotificationChannel(context);
-                NotificationReceiver.showNotification(context, date);
-                break;
-        }
-    }
 }

@@ -1,37 +1,30 @@
 package ru.mvlikhachev.stopdrink.screens.Room.SettingsScreen
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.mvlikhachev.stopdrink.Utils.REPOSITORY
-import ru.mvlikhachev.stopdrink.Utils.TYPE_ROOM
-import ru.mvlikhachev.stopdrink.database.Room.AppRoomDatabase
-import ru.mvlikhachev.stopdrink.database.Room.AppRoomRepository
-import ru.mvlikhachev.stopdrink.model.User
+import ru.mvlikhachev.stopdrink.Utils.APP_ACTIVITY
 
 class SettingsFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mContext = application
-    lateinit var readUserData: LiveData<List<User>>
-
-    fun initDatabase(type: String, onSuccess:() -> Unit) {
-        when(type) {
-            TYPE_ROOM -> {
-                val dao = AppRoomDatabase.getInstance(mContext).getAppRoomDao()
-                REPOSITORY = AppRoomRepository(dao)
-                onSuccess()
-            }
+    fun saveData(name: String, about: String, date: String) {
+        val sharedPref = APP_ACTIVITY?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString("userDataName", name)
+            putString("userDataAbout", about)
+            putString("userDataDate", date)
+            apply()
         }
     }
 
-    fun insert(appPerson: User, onSuccess: () -> Unit) =
-            viewModelScope.launch(Dispatchers.Main) {
-                REPOSITORY.insert(appPerson) {
-                    onSuccess()
-                }
-            }
-
+    fun testLoadData() {
+        val sharedPref = APP_ACTIVITY?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val name = sharedPref.getString("userDataName", "NULL")
+        val about = sharedPref.getString("userDataAbout", "NULL")
+        val date = sharedPref.getString("userDataDate", "NULL")
+        Log.d("loadDate", "Name: $name" )
+        Log.d("loadDate", "About: $about" )
+        Log.d("loadDate", "Date: $date" )
+    }
 }

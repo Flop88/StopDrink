@@ -18,8 +18,7 @@ import java.util.Map;
 public class User extends BaseObservable {
 
     @PrimaryKey(autoGenerate = true)
-    private int dbId;
-    private String id;
+    private int id;
     private String uid;
     private String email;
     private String name;
@@ -30,14 +29,14 @@ public class User extends BaseObservable {
     public User() {
     }
 
-    public User(String id, String name, String email) {
+    public User(int id, String name, String email) {
         this.id = id;
         this.email = email;
         this.name = name;
     }
 
-    public User(int dbId, String id, String uid, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate) {
-        this.dbId = dbId;
+    public User(int id, String uid, String email, String name, String dateWhenStopDrink, String aboutMe, String profileImage, ArrayList<String> drinksDate) {
+
         this.id = id;
         this.uid = uid;
         this.email = email;
@@ -52,11 +51,11 @@ public class User extends BaseObservable {
     }
 
     @Bindable
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
         notifyPropertyChanged(BR.id);
     }
@@ -122,15 +121,6 @@ public class User extends BaseObservable {
         notifyPropertyChanged(BR.uid);
     }
 
-    @Bindable
-    public int getDbId() {
-        return dbId;
-    }
-
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
-        notifyPropertyChanged(BR.dbId);
-    }
 
     @Exclude
     public Map<String, Object> toMap() {

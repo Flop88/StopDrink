@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -26,11 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ru.mvlikhachev.stopdrink.model.User;
 import ru.mvlikhachev.stopdrink.R;
 import ru.mvlikhachev.stopdrink.Utils.Utils;
-import ru.mvlikhachev.stopdrink.Utils.Validations;
-import ru.mvlikhachev.stopdrink.screens.viewmodel.MainActivityViewModel;
+import ru.mvlikhachev.stopdrink.model.User;
 
 public class LoginSignUpActivity extends AppCompatActivity {
 
@@ -55,7 +52,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
-    private MainActivityViewModel mainActivityViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +86,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
         loginSignUpButton = findViewById(R.id.loginSignUpButton);
         toggleLoginSignUpTextView = findViewById(R.id.toggleLoginSignUpTextView);
 
-        mainActivityViewModel = new ViewModelProvider
-                .AndroidViewModelFactory(getApplication())
-                .create(MainActivityViewModel.class);
+
 
         authorizationUi();
         auth = FirebaseAuth.getInstance();
@@ -214,9 +209,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     });
         } else { // Registration
 
-            if (!validateEmail() | !Validations.validateName(textInputName) | !validatePassword() ) { // | !validateConfirmPassword()
-                return;
-            }
+
 
             auth.createUserWithEmailAndPassword(
                     textInputEmail.getEditText().getText().toString().trim(),
@@ -259,8 +252,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private void createUser(FirebaseUser user) {
 
         User currentUser = new User();
-
-        currentUser.setId(user.getUid());
         currentUser.setUid(user.getUid());
         currentUser.setEmail(user.getEmail());
         currentUser.setName(textInputName.getEditText()
@@ -270,7 +261,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         currentUser.setDateWhenStopDrink(Utils.getCurrentDate());
 
-        mainActivityViewModel.addNewUser(currentUser);
 
     }
 

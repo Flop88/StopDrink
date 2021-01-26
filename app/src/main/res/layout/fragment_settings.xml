@@ -27,65 +27,38 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/logo" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
         android:id="@+id/roomNameTextInput"
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
+        android:hint="@string/name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/name" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
         android:id="@+id/roomAboutMeTextInput"
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
+        android:hint="@string/aboutMe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/aboutMe" />
 
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
         android:id="@+id/roomDrinkDateTextInput"
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
+        android:hint="@string/drinkDate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/drinkDate" />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/date_of_check"
-        android:layout_weight="1">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/check_date"
-            android:hint="DD.MM.YYY"
-            android:inputType="date" />
-    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:layout_width="match_parent"
