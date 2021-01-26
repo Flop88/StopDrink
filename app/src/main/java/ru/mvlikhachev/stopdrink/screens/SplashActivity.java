@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import ru.mvlikhachev.stopdrink.R;
+import ru.mvlikhachev.stopdrink.screens.Room.RoomNavigationActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
                 } finally {
                     startActivity(new Intent(
                             SplashActivity.this,
-                            ChooseActivity.class
+                            RoomNavigationActivity.class
 
                     ));
                 }

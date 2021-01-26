@@ -14,7 +14,6 @@
     <string name="writeReviews">Оставить отзыв</string>
     <string name="newName">Новое имя</string>
     <string name="setTime">Установить время</string>
-    <string name="save">Сохранить</string>
     <string name="about">About</string>
     <string name="settings">Настройки</string>
     <string name="aboutProgram">О программе</string>
@@ -30,4 +29,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="friends">Друзья</string>
     <string name="aboutMe">Обо мне</string>
+    <string name="save">Сохранить</string>
+    <string name="drinkDate">Дата употребления алкоголя</string>
 </resources>
