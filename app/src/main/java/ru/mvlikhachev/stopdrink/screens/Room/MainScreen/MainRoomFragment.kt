@@ -2,7 +2,6 @@ package ru.mvlikhachev.stopdrink.screens.Room.MainScreen
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,20 +32,29 @@ class MainRoomFragment : Fragment() {
         val about = sharedPref.getString("userDataAbout", "NULL")
         val date = sharedPref.getString("userDataDate", "NULL")
 
-        setText(name, date)
+
+        val thread: Thread = object : Thread() {
+            override fun run() {
+                try {
+                    sleep(5000)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    setText(name, date)
+                }
+            }
+        }
+        thread.start()
+
     }
 
     private fun setText(name: String?, date: String?) {
-        val mDate = "2021/01/01 00:00:00"
+        val mDate = "$date 00:00:00" // 2021/01/01
         val newDate = calculateTimeWithoutDrink(mDate)
 
-        Log.d("checkDate", "days: ${newDate[0]}")
-        Log.d("checkDate", "minutes: ${newDate[1]}")
-        Log.d("checkDate", "seconds: ${newDate[2]}")
-
         usernameTextView.text = "Здраствуйте, $name"
-//        daysTextView.text = "${newDate[0]} дней"
-//        timeTextView.text = "${newDate[1]}:${newDate[2]}"
+        daysTextView.text = "${newDate[0]} дней"
+        timeTextView.text = "${newDate[1]}:${newDate[2]}"
     }
 
 }
