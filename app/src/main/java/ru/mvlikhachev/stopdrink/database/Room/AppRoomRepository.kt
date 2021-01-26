@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import ru.mvlikhachev.stopdrink.database.DatabaseRepository
 import ru.mvlikhachev.stopdrink.model.User
 
-class AppRoomRepository(private val appRoomDao: AppRoomDao, override val allUsers: LiveData<List<User>>) : DatabaseRepository {
+class AppRoomRepository(private val appRoomDao: AppRoomDao) : DatabaseRepository {
 
-    val allNotes: LiveData<List<User>>
+    override val allNotes: LiveData<List<User>>
         get() = appRoomDao.getAllPersons()
 
     override suspend fun getPersonById(id: Int): LiveData<User> {

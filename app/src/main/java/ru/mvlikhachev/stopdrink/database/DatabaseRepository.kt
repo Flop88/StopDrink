@@ -5,7 +5,7 @@ import ru.mvlikhachev.stopdrink.model.User
 
 interface DatabaseRepository {
 
-    val allUsers: LiveData<List<User>>
+    val allNotes: LiveData<List<User>>
 
     suspend fun getPersonById(id: Int) : LiveData<User>
 
