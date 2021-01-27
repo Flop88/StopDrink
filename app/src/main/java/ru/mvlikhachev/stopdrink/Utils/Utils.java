@@ -34,7 +34,7 @@ public class Utils {
 
     // Получить текущую дату
     public static String getCurrentDate() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
 
         return dateFormat.format(date);
