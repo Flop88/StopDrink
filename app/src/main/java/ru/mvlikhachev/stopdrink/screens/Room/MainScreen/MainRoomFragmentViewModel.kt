@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainRoomFragmentViewModel(application: Application) : AndroidViewModel(application) {
-
     fun resetTimer() {
         val sharedPref = APP_ACTIVITY?.getPreferences(Context.MODE_PRIVATE) ?: return
         val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss")
