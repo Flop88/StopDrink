@@ -46,17 +46,16 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
         long timeUp = 0;
+        long diff = System.currentTimeMillis() - timeUp;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
         try {
             timeUp = format.parse(date).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        long diff = System.currentTimeMillis() - timeUp;
-
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000) % 24;
-        long diffDays = diff / (24 * 60 * 60 * 1000);
 
         // Проверка если минуты и секунды меньше 10 - выполняем форматирование, чтоб красиво отображалось во вью
         String hoursString = "";
