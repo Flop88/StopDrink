@@ -11,8 +11,6 @@ class ChooseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose)
-
-
     }
 
     fun startRoomMode(view: View) {
