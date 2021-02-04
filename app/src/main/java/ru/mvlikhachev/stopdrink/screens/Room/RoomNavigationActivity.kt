@@ -19,7 +19,6 @@ class RoomNavigationActivity : AppCompatActivity() {
         _binding = ActivityRoomNavigationBinding.inflate(layoutInflater)
         setContentView(mBinding?.root)
         APP_ACTIVITY = this
-
         mNavController = Navigation.findNavController(this, R.id.nav_host)
     }
 }
