@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         helloUsernameTextView = findViewById(R.id.helloUsernameTextView);
         daysTextView = findViewById(R.id.daysTextView);
         timeTextView = findViewById(R.id.timeTextView);
@@ -90,11 +89,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
         }
 
-
         if (Utils.hasConnection(this)) {
-
-
-
             // load last date when user drink alcohol from firebase database
             Thread updateDateThread = new Thread(() -> {
                 while(true){
@@ -106,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             updateDateThread.start();
-
         } else {
             username = sharedPreferences.getString(APP_PREFERENCES_KEY_NAME,
                     "Default Name");
@@ -115,7 +109,5 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Для работы приложения нужен доступ в интернет", Toast.LENGTH_LONG).show();
         }
         notificationManager = NotificationManagerCompat.from(this);
-        
     }
-
 }
