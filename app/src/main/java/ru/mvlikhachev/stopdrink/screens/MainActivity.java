@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
-
     // AdMob
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
