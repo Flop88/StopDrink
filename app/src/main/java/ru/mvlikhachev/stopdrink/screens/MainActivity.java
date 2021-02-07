@@ -55,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManager;
 
 
-
-    // TEST
-
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
 
