@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
 ///////////////////////////////////////////////////////////////////
 
     private NotificationManagerCompat notificationManager;
-
-
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
 
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
-
 
 //////// End initialization block
 
