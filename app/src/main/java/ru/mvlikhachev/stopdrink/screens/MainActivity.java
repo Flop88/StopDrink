@@ -68,10 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-
         database = FirebaseDatabase.getInstance();
         userDatabaseReference = database.getReference().child("users");
 
