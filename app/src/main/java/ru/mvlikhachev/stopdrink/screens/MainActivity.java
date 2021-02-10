@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     ////////////////////////// FIREBASE ///////////////////////////////
     private FirebaseDatabase database;
     private DatabaseReference userDatabaseReference;
-
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     // AdMob
