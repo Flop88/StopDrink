@@ -73,12 +73,10 @@ public class MainActivity extends AppCompatActivity {
         userDatabaseReference = database.getReference().child("users");
 
 //////// End initialization block
-
         // Если не авторизованы - идев в активити авторизации
         if (auth.getCurrentUser() == null) {
             startActivity(new Intent(MainActivity.this, LoginSignUpActivity.class));
         }
-
         if (Utils.hasConnection(this)) {
             // load last date when user drink alcohol from firebase database
             Thread updateDateThread = new Thread(() -> {
