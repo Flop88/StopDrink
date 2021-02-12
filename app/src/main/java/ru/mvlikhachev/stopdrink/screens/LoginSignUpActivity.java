@@ -41,8 +41,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private Button loginSignUpButton;
     private TextView toggleLoginSignUpTextView;
     private TextView dangedLoginSignUpTextView;
-
-
     private boolean isLoginModeActive;
 
     // Firebase
