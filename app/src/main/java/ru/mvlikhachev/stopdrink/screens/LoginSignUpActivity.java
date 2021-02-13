@@ -37,10 +37,10 @@ public class LoginSignUpActivity extends AppCompatActivity {
     private TextInputLayout textInputName;
     private TextInputLayout textInputPassword;
     private TextInputLayout textInputConfirmPassword;
-
-    private Button loginSignUpButton;
     private TextView toggleLoginSignUpTextView;
     private TextView dangedLoginSignUpTextView;
+
+    private Button loginSignUpButton;
     private boolean isLoginModeActive;
 
     // Firebase
