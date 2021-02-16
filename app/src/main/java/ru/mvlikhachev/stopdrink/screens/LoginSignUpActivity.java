@@ -50,7 +50,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
