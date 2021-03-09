@@ -59,6 +59,19 @@ class MainRoomFragment : Fragment() {
         }
         thread.start()
 
+        val updateDateThread = Thread {
+            while (true) {
+                try {
+                    val date = sharedPref.getString("userDataDate", "NULL")
+                    setDate(date)
+                    Thread.sleep(60000) //1000 - 1 сек
+                } catch (ex: InterruptedException) {
+                    ex.printStackTrace()
+                }
+            }
+        }
+        updateDateThread.start()
+
         resetTimeRoomButton.setOnClickListener {
             mViewModel.resetTimer()
             val date = sharedPref.getString("userDataDate", "NULL")
