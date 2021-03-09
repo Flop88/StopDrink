@@ -25,11 +25,6 @@
             android:name=".screens.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".screens.LoginSignUpActivity"
-            android:label="Вход"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".screens.MainActivity"
             android:label="Я Не Пью!"
             android:noHistory="false"
